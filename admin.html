@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrativo - Science Stone</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- HEADER / NAVBAR -->
+    <header class="header">
+        <div class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <div class="logo-animated">
+                        <span class="logo-icon">⚛️</span>
+                        <span class="logo-text">Science Stone</span>
+                    </div>
+                    <p class="tagline">Un mundo guiado por la ciencia</p>
+                </div>
+
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <nav class="nav-menu" id="navMenu">
+                    <a href="index.html" class="nav-link">Inicio</a>
+                    <a href="index.html#articulos" class="nav-link">Artículos</a>
+                    <a href="resources.html" class="nav-link">Recursos</a>
+                    
+                    <div class="nav-dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">Más <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="author.html" class="dropdown-item">Sobre el Autor</a>
+                            <a href="contact.html" class="dropdown-item">Contacto</a>
+                        </div>
+                    </div>
+                </nav>
+
+                <div class="search-container">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="search-bar" id="searchBar">
+                <input type="text" id="searchInput" placeholder="Buscar artículos...">
+                <button class="close-search" id="closeSearch">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-container">
+        <div class="container">
+            <!-- SECCIÓN DE CREAR/EDITAR ARTÍCULO -->
+            <section class="admin-form-section">
+                <h2><i class="fas fa-pencil-alt"></i> Redactar Artículo</h2>
+                
+                <form id="articleForm" class="article-form">
+                    <input type="hidden" id="articleId">
+
+                    <!-- TÍTULO -->
+                    <div class="form-group">
+                        <label for="title">Título del Artículo *</label>
+                        <input type="text" id="title" placeholder="Ingresa el título del artículo" required>
+                    </div>
+
+                    <!-- RESUMEN/EXCERPT -->
+                    <div class="form-group">
+                        <label for="excerpt">Resumen o Excerpt *</label>
+                        <textarea id="excerpt" rows="2" placeholder="Breve resumen del artículo" required></textarea>
+                    </div>
+
+                    <!-- CATEGORÍAS -->
+                    <div class="form-group">
+                        <label>Categorías *</label>
+                        <div class="categories-checkboxes" id="categoriesCheckboxes">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- IMÁGENES -->
+                    <div class="form-group">
+                        <label>Imágenes del Artículo</label>
+                        <div class="image-inputs-container">
+                            <div id="imagesContainer">
+                                <div class="image-input-group">
+                                    <input type="url" class="image-url-input" placeholder="URL de imagen (https://...)">
+                                    <input type="text" class="image-credit-input" placeholder="Crédito/Autor (OBLIGATORIO)">
+                                    <button type="button" class="btn btn-small btn-red" onclick="removeImageInput(this)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button" id="addImageBtn" class="btn btn-small btn-green">
+                                <i class="fas fa-plus"></i> Agregar Imagen
+                            </button>
+                            <button type="button" id="uploadImageBtn" class="btn btn-small btn-cyan">
+                                <i class="fas fa-upload"></i> Cargar desde PC
+                            </button>
+                            <input type="file" id="imageFileInput" multiple accept="image/*" style="display:none;">
+                        </div>
+                    </div>
+
+                    <!-- CONTENIDO CON EDITOR ENRIQUECIDO -->
+                    <div class="form-group">
+                        <label for="contentEditor">Contenido del Artículo *</label>
+                        
+                        <div class="editor-toolbar">
+                            <button type="button" class="editor-btn" onclick="execCommand('bold')" title="Negrita">
+                                <i class="fas fa-bold"></i>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="execCommand('italic')" title="Cursiva">
+                                <i class="fas fa-italic"></i>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="execCommand('underline')" title="Subrayado">
+                                <i class="fas fa-underline"></i>
+                            </button>
+                            
+                            <div class="separator"></div>
+                            
+                            <select class="editor-select" onchange="execCommandWithValue('formatBlock', this.value)">
+                                <option value="">Formato</option>
+                                <option value="h2">Encabezado 2</option>
+                                <option value="h3">Encabezado 3</option>
+                                <option value="h4">Encabezado 4</option>
+                                <option value="p">Párrafo</option>
+                            </select>
+                            
+                            <button type="button" class="editor-btn" onclick="execCommand('insertUnorderedList')" title="Lista">
+                                <i class="fas fa-list-ul"></i>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="execCommand('insertOrderedList')" title="Lista Numerada">
+                                <i class="fas fa-list-ol"></i>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="execCommand('indent')" title="Indentar">
+                                <i class="fas fa-indent"></i>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="execCommand('outdent')" title="Reducir Indentar">
+                                <i class="fas fa-outdent"></i>
+                            </button>
+                            
+                            <div class="separator"></div>
+                            
+                            <button type="button" class="editor-btn" onclick="addLink()" title="Agregar Enlace">
+                                <i class="fas fa-link"></i>
+                            </button>
+                            <button type="button" class="editor-btn" onclick="insertQuote()" title="Agregar Cita">
+                                <i class="fas fa-quote-left"></i>
+                            </button>
+                            
+                            <div class="separator"></div>
+                            
+                            <button type="button" class="editor-btn" onclick="execCommand('removeFormat')" title="Limpiar Formato">
+                                <i class="fas fa-eraser"></i>
+                            </button>
+                        </div>
+                        
+                        <div id="contentEditor" contenteditable="true"></div>
+                    </div>
+
+                    <!-- VIDEOS -->
+                    <div class="form-group">
+                        <label>Videos del Artículo</label>
+                        <div class="video-inputs-container">
+                            <label>URL de Video (YouTube, Vimeo, etc.)</label>
+                            <input type="url" id="videoUrl" placeholder="https://youtube.com/embed/...">
+                            
+                            <label style="margin-top: 15px;">O carga un video desde tu PC</label>
+                            <input type="file" id="videoFile" accept="video/*">
+                        </div>
+                    </div>
+
+                    <!-- ENLACES EXTERNOS -->
+                    <div class="form-group">
+                        <label>Enlaces Relacionados</label>
+                        <div class="links-container">
+                            <div id="linksContainer">
+                                <div class="link-input-group">
+                                    <input type="text" class="link-title-input" placeholder="Título del enlace">
+                                    <input type="url" class="link-url-input" placeholder="URL (https://...)">
+                                    <input type="text" class="link-description-input" placeholder="Descripción (opcional)">
+                                    <button type="button" class="btn btn-small btn-red" onclick="removeLinkInput(this)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button" id="addLinkBtn" class="btn btn-small btn-green">
+                                <i class="fas fa-plus"></i> Agregar Enlace
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- TAGS Y FUENTES -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tags">Tags (separados por coma)</label>
+                            <input type="text" id="tags" placeholder="ciencia, tecnología, educación">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sources">Fuentes (separadas por coma)</label>
+                            <input type="text" id="sources" placeholder="Wikipedia, Khan Academy, etc.">
+                        </div>
+                    </div>
+
+                    <!-- DESTACADO -->
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="featured">
+                            <span>Marcar como Artículo Destacado</span>
+                        </label>
+                    </div>
+
+                    <!-- BOTONES -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">
+                            <i class="fas fa-save"></i> Publicar Artículo
+                        </button>
+                        <button type="button" id="cancelBtn" class="btn btn-secondary btn-large" style="display:none;">
+                            <i class="fas fa-times"></i> Cancelar Edición
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- SECCIÓN DE ARTÍCULOS PUBLICADOS -->
+            <section class="admin-articles-section">
+                <div class="admin-section-header">
+                    <h2><i class="fas fa-newspaper"></i> Artículos Publicados</h2>
+                    <div class="admin-section-controls">
+                        <input type="text" id="searchArticles" placeholder="Buscar artículos...">
+                        <button id="refreshBtn" class="btn btn-small btn-cyan">
+                            <i class="fas fa-sync-alt"></i> Actualizar
+                        </button>
+                    </div>
+                </div>
+
+                <div id="articlesList" class="articles-list">
+                    <!-- Se llena dinámicamente -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Science Stone</h4>
+                    <p>Tu fuente de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="index.html#articulos">Artículos</a></li>
+                        <li><a href="resources.html">Recursos</a></li>
+                        <li><a href="author.html">Sobre el Autor</a></li>
+                        <li><a href="contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Sígueme</h4>
+                    <div class="social-links" id="footerSocial">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Science Stone. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="admin.js"></script>
+</body>
+</html>

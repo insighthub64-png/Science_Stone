@@ -1,0 +1,2252 @@
+@import url('https://fonts.googleapis.com/css2?family=Philosopher:wght@400;700&display=swap');
+
+:root {
+    --primary: #1a1a2e;
+    --primary-light: #16213e;
+    --secondary: #FFD700;
+    --secondary-light: #FFF44F;
+    --accent: #40E0D0;
+    --accent-light: #7FFFD4;
+    --green: #52B788;
+    --green-light: #74C69D;
+    --cyan: #00D4FF;
+    --cyan-light: #48E5FF;
+    --light: #FFFFFF;
+    --dark: #1a1a2e;
+    --white: #FFFFFF;
+    --text-dark: #000000;
+    --text-light: #FFFFFF;
+    --border: #e0e0e0;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Philosopher', sans-serif;
+    color: var(--text-dark);
+    background-color: var(--light);
+    line-height: 1.6;
+    transition: background-color 0.3s ease;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ===================== SPLASH SCREEN ===================== */
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeOutSplash 0.8s ease-in-out 2.2s forwards;
+    overflow: hidden;
+}
+
+.splash-screen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+@keyframes fadeOutSplash {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+.splash-content {
+    text-align: center;
+    z-index: 10;
+    position: relative;
+}
+
+.logo-loader {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-circle {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: rgba(255, 215, 0, 0.15);
+    backdrop-filter: blur(10px);
+    border: 3px solid rgba(255, 215, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: scaleIn 0.6s ease-out;
+    z-index: 2;
+    box-shadow: 0 8px 32px 0 rgba(255, 215, 0, 0.2);
+    padding: 15px;
+}
+
+.loader-ring {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border: 4px solid transparent;
+    border-top: 4px solid rgba(255, 215, 0, 0.9);
+    border-right: 4px solid rgba(255, 215, 0, 0.6);
+    border-radius: 50%;
+    animation: spin 2.5s linear infinite;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loader-text {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 20px;
+    animation: pulse 1.5s ease-in-out infinite;
+    letter-spacing: 2px;
+    font-family: 'Philosopher', sans-serif;
+    font-weight: 700;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* ===================== HEADER / NAVBAR ===================== */
+.header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+}
+
+.navbar {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    min-width: 60px;
+}
+
+.logo-animated {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    font-size: 28px;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.6));
+}
+
+.logo-text {
+    color: var(--secondary);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.tagline {
+    color: rgba(255, 215, 0, 0.6);
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-family: 'Philosopher', sans-serif;
+    display: none;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-link {
+    color: var(--light);
+    text-decoration: none;
+    font-weight: 700;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    position: relative;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #1a1a2e;
+    background: var(--secondary);
+    border-bottom: 2px solid var(--secondary);
+}
+
+.nav-dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--light);
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    min-width: 200px;
+    padding: 10px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    margin-top: 5px;
+}
+
+.nav-dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: block;
+    padding: 12px 20px;
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-family: 'Philosopher', sans-serif;
+    font-weight: 600;
+}
+
+.dropdown-item:hover,
+.dropdown-item.active {
+    background: var(--secondary);
+    color: #1a1a2e;
+    padding-left: 25px;
+}
+
+.admin-btn {
+    background: var(--secondary);
+    color: #1a1a2e;
+    border: 1px solid var(--secondary);
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+.admin-btn:hover {
+    background: var(--secondary-light);
+    color: #1a1a2e;
+}
+
+.search-container {
+    display: flex;
+    gap: 15px;
+}
+
+.search-btn {
+    background: none;
+    border: none;
+    color: var(--secondary);
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    font-weight: 700;
+}
+
+.search-btn:hover {
+    transform: scale(1.15);
+    color: var(--secondary-light);
+}
+
+.search-bar {
+    display: none;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px 20px;
+    margin-top: 10px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    animation: slideDown 0.3s ease;
+}
+
+.search-bar.active {
+    display: flex;
+    gap: 10px;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#searchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background: transparent;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.close-search {
+    background: none;
+    border: none;
+    color: var(--text-dark);
+    cursor: pointer;
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+.close-search:hover {
+    transform: rotate(90deg);
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background: var(--secondary);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(10px, 10px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+@media (max-width: 768px) {
+    .nav-container {
+        gap: 15px;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: #1a1a2e;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        border-bottom: 2px solid var(--secondary);
+    }
+
+    .nav-menu.active {
+        display: flex;
+    }
+
+    .nav-link {
+        padding: 12px 0;
+        color: var(--light);
+    }
+
+    .dropdown-menu {
+        position: static;
+        opacity: 0;
+        visibility: hidden;
+        display: none;
+    }
+
+    .nav-dropdown:hover .dropdown-menu {
+        display: none;
+    }
+
+    .nav-dropdown.active .dropdown-menu {
+        display: block;
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        background: rgba(255, 215, 0, 0.2);
+        box-shadow: none;
+        margin-top: 0;
+    }
+
+    .logo-text {
+        font-size: 18px;
+    }
+}
+
+/* ===================== HERO SECTION ===================== */
+.hero {
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    color: var(--light);
+    padding: 60px 20px;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.earth-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.5) contrast(1.1);
+}
+
+.hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.5) contrast(1.1);
+}
+
+.hero-solid-color {
+    width: 100%;
+    height: 100%;
+}
+
+.hero-animations {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.bubble {
+    position: absolute;
+    background: rgba(82, 183, 136, 0.3);
+    border-radius: 50%;
+    animation: float 6s infinite ease-in;
+}
+
+@keyframes float {
+    to {
+        bottom: 100vh;
+        opacity: 0;
+    }
+}
+
+.gear {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 212, 255, 0.2);
+    clip-path: polygon(50% 0%, 80% 10%, 90% 20%, 80% 30%, 100% 50%, 80% 70%, 90% 80%, 80% 90%, 50% 100%, 20% 90%, 10% 80%, 20% 70%, 0% 50%, 20% 30%, 10% 20%, 20% 10%);
+    animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.star {
+    position: absolute;
+    animation: twinkle 2s ease-in-out infinite;
+    font-size: 20px;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(82, 183, 136, 0.6);
+    border-radius: 50%;
+    animation: drift 8s linear infinite;
+}
+
+@keyframes drift {
+    to {
+        transform: translateY(-100vh) translateX(100px);
+        opacity: 0;
+    }
+}
+
+.earth-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.4) 0%, rgba(22, 33, 62, 0.3) 100%);
+}
+
+.hero-content {
+    text-align: center;
+    z-index: 2;
+    animation: fadeInUp 0.8s ease-out;
+    max-width: 700px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-title {
+    font-size: 56px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    line-height: 1.2;
+    font-family: 'Philosopher', sans-serif;
+    color: var(--light);
+}
+
+.hero-subtitle {
+    font-size: 22px;
+    margin-bottom: 30px;
+    opacity: 0.95;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    font-family: 'Philosopher', sans-serif;
+    color: var(--secondary);
+    font-weight: 700;
+}
+
+.hero-btn {
+    display: inline-block;
+    background: var(--secondary);
+    color: #1a1a2e;
+    padding: 14px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+    border: 2px solid transparent;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.hero-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.6);
+    background: var(--secondary-light);
+    color: #1a1a2e;
+}
+
+.hero-edit-btn {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    background: var(--secondary);
+    color: #1a1a2e;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 3;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.hero-edit-btn:hover {
+    background: var(--secondary-light);
+    transform: scale(1.1);
+}
+
+.hero-edit-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.hero-edit-content {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+}
+
+.hero-edit-content h3 {
+    margin-bottom: 20px;
+    color: #1a1a2e;
+    font-size: 22px;
+}
+
+.option-group {
+    margin-bottom: 20px;
+}
+
+.option-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.option-group input[type="radio"],
+.option-group input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.hero-option-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-left: 25px;
+    margin-top: 10px;
+}
+
+.hero-input {
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-family: 'Philosopher', sans-serif;
+    font-size: 14px;
+}
+
+.hero-input:focus {
+    outline: none;
+    border-color: var(--secondary);
+}
+
+@media (max-width: 768px) {
+    .hero {
+        min-height: 350px;
+        padding: 40px 20px;
+    }
+
+    .hero-title {
+        font-size: 36px;
+    }
+
+    .hero-subtitle {
+        font-size: 16px;
+    }
+
+    .hero-edit-btn {
+        width: 45px;
+        height: 45px;
+        bottom: 20px;
+        right: 20px;
+        font-size: 18px;
+    }
+}
+
+/* ===================== CATEGORÍAS ===================== */
+.categories-section {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.section-title {
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 50px;
+    color: #1a1a2e;
+    position: relative;
+    padding-bottom: 20px;
+    font-weight: 700;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary) 0%, var(--green) 100%);
+    border-radius: 2px;
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+}
+
+.category-card {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E72 100%);
+    padding: 25px 15px;
+    border-radius: 12px;
+    text-align: center;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+    border: 2px solid transparent;
+}
+
+.category-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--secondary);
+}
+
+.category-icon {
+    font-size: 42px;
+    margin-bottom: 12px;
+}
+
+.category-card:hover .category-icon {
+    animation: popIcon 0.5s ease;
+}
+
+@keyframes popIcon {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.category-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #000;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.category-card[data-category="quimica"] {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E72 100%);
+}
+
+.category-card[data-category="biologia"] {
+    background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+}
+
+.category-card[data-category="geografia"] {
+    background: linear-gradient(135deg, #FFD93D 0%, #FFA502 100%);
+}
+
+.category-card[data-category="geologia"] {
+    background: linear-gradient(135deg, #A0826D 0%, #7B6E6E 100%);
+}
+
+.category-card[data-category="paleontologia"] {
+    background: linear-gradient(135deg, #C38D5D 0%, #9B6D4A 100%);
+}
+
+.category-card[data-category="astronomia"] {
+    background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+}
+
+.category-card[data-category="tecnologia"] {
+    background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+}
+
+.category-card[data-category="meteorologia"] {
+    background: linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%);
+}
+
+.category-card[data-category="ingenieria"] {
+    background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+}
+
+.category-card[data-category="historia"] {
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+}
+
+.category-card[data-category="medicina"] {
+    background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+}
+
+.category-card[data-category="experimentos"] {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+}
+
+.category-card[data-category="noticias"] {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+.category-card[data-category="datos-curiosos"] {
+    background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+}
+
+@media (max-width: 768px) {
+    .categories-grid {
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 15px;
+    }
+
+    .section-title {
+        font-size: 32px;
+    }
+
+    .category-card {
+        padding: 20px 12px;
+    }
+
+    .category-icon {
+        font-size: 32px;
+    }
+
+    .category-card h3 {
+        font-size: 12px;
+    }
+}
+
+/* ===================== ARTÍCULOS ===================== */
+.articles-section {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.category-articles-section {
+    background: #f8f9fa;
+}
+
+.filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 45px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: var(--light);
+    border: 2px solid var(--secondary);
+    color: #1a1a2e;
+    padding: 10px 22px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 700;
+    font-size: 14px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--secondary);
+    color: #1a1a2e;
+    border-color: var(--secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.article-card {
+    background: var(--light);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    transform: scale(1);
+    display: flex;
+    flex-direction: column;
+}
+
+.article-card:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-lg);
+}
+
+.article-card-large {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.article-card-large .article-image {
+    height: 350px;
+}
+
+.article-card-list {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+}
+
+.article-card-list .article-image {
+    width: 100%;
+    height: 200px;
+}
+
+.article-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.article-card:hover .article-image {
+    transform: scale(1.1);
+}
+
+.article-content {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.article-category {
+    display: inline-block;
+    background: var(--secondary);
+    color: #1a1a2e;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    width: fit-content;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.article-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    flex-grow: 1;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.article-date {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.article-excerpt {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.no-articles {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--light);
+    font-size: 18px;
+    grid-column: 1 / -1;
+    font-family: 'Philosopher', sans-serif;
+    font-weight: 600;
+}
+
+/* ===================== PÁGINA DE ARTÍCULO COMPLETO ===================== */
+.article-container {
+    background: #f8f9fa;
+    padding: 60px 20px;
+    min-height: 100vh;
+}
+
+.article-full {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: var(--shadow-lg);
+}
+
+.article-header {
+    margin-bottom: 40px;
+    border-bottom: 3px solid var(--secondary);
+    padding-bottom: 30px;
+}
+
+.article-category-badge {
+    display: inline-block;
+    background: var(--secondary);
+    color: #1a1a2e;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.article-full h1 {
+    font-size: 48px;
+    color: #1a1a2e;
+    margin-bottom: 20px;
+    line-height: 1.3;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.article-meta {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: #666;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.article-meta p {
+    margin: 0;
+}
+
+.article-meta strong {
+    color: #1a1a2e;
+}
+
+.article-figure {
+    margin: 30px 0;
+    text-align: center;
+}
+
+.article-full-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.image-credit {
+    font-size: 12px;
+    color: #999;
+    margin-top: 10px;
+    font-style: italic;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.article-body {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #333;
+    margin: 30px 0;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.article-body p {
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.article-video-container {
+    margin: 30px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.article-video {
+    width: 100%;
+    height: auto;
+    min-height: 400px;
+}
+
+.article-links,
+.article-sources {
+    background: #f0f4ff;
+    padding: 20px;
+    border-left: 4px solid var(--secondary);
+    border-radius: 6px;
+    margin: 30px 0;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.article-links h4,
+.article-sources strong {
+    color: #1a1a2e;
+    margin-bottom: 10px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.article-links ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.article-links li {
+    margin-bottom: 8px;
+}
+
+.article-links a {
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.article-links a:hover {
+    text-decoration: underline;
+}
+
+.article-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 30px 0;
+}
+
+.tag {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.article-social {
+    border-top: 2px solid var(--border);
+    padding-top: 20px;
+    margin-top: 30px;
+}
+
+.social-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.social-btn {
+    flex: 1;
+    min-width: 140px;
+    padding: 12px;
+    border: 2px solid var(--border);
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #1a1a2e;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.social-btn:hover {
+    border-color: var(--secondary);
+    color: var(--secondary);
+    background: rgba(255, 215, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.rating-section {
+    text-align: center;
+    border-top: 2px solid var(--border);
+    padding: 30px 0;
+    margin: 30px 0;
+}
+
+.rating-section p {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #1a1a2e;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.stars {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.stars i {
+    font-size: 28px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #ddd;
+}
+
+.stars i:hover,
+.stars i.active {
+    color: var(--secondary);
+    transform: scale(1.2);
+}
+
+.comments-section {
+    border-top: 2px solid var(--border);
+    padding-top: 30px;
+    margin-top: 30px;
+}
+
+.comments-section h3 {
+    color: #1a1a2e;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.comment-form input,
+.comment-form textarea {
+    padding: 12px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    font-family: 'Philosopher', sans-serif;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    background: white;
+    color: #1a1a2e;
+}
+
+.comment-form input:focus,
+.comment-form textarea:focus {
+    outline: none;
+    border-color: var(--secondary);
+    background: rgba(255, 215, 0, 0.02);
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.comment {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--green);
+}
+
+.comment-author {
+    font-weight: 700;
+    color: #1a1a2e;
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.comment-text {
+    color: #333;
+    font-size: 14px;
+    line-height: 1.6;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.comment-date {
+    font-size: 12px;
+    color: #999;
+    margin-top: 10px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.article-navigation {
+    display: flex;
+    gap: 15px;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.article-navigation .btn {
+    flex: 1;
+    min-width: 150px;
+}
+
+/* ===================== CATEGORÍA HERO ===================== */
+.category-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.category-hero-content h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.category-hero-content p {
+    font-size: 18px;
+    opacity: 0.9;
+    font-family: 'Philosopher', sans-serif;
+    color: var(--secondary);
+}
+
+/* ===================== RECURSOS HERO ===================== */
+.resources-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.resources-hero-content h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.resources-hero-content p {
+    font-size: 18px;
+    opacity: 0.9;
+    font-family: 'Philosopher', sans-serif;
+    color: var(--secondary);
+}
+
+.resources-section {
+    padding: 60px 20px;
+    background: #f8f9fa;
+}
+
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.resource-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.resource-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.resource-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.resource-content {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.resource-category {
+    display: inline-block;
+    background: var(--cyan);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    width: fit-content;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.resource-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 10px 0;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.resource-date {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 10px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.resource-description {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    flex-grow: 1;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.resource-author {
+    font-size: 12px;
+    color: #999;
+    margin-top: 10px;
+    font-style: italic;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.resource-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+}
+
+.resource-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.resource-modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.resource-modal-content h2 {
+    margin-bottom: 20px;
+    color: #1a1a2e;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.resource-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* ===================== NEWSLETTER ===================== */
+.newsletter-section {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.newsletter-box {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--secondary);
+}
+
+.newsletter-box h3 {
+    color: #1a1a2e;
+    font-size: 28px;
+    margin-bottom: 10px;
+    font-family: 'Philosopher', sans-serif;
+    font-weight: 700;
+}
+
+.newsletter-box p {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 16px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.newsletter-form {
+    display: flex;
+    gap: 10px;
+}
+
+.newsletter-form input {
+    flex: 1;
+    padding: 14px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    background: white;
+    color: #1a1a2e;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.newsletter-form input:focus {
+    outline: none;
+    border-color: var(--secondary);
+}
+
+.newsletter-form .btn {
+    padding: 14px 30px;
+}
+
+#subscriptionMessage {
+    padding: 15px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-family: 'Philosopher', sans-serif;
+}
+
+#subscriptionMessage.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+/* ===================== FOOTER ===================== */
+.footer {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    padding: 60px 20px 20px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-section h4 {
+    margin-bottom: 15px;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--secondary);
+    font-family: 'Philosopher', sans-serif;
+}
+
+.footer-section p {
+    font-size: 14px;
+    opacity: 0.85;
+    line-height: 1.6;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 12px;
+}
+
+.footer-section a {
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    opacity: 0.8;
+    font-size: 14px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.footer-section a:hover {
+    color: var(--secondary);
+    opacity: 1;
+    transform: translateX(5px);
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.social-link {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(255, 215, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    color: var(--secondary);
+    text-decoration: none;
+    font-size: 18px;
+    border: 2px solid transparent;
+}
+
+.social-link:hover {
+    background: var(--secondary);
+    color: #1a1a2e;
+    transform: translateY(-5px);
+    border-color: var(--secondary);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 13px;
+    opacity: 0.75;
+    font-family: 'Philosopher', sans-serif;
+    font-weight: 600;
+}
+
+/* ===================== CONTACT PAGE ===================== */
+.contact-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.contact-hero-content h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.contact-hero-content p {
+    font-size: 18px;
+    color: var(--secondary);
+    font-family: 'Philosopher', sans-serif;
+}
+
+.contact-container {
+    background: #f8f9fa;
+    padding: 60px 20px;
+    min-height: 100vh;
+}
+
+.contact-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.contact-form-section {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.contact-form-section h2 {
+    color: #1a1a2e;
+    margin-bottom: 25px;
+    font-size: 24px;
+    font-weight: 700;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form-group label {
+    font-weight: 700;
+    color: #1a1a2e;
+    font-size: 14px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 12px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    font-family: 'Philosopher', sans-serif;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: white;
+    color: #1a1a2e;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--secondary);
+    background: rgba(255, 215, 0, 0.03);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+}
+
+.phone-input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.country-code-select {
+    width: 140px;
+    padding: 12px !important;
+    border: 2px solid var(--border) !important;
+}
+
+.contact-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.contact-info-section h2 {
+    color: #1a1a2e;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.contact-info-item {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    border-left: 4px solid var(--secondary);
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+}
+
+.contact-info-item:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.contact-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a1a2e;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.contact-details h3 {
+    color: #1a1a2e;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.contact-details p {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.contact-link {
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13px;
+    transition: color 0.3s ease;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.contact-link:hover {
+    color: var(--secondary-light);
+}
+
+.contact-socials {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.contact-socials a {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--secondary);
+    color: #1a1a2e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.contact-socials a:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(255, 215, 0, 0.3);
+    background: var(--secondary-light);
+}
+
+.contact-edit {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.contact-edit h2 {
+    color: #1a1a2e;
+    margin-bottom: 25px;
+    font-size: 24px;
+    font-weight: 700;
+    font-family: 'Philosopher', sans-serif;
+}
+
+/* ===================== BOTONES GENERALES ===================== */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+.btn-primary {
+    background: var(--secondary);
+    color: #1a1a2e;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+    background: var(--secondary-light);
+}
+
+.btn-secondary {
+    background: #e0e0e0;
+    color: #1a1a2e;
+}
+
+.btn-secondary:hover {
+    background: #d0d0d0;
+}
+
+.btn-small {
+    padding: 8px 12px;
+    font-size: 12px;
+}
+
+.btn-cyan {
+    background: var(--cyan);
+    color: white;
+}
+
+.btn-cyan:hover {
+    background: var(--cyan-light);
+}
+
+.btn-green {
+    background: var(--green);
+    color: white;
+}
+
+.btn-green:hover {
+    background: var(--green-light);
+}
+
+.btn-edit {
+    background: var(--secondary);
+    color: #1a1a2e;
+    padding: 6px 12px;
+    font-size: 12px;
+    width: fit-content;
+}
+
+.btn-delete {
+    background: #DC2626;
+    color: white;
+    padding: 6px 12px;
+    font-size: 12px;
+    width: fit-content;
+}
+
+.btn-delete:hover {
+    background: #b71c1c;
+}
+
+.btn-yellow {
+    background: var(--secondary);
+    color: #1a1a2e;
+}
+
+.btn-red {
+    background: #DC2626;
+    color: white;
+}
+
+/* ===================== FORMULARIOS ===================== */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form-group label {
+    font-weight: 700;
+    color: #1a1a2e;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 12px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    font-family: 'Philosopher', sans-serif;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: white;
+    color: #1a1a2e;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--secondary);
+    background: rgba(255, 215, 0, 0.03);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.social-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.social-input-group select,
+.social-input-group input {
+    padding: 10px !important;
+    border: 2px solid var(--border) !important;
+}
+
+.social-input-group select {
+    flex: 0 0 150px;
+    font-size: 13px;
+}
+
+.social-input-group input {
+    flex: 1;
+    font-size: 13px;
+}
+
+/* ===================== ALERTAS ===================== */
+.alert {
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    animation: slideDown 0.3s ease;
+    border-left: 4px solid;
+    font-weight: 700;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border-left-color: #28a745;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border-left-color: #d32f2f;
+}
+
+.alert-warning {
+    background: #fff3cd;
+    color: #856404;
+    border-left-color: #ffc107;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 768px) {
+    .contact-wrapper,
+    .admin-wrapper {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .article-card-large {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+
+    .article-card-list {
+        grid-column: span 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .article-card-list .article-image {
+        width: 100%;
+    }
+
+    .hero-title {
+        font-size: 32px;
+    }
+
+    .section-title {
+        font-size: 28px;
+    }
+
+    .modal-body {
+        grid-template-columns: 1fr;
+    }
+
+    .phone-input-group {
+        flex-direction: column;
+    }
+
+    .country-code-select {
+        width: 100% !important;
+    }
+
+    .newsletter-form {
+        flex-direction: column;
+    }
+
+    .contact-info-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 24px;
+    }
+
+    .section-title {
+        font-size: 22px;
+    }
+
+    .articles-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .filter-buttons {
+        flex-direction: column;
+    }
+
+    .filter-btn {
+        width: 100%;
+    }
+
+    .social-actions {
+        flex-direction: column;
+    }
+
+    .social-btn {
+        width: 100%;
+    }
+
+    .article-full {
+        padding: 20px;
+    }
+
+    .contact-form-section,
+    .contact-info-section {
+        padding: 20px;
+    }
+}
+
+/* ===================== SCROLLBAR ===================== */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-light);
+}
+
+/* ===================== UTILIDADES ===================== */
+.hidden {
+    display: none !important;
+}
+
+.fade-in {
+    animation: fadeInUp 0.5s ease;
+}
+
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--secondary);
+    color: #1a1a2e;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 26px;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.modal-close:hover {
+    background: var(--secondary-light);
+    transform: rotate(90deg);
+}

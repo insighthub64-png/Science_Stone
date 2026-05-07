@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science Stone - Explorando la Ciencia</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- SPLASH SCREEN / LOADER -->
+    <div id="splashScreen" class="splash-screen">
+        <div class="splash-content">
+            <div class="logo-loader">
+                <div class="logo-circle">
+                    <span class="logo-text">Science Stone</span>
+                </div>
+                <div class="loader-ring"></div>
+            </div>
+            <p class="loader-text">Cargando...</p>
+        </div>
+    </div>
+
+    <!-- HEADER / NAVBAR -->
+    <header class="header">
+        <div class="navbar">
+            <div class="nav-container">
+                <!-- LOGO -->
+                <div class="logo">
+                    <div class="logo-animated">
+                        <span class="logo-icon">⚛️</span>
+                        <span class="logo-text">Science Stone</span>
+                    </div>
+                    <p class="tagline">Un mundo guiado por la ciencia</p>
+                </div>
+
+                <!-- MENÚ HAMBURGUESA MÓVIL -->
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <!-- NAVEGACIÓN PRINCIPAL -->
+                <nav class="nav-menu" id="navMenu">
+                    <a href="#inicio" class="nav-link active">Inicio</a>
+                    <a href="#articulos" class="nav-link">Artículos</a>
+                    <a href="resources.html" class="nav-link">Recursos</a>
+                    
+                    <div class="nav-dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">Más <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="author.html" class="dropdown-item">Sobre el Autor</a>
+                            <a href="contact.html" class="dropdown-item">Contacto</a>
+                        </div>
+                    </div>
+                    
+                    <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;" title="Panel de administración">
+                        <i class="fas fa-cog"></i> Admin
+                    </a>
+                </nav>
+
+                <!-- BUSCADOR -->
+                <div class="search-container">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- BARRA DE BÚSQUEDA EXPANDIDA -->
+            <div class="search-bar" id="searchBar">
+                <input type="text" id="searchInput" placeholder="Buscar artículos...">
+                <button class="close-search" id="closeSearch">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION CON EDITOR ADMIN -->
+    <section class="hero" id="inicio">
+        <div class="hero-background" id="heroBackground">
+            <img id="heroImage" src="https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=1200&q=80" alt="Fondo" class="earth-image" style="display:block;">
+            <video id="heroVideo" class="hero-video" autoplay muted loop style="display:none;"></video>
+            <div id="heroSolidColor" class="hero-solid-color" style="display:none;"></div>
+            <div class="hero-animations" id="heroAnimations"></div>
+            <div class="earth-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">Bienvenido a Science Stone</h1>
+            <p class="hero-subtitle">Un mundo guiado por la ciencia</p>
+            <a href="#articulos" class="hero-btn">Ver Artículos</a>
+        </div>
+        <button class="hero-edit-btn" id="heroEditBtn" style="display:none;" title="Editar fondo del hero">
+            <i class="fas fa-edit"></i>
+        </button>
+    </section>
+
+    <!-- PANEL DE EDICIÓN DEL HERO (Oculto inicialmente) -->
+    <div id="heroEditPanel" class="hero-edit-panel" style="display:none;">
+        <div class="hero-edit-content">
+            <h3>Editar Sección Hero</h3>
+            <div class="hero-edit-options">
+                <div class="option-group">
+                    <label>
+                        <input type="radio" name="heroType" value="image" checked>
+                        Imagen de Fondo
+                    </label>
+                    <div id="imageOption" class="hero-option-content">
+                        <input type="text" id="heroImageUrl" placeholder="URL de la imagen" class="hero-input">
+                        <input type="file" id="heroImageFile" accept="image/*" class="hero-input">
+                        <button class="btn btn-small btn-cyan" onclick="updateHeroImage()">Actualizar Imagen</button>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <label>
+                        <input type="radio" name="heroType" value="video">
+                        Video de Fondo
+                    </label>
+                    <div id="videoOption" class="hero-option-content" style="display:none;">
+                        <input type="text" id="heroVideoUrl" placeholder="URL del video" class="hero-input">
+                        <input type="file" id="heroVideoFile" accept="video/*" class="hero-input">
+                        <button class="btn btn-small btn-cyan" onclick="updateHeroVideo()">Actualizar Video</button>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <label>
+                        <input type="radio" name="heroType" value="color">
+                        Color Sólido
+                    </label>
+                    <div id="colorOption" class="hero-option-content" style="display:none;">
+                        <input type="color" id="heroColor" class="hero-input">
+                        <button class="btn btn-small btn-cyan" onclick="updateHeroColor()">Actualizar Color</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <label>Agregar Animación</label>
+                <select id="heroAnimation" class="hero-input">
+                    <option value="none">Ninguna</option>
+                    <option value="bubbles">Burbujas Rebotando</option>
+                    <option value="gears">Engranajes Girando</option>
+                    <option value="stars">Estrellas Parpadeantes</option>
+                    <option value="particles">Partículas Flotantes</option>
+                </select>
+                <button class="btn btn-small btn-green" onclick="updateHeroAnimation()">Aplicar Animación</button>
+            </div>
+
+            <button class="btn btn-secondary btn-small" onclick="closeHeroEditPanel()">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DE CATEGORÍAS -->
+    <section class="categories-section">
+        <div class="container">
+            <h2 class="section-title">Categorías</h2>
+            <div class="categories-grid" id="categoriesGrid">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN DE ARTÍCULOS -->
+    <section class="articles-section" id="articulos">
+        <div class="container">
+            <h2 class="section-title" style="color: white;">Artículos</h2>
+            
+            <!-- BOTÓN FILTRAR (Solo mostrar "Todos") -->
+            <div class="filter-buttons" id="filterButtons" style="justify-content: center; margin-bottom: 40px;">
+                <button class="filter-btn active" data-filter="todos">Todos los Artículos</button>
+            </div>
+
+            <!-- GRID DE ARTÍCULOS (MASÓNICO CON VARIEDAD) -->
+            <div class="articles-grid" id="articlesGrid">
+                <!-- Se llena con JavaScript -->
+            </div>
+
+            <!-- MENSAJE SIN ARTÍCULOS -->
+            <div id="noArticles" class="no-articles" style="display:none;">
+                <p>No hay artículos publicados aún.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN NEWSLETTER -->
+    <section class="newsletter-section">
+        <div class="container">
+            <div class="newsletter-box">
+                <h3>Suscríbete a nuestro Newsletter</h3>
+                <p>Recibe los mejores artículos científicos directamente en tu correo</p>
+                <div class="newsletter-form">
+                    <input type="email" id="newsletterEmail" placeholder="Tu correo electrónico" required>
+                    <button class="btn btn-primary" id="subscribeBtn">Suscribirse</button>
+                </div>
+                <div id="subscriptionMessage" style="display:none; margin-top: 10px;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Science Stone</h4>
+                    <p>Tu fuente de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#articulos">Artículos</a></li>
+                        <li><a href="resources.html">Recursos</a></li>
+                        <li><a href="author.html">Sobre el Autor</a></li>
+                        <li><a href="contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Sígueme</h4>
+                    <div class="social-links" id="footerSocial">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Science Stone. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

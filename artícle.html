@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artículo - Science Stone</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- HEADER / NAVBAR -->
+    <header class="header">
+        <div class="navbar">
+            <div class="nav-container">
+                <!-- LOGO -->
+                <div class="logo">
+                    <div class="logo-animated">
+                        <span class="logo-icon">⚛️</span>
+                        <span class="logo-text">Science Stone</span>
+                    </div>
+                    <p class="tagline">Un mundo guiado por la ciencia</p>
+                </div>
+
+                <!-- MENÚ HAMBURGUESA MÓVIL -->
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <!-- NAVEGACIÓN PRINCIPAL -->
+                <nav class="nav-menu" id="navMenu">
+                    <a href="index.html" class="nav-link">Inicio</a>
+                    <a href="index.html#articulos" class="nav-link">Artículos</a>
+                    <a href="resources.html" class="nav-link">Recursos</a>
+                    
+                    <div class="nav-dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">Más <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="author.html" class="dropdown-item">Sobre el Autor</a>
+                            <a href="contact.html" class="dropdown-item">Contacto</a>
+                        </div>
+                    </div>
+                    
+                    <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;">
+                        <i class="fas fa-cog"></i> Admin
+                    </a>
+                </nav>
+
+                <!-- BUSCADOR -->
+                <div class="search-container">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- BARRA DE BÚSQUEDA EXPANDIDA -->
+            <div class="search-bar" id="searchBar">
+                <input type="text" id="searchInput" placeholder="Buscar artículos...">
+                <button class="close-search" id="closeSearch">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ARTÍCULO COMPLETO -->
+    <main class="article-container">
+        <article class="article-full" id="articleContent">
+            <!-- Se llena dinámicamente -->
+        </article>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Science Stone</h4>
+                    <p>Tu fuente de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="index.html#articulos">Artículos</a></li>
+                        <li><a href="resources.html">Recursos</a></li>
+                        <li><a href="author.html">Sobre el Autor</a></li>
+                        <li><a href="contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Sígueme</h4>
+                    <div class="social-links" id="footerSocial">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Science Stone. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="article-script.js"></script>
+</body>
+</html>

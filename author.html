@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre el Autor - Science Stone</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- HEADER / NAVBAR -->
+    <header class="header">
+        <div class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <div class="logo-animated">
+                        <span class="logo-icon">⚛️</span>
+                        <span class="logo-text">Science Stone</span>
+                    </div>
+                    <p class="tagline">Un mundo guiado por la ciencia</p>
+                </div>
+
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <nav class="nav-menu" id="navMenu">
+                    <a href="index.html" class="nav-link">Inicio</a>
+                    <a href="index.html#articulos" class="nav-link">Artículos</a>
+                    <a href="resources.html" class="nav-link">Recursos</a>
+                    
+                    <div class="nav-dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">Más <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-menu">
+                            <a href="author.html" class="dropdown-item active">Sobre el Autor</a>
+                            <a href="contact.html" class="dropdown-item">Contacto</a>
+                        </div>
+                    </div>
+                    
+                    <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;">
+                        <i class="fas fa-cog"></i> Admin
+                    </a>
+                </nav>
+
+                <div class="search-container">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="search-bar" id="searchBar">
+                <input type="text" id="searchInput" placeholder="Buscar artículos...">
+                <button class="close-search" id="closeSearch">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="author-hero">
+        <div class="author-hero-content">
+            <h1>Sobre el Autor</h1>
+            <p>Conoce más acerca de quien está detrás de Science Stone</p>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main class="author-container">
+        <div class="container">
+            <!-- VISTA DEL PERFIL DEL AUTOR -->
+            <div class="author-view">
+                <section class="author-profile">
+                    <!-- Se llena dinámicamente con JavaScript -->
+                </section>
+
+                <section class="author-details">
+                    <!-- Se llena dinámicamente con JavaScript -->
+                </section>
+
+                <section class="author-articles">
+                    <h2>Mis Artículos</h2>
+                    <div class="articles-list">
+                        <!-- Se llena dinámicamente con JavaScript -->
+                    </div>
+                </section>
+
+                <button class="btn btn-primary" id="editAuthorBtn" style="display:none; margin-top: 30px;">
+                    <i class="fas fa-edit"></i> Editar Perfil
+                </button>
+            </div>
+
+            <!-- PANEL DE EDICIÓN DEL PERFIL (Solo Admin) -->
+            <div class="author-edit" style="display:none;">
+                <h2>Editar Perfil del Autor</h2>
+                
+                <form id="authorEditForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="editAuthorName">Nombre Completo *</label>
+                        <input type="text" id="editAuthorName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editAuthorTitle">Título/Profesión</label>
+                        <input type="text" id="editAuthorTitle" placeholder="Ej: Científico, Educador, etc.">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editAuthorBio">Biografía</label>
+                        <textarea id="editAuthorBio" rows="5" placeholder="Cuéntanos sobre ti..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editAuthorImage">URL de tu Foto de Perfil</label>
+                        <input type="url" id="editAuthorImage" placeholder="https://...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editAuthorEmail">Email</label>
+                        <input type="email" id="editAuthorEmail">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editAuthorLocation">Ubicación</label>
+                        <input type="text" id="editAuthorLocation" placeholder="Tu ciudad, país">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editAuthorWebsite">Sitio Web (Opcional)</label>
+                        <input type="url" id="editAuthorWebsite" placeholder="https://tuwebsite.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Redes Sociales</label>
+                        <div id="authorSocialsContainer">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-small" id="addAuthorSocialBtn">
+                            <i class="fas fa-plus"></i> Agregar Red Social
+                        </button>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Guardar Cambios
+                        </button>
+                        <button type="button" id="cancelAuthorEditBtn" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Science Stone</h4>
+                    <p>Tu fuente de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="index.html#articulos">Artículos</a></li>
+                        <li><a href="resources.html">Recursos</a></li>
+                        <li><a href="author.html">Sobre el Autor</a></li>
+                        <li><a href="contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Sígueme</h4>
+                    <div class="social-links" id="footerSocial">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Science Stone. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="author.js"></script>
+</body>
+</html>

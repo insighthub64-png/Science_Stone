@@ -12,7 +12,6 @@
     <header class="header">
         <div class="navbar">
             <div class="nav-container">
-                <!-- LOGO -->
                 <div class="logo">
                     <div class="logo-animated">
                         <span class="logo-icon">⚛️</span>
@@ -21,33 +20,24 @@
                     <p class="tagline">Un mundo guiado por la ciencia</p>
                 </div>
 
-                <!-- MENÚ HAMBURGUESA MÓVIL -->
                 <div class="hamburger" id="hamburger">
                     <span></span>
                     <span></span>
                     <span></span>
                 </div>
 
-                <!-- NAVEGACIÓN PRINCIPAL -->
                 <nav class="nav-menu" id="navMenu">
                     <a href="index.html" class="nav-link">Inicio</a>
                     <a href="index.html#articulos" class="nav-link">Artículos</a>
                     <a href="resources.html" class="nav-link">Recursos</a>
-                    
-                    <div class="nav-dropdown">
-                        <a href="#" class="nav-link dropdown-toggle">Más <i class="fas fa-chevron-down"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="author.html" class="dropdown-item">Sobre el Autor</a>
-                            <a href="contact.html" class="dropdown-item">Contacto</a>
-                        </div>
-                    </div>
+                    <a href="author.html" class="nav-link">Sobre el Autor</a>
+                    <a href="contact.html" class="nav-link">Contacto</a>
                     
                     <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;">
                         <i class="fas fa-cog"></i> Admin
                     </a>
                 </nav>
 
-                <!-- BUSCADOR -->
                 <div class="search-container">
                     <button class="search-btn" id="searchBtn">
                         <i class="fas fa-search"></i>
@@ -55,7 +45,6 @@
                 </div>
             </div>
 
-            <!-- BARRA DE BÚSQUEDA EXPANDIDA -->
             <div class="search-bar" id="searchBar">
                 <input type="text" id="searchInput" placeholder="Buscar artículos...">
                 <button class="close-search" id="closeSearch">
@@ -66,7 +55,7 @@
     </header>
 
     <!-- HERO SECTION -->
-    <section class="category-hero">
+    <section class="category-hero" id="categoryHero">
         <div class="category-hero-content">
             <h1 id="categoryTitle">Categoría</h1>
             <p id="categoryDescription">Artículos de esta categoría</p>

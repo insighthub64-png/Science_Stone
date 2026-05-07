@@ -3,21 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Science Stone - Explorando la Ciencia</title>
+    <title>Science Stone - Blog de Ciencia</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- SPLASH SCREEN / LOADER -->
+    <!-- SPLASH SCREEN -->
     <div id="splashScreen" class="splash-screen">
         <div class="splash-content">
-            <div class="logo-loader">
-                <div class="logo-circle">
-                    <span class="logo-text">Science Stone</span>
-                </div>
-                <div class="loader-ring"></div>
-            </div>
-            <p class="loader-text">Cargando...</p>
+            <div class="splash-logo">⚛️</div>
+            <h1>Science Stone</h1>
+            <p>Un mundo guiado por la ciencia</p>
+            <div class="splash-loader"></div>
         </div>
     </div>
 
@@ -25,7 +22,6 @@
     <header class="header">
         <div class="navbar">
             <div class="nav-container">
-                <!-- LOGO -->
                 <div class="logo">
                     <div class="logo-animated">
                         <span class="logo-icon">⚛️</span>
@@ -34,33 +30,24 @@
                     <p class="tagline">Un mundo guiado por la ciencia</p>
                 </div>
 
-                <!-- MENÚ HAMBURGUESA MÓVIL -->
                 <div class="hamburger" id="hamburger">
                     <span></span>
                     <span></span>
                     <span></span>
                 </div>
 
-                <!-- NAVEGACIÓN PRINCIPAL -->
                 <nav class="nav-menu" id="navMenu">
-                    <a href="#inicio" class="nav-link active">Inicio</a>
-                    <a href="#articulos" class="nav-link">Artículos</a>
+                    <a href="index.html" class="nav-link active">Inicio</a>
+                    <a href="index.html#articulos" class="nav-link">Artículos</a>
                     <a href="resources.html" class="nav-link">Recursos</a>
+                    <a href="author.html" class="nav-link">Sobre el Autor</a>
+                    <a href="contact.html" class="nav-link">Contacto</a>
                     
-                    <div class="nav-dropdown">
-                        <a href="#" class="nav-link dropdown-toggle">Más <i class="fas fa-chevron-down"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="author.html" class="dropdown-item">Sobre el Autor</a>
-                            <a href="contact.html" class="dropdown-item">Contacto</a>
-                        </div>
-                    </div>
-                    
-                    <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;" title="Panel de administración">
+                    <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;">
                         <i class="fas fa-cog"></i> Admin
                     </a>
                 </nav>
 
-                <!-- BUSCADOR -->
                 <div class="search-container">
                     <button class="search-btn" id="searchBtn">
                         <i class="fas fa-search"></i>
@@ -68,7 +55,6 @@
                 </div>
             </div>
 
-            <!-- BARRA DE BÚSQUEDA EXPANDIDA -->
             <div class="search-bar" id="searchBar">
                 <input type="text" id="searchInput" placeholder="Buscar artículos...">
                 <button class="close-search" id="closeSearch">
@@ -78,86 +64,71 @@
         </div>
     </header>
 
-    <!-- HERO SECTION CON EDITOR ADMIN -->
-    <section class="hero" id="inicio">
-        <div class="hero-background" id="heroBackground">
-            <img id="heroImage" src="https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=1200&q=80" alt="Fondo" class="earth-image" style="display:block;">
-            <video id="heroVideo" class="hero-video" autoplay muted loop style="display:none;"></video>
-            <div id="heroSolidColor" class="hero-solid-color" style="display:none;"></div>
-            <div class="hero-animations" id="heroAnimations"></div>
-            <div class="earth-overlay"></div>
-        </div>
+    <!-- HERO SECTION -->
+    <section class="hero" id="heroSection">
+        <div id="heroImage" style="position: absolute; width: 100%; height: 100%; object-fit: cover; background-size: cover; background-position: center;"></div>
+        <div id="heroVideo" style="position: absolute; width: 100%; height: 100%; object-fit: cover; display: none;"></div>
+        <div id="heroSolidColor" style="position: absolute; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: none;"></div>
+        <div id="heroAnimations" style="position: absolute; width: 100%; height: 100%;"></div>
+
         <div class="hero-content">
-            <h1 class="hero-title">Bienvenido a Science Stone</h1>
-            <p class="hero-subtitle">Un mundo guiado por la ciencia</p>
-            <a href="#articulos" class="hero-btn">Ver Artículos</a>
+            <h1>¡Bienvenido a Science Stone!</h1>
+            <p>Descubre los misterios del universo a través de la ciencia</p>
+            <a href="#articulos" class="btn btn-primary">Explorar Artículos</a>
         </div>
-        <button class="hero-edit-btn" id="heroEditBtn" style="display:none;" title="Editar fondo del hero">
-            <i class="fas fa-edit"></i>
+
+        <button class="btn btn-yellow" id="heroEditBtn" style="position: absolute; top: 20px; right: 20px; display: none;">
+            <i class="fas fa-edit"></i> Editar Hero
         </button>
+
+        <!-- PANEL DE EDICIÓN DEL HERO (Solo Admin) -->
+        <div id="heroEditPanel" style="display: none; position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; width: 300px;">
+            <h3 style="margin-top: 0;">Editar Sección Hero</h3>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Imagen de Fondo</label>
+                <input type="url" id="heroImageUrl" placeholder="URL de imagen" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                <input type="file" id="heroImageFile" accept="image/*" style="width: 100%; margin-top: 8px;">
+                <button onclick="updateHeroImage()" class="btn btn-small btn-cyan" style="width: 100%; margin-top: 8px;">Actualizar Imagen</button>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Video de Fondo</label>
+                <input type="url" id="heroVideoUrl" placeholder="URL de video" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                <input type="file" id="heroVideoFile" accept="video/*" style="width: 100%; margin-top: 8px;">
+                <button onclick="updateHeroVideo()" class="btn btn-small btn-cyan" style="width: 100%; margin-top: 8px;">Actualizar Video</button>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Color Sólido</label>
+                <input type="color" id="heroColor" value="#667eea" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; cursor: pointer;">
+                <button onclick="updateHeroColor()" class="btn btn-small btn-cyan" style="width: 100%; margin-top: 8px;">Aplicar Color</button>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Animación</label>
+                <select id="heroAnimation" onchange="updateHeroAnimation()" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                    <option value="">Sin animación</option>
+                    <option value="bubbles">Burbujas</option>
+                    <option value="gears">Engranajes</option>
+                    <option value="stars">Estrellas</option>
+                    <option value="particles">Partículas</option>
+                </select>
+            </div>
+
+            <button onclick="closeHeroEditPanel()" class="btn btn-secondary" style="width: 100%;">Cerrar</button>
+        </div>
     </section>
 
-    <!-- PANEL DE EDICIÓN DEL HERO (Oculto inicialmente) -->
-    <div id="heroEditPanel" class="hero-edit-panel" style="display:none;">
-        <div class="hero-edit-content">
-            <h3>Editar Sección Hero</h3>
-            <div class="hero-edit-options">
-                <div class="option-group">
-                    <label>
-                        <input type="radio" name="heroType" value="image" checked>
-                        Imagen de Fondo
-                    </label>
-                    <div id="imageOption" class="hero-option-content">
-                        <input type="text" id="heroImageUrl" placeholder="URL de la imagen" class="hero-input">
-                        <input type="file" id="heroImageFile" accept="image/*" class="hero-input">
-                        <button class="btn btn-small btn-cyan" onclick="updateHeroImage()">Actualizar Imagen</button>
-                    </div>
-                </div>
-
-                <div class="option-group">
-                    <label>
-                        <input type="radio" name="heroType" value="video">
-                        Video de Fondo
-                    </label>
-                    <div id="videoOption" class="hero-option-content" style="display:none;">
-                        <input type="text" id="heroVideoUrl" placeholder="URL del video" class="hero-input">
-                        <input type="file" id="heroVideoFile" accept="video/*" class="hero-input">
-                        <button class="btn btn-small btn-cyan" onclick="updateHeroVideo()">Actualizar Video</button>
-                    </div>
-                </div>
-
-                <div class="option-group">
-                    <label>
-                        <input type="radio" name="heroType" value="color">
-                        Color Sólido
-                    </label>
-                    <div id="colorOption" class="hero-option-content" style="display:none;">
-                        <input type="color" id="heroColor" class="hero-input">
-                        <button class="btn btn-small btn-cyan" onclick="updateHeroColor()">Actualizar Color</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="option-group">
-                <label>Agregar Animación</label>
-                <select id="heroAnimation" class="hero-input">
-                    <option value="none">Ninguna</option>
-                    <option value="bubbles">Burbujas Rebotando</option>
-                    <option value="gears">Engranajes Girando</option>
-                    <option value="stars">Estrellas Parpadeantes</option>
-                    <option value="particles">Partículas Flotantes</option>
-                </select>
-                <button class="btn btn-small btn-green" onclick="updateHeroAnimation()">Aplicar Animación</button>
-            </div>
-
-            <button class="btn btn-secondary btn-small" onclick="closeHeroEditPanel()">Cerrar</button>
-        </div>
-    </div>
+    <!-- SECCIÓN DE INTRODUCCIÓN -->
+    <section class="introduction-section">
+        <!-- Se llena dinámicamente con JavaScript -->
+    </section>
 
     <!-- SECCIÓN DE CATEGORÍAS -->
     <section class="categories-section">
         <div class="container">
-            <h2 class="section-title">Categorías</h2>
+            <h2>Explora por Categoría</h2>
             <div class="categories-grid" id="categoriesGrid">
                 <!-- Se llena dinámicamente -->
             </div>
@@ -167,14 +138,14 @@
     <!-- SECCIÓN DE ARTÍCULOS -->
     <section class="articles-section" id="articulos">
         <div class="container">
-            <h2 class="section-title" style="color: white;">Artículos</h2>
+            <h2>Artículos Destacados</h2>
             
-            <!-- BOTÓN FILTRAR (Solo mostrar "Todos") -->
-            <div class="filter-buttons" id="filterButtons" style="justify-content: center; margin-bottom: 40px;">
-                <button class="filter-btn active" data-filter="todos">Todos los Artículos</button>
+            <!-- BOTONES DE FILTRO -->
+            <div class="filter-buttons" id="filterButtons">
+                <!-- Se llena dinámicamente -->
             </div>
 
-            <!-- GRID DE ARTÍCULOS (MASÓNICO CON VARIEDAD) -->
+            <!-- GRID DE ARTÍCULOS -->
             <div class="articles-grid" id="articlesGrid">
                 <!-- Se llena con JavaScript -->
             </div>
@@ -186,17 +157,17 @@
         </div>
     </section>
 
-    <!-- SECCIÓN NEWSLETTER -->
+    <!-- SECCIÓN DE NEWSLETTER -->
     <section class="newsletter-section">
         <div class="container">
-            <div class="newsletter-box">
-                <h3>Suscríbete a nuestro Newsletter</h3>
-                <p>Recibe los mejores artículos científicos directamente en tu correo</p>
+            <div class="newsletter-content">
+                <h2>Suscríbete a Nuestro Newsletter</h2>
+                <p>Recibe las últimas noticias y artículos directamente en tu correo</p>
                 <div class="newsletter-form">
                     <input type="email" id="newsletterEmail" placeholder="Tu correo electrónico" required>
                     <button class="btn btn-primary" id="subscribeBtn">Suscribirse</button>
                 </div>
-                <div id="subscriptionMessage" style="display:none; margin-top: 10px;"></div>
+                <div id="subscriptionMessage" style="display:none; margin-top: 15px; text-align: center; font-weight: bold;"></div>
             </div>
         </div>
     </section>
@@ -212,8 +183,8 @@
                 <div class="footer-section">
                     <h4>Enlaces Rápidos</h4>
                     <ul>
-                        <li><a href="#inicio">Inicio</a></li>
-                        <li><a href="#articulos">Artículos</a></li>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="index.html#articulos">Artículos</a></li>
                         <li><a href="resources.html">Recursos</a></li>
                         <li><a href="author.html">Sobre el Autor</a></li>
                         <li><a href="contact.html">Contacto</a></li>

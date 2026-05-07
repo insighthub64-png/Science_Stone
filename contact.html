@@ -30,14 +30,8 @@
                     <a href="index.html" class="nav-link">Inicio</a>
                     <a href="index.html#articulos" class="nav-link">Artículos</a>
                     <a href="resources.html" class="nav-link">Recursos</a>
-                    
-                    <div class="nav-dropdown">
-                        <a href="#" class="nav-link dropdown-toggle">Más <i class="fas fa-chevron-down"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="author.html" class="dropdown-item">Sobre el Autor</a>
-                            <a href="contact.html" class="dropdown-item active">Contacto</a>
-                        </div>
-                    </div>
+                    <a href="author.html" class="nav-link">Sobre el Autor</a>
+                    <a href="contact.html" class="nav-link active">Contacto</a>
                     
                     <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;" title="Panel de administración">
                         <i class="fas fa-cog"></i> Admin
@@ -91,11 +85,17 @@
                             <label for="contactPhone">Teléfono (Opcional)</label>
                             <div class="phone-input-group">
                                 <select id="contactCountry" class="country-code-select">
+                                    <option value="+502">🇬🇹 +502 (Guatemala)</option>
+                                    <option value="+503">🇸🇻 +503 (El Salvador)</option>
+                                    <option value="+504">🇭🇳 +504 (Honduras)</option>
+                                    <option value="+505">🇳🇮 +505 (Nicaragua)</option>
+                                    <option value="+506">🇨🇷 +506 (Costa Rica)</option>
+                                    <option value="+507">🇵🇦 +507 (Panamá)</option>
                                     <option value="+1">🇺🇸 +1 (USA)</option>
+                                    <option value="+1">🇨🇦 +1 (Canadá)</option>
+                                    <option value="+52">🇲🇽 +52 (México)</option>
                                     <option value="+34">🇪🇸 +34 (España)</option>
                                     <option value="+55">🇧🇷 +55 (Brasil)</option>
-                                    <option value="+52">🇲🇽 +52 (México)</option>
-                                    <option value="+502">🇬🇹 +502 (Guatemala)</option>
                                     <option value="+51">🇵🇪 +51 (Perú)</option>
                                     <option value="+56">🇨🇱 +56 (Chile)</option>
                                     <option value="+57">🇨🇴 +57 (Colombia)</option>
@@ -104,6 +104,12 @@
                                     <option value="+33">🇫🇷 +33 (Francia)</option>
                                     <option value="+49">🇩🇪 +49 (Alemania)</option>
                                     <option value="+44">🇬🇧 +44 (Reino Unido)</option>
+                                    <option value="+64">🇳🇿 +64 (Nueva Zelanda)</option>
+                                    <option value="+61">🇦🇺 +61 (Australia)</option>
+                                    <option value="+81">🇯🇵 +81 (Japón)</option>
+                                    <option value="+86">🇨🇳 +86 (China)</option>
+                                    <option value="+91">🇮🇳 +91 (India)</option>
+                                    <option value="+27">🇿🇦 +27 (Sudáfrica)</option>
                                 </select>
                                 <input type="tel" id="contactPhoneNumber" placeholder="123456789" maxlength="15">
                             </div>
@@ -211,14 +217,30 @@
                         <div class="phone-input-group">
                             <select id="editContactCountry" class="country-code-select">
                                 <option value="+502" selected>🇬🇹 +502 (Guatemala)</option>
+                                <option value="+503">🇸🇻 +503 (El Salvador)</option>
+                                <option value="+504">🇭🇳 +504 (Honduras)</option>
+                                <option value="+505">🇳🇮 +505 (Nicaragua)</option>
+                                <option value="+506">🇨🇷 +506 (Costa Rica)</option>
+                                <option value="+507">🇵🇦 +507 (Panamá)</option>
                                 <option value="+1">🇺🇸 +1 (USA)</option>
+                                <option value="+1">🇨🇦 +1 (Canadá)</option>
+                                <option value="+52">🇲🇽 +52 (México)</option>
                                 <option value="+34">🇪🇸 +34 (España)</option>
                                 <option value="+55">🇧🇷 +55 (Brasil)</option>
-                                <option value="+52">🇲🇽 +52 (México)</option>
                                 <option value="+51">🇵🇪 +51 (Perú)</option>
                                 <option value="+56">🇨🇱 +56 (Chile)</option>
                                 <option value="+57">🇨🇴 +57 (Colombia)</option>
                                 <option value="+54">🇦🇷 +54 (Argentina)</option>
+                                <option value="+39">🇮🇹 +39 (Italia)</option>
+                                <option value="+33">🇫🇷 +33 (Francia)</option>
+                                <option value="+49">🇩🇪 +49 (Alemania)</option>
+                                <option value="+44">🇬🇧 +44 (Reino Unido)</option>
+                                <option value="+64">🇳🇿 +64 (Nueva Zelanda)</option>
+                                <option value="+61">🇦🇺 +61 (Australia)</option>
+                                <option value="+81">🇯🇵 +81 (Japón)</option>
+                                <option value="+86">🇨🇳 +86 (China)</option>
+                                <option value="+91">🇮🇳 +91 (India)</option>
+                                <option value="+27">🇿🇦 +27 (Sudáfrica)</option>
                             </select>
                             <input type="tel" id="editContactPhoneNumber" placeholder="1234-5678" maxlength="15">
                         </div>

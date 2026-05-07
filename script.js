@@ -1,19 +1,19 @@
-// ===================== SCRIPT.JS MEJORADO =====================
+// ===================== SCRIPT.JS ACTUALIZADO =====================
 const categories = [
-    { key: 'quimica', name: 'Química', icon: '⚗️', color: '#FF6B6B' },
-    { key: 'biologia', name: 'Biología', icon: '🧬', color: '#4ECDC4' },
-    { key: 'geografia', name: 'Geografía', icon: '🌍', color: '#FFD93D' },
-    { key: 'geologia', name: 'Geología', icon: '🪨', color: '#A0826D' },
-    { key: 'paleontologia', name: 'Paleontología', icon: '🦕', color: '#C38D5D' },
-    { key: 'astronomia', name: 'Astronomía', icon: '🔭', color: '#1E3A8A' },
-    { key: 'tecnologia', name: 'Tecnología', icon: '💻', color: '#06B6D4' },
-    { key: 'meteorologia', name: 'Meteorología', icon: '⛈️', color: '#9CA3AF' },
-    { key: 'ingenieria', name: 'Ingeniería', icon: '⚙️', color: '#8B5CF6' },
-    { key: 'historia', name: 'Historia', icon: '📚', color: '#DC2626' },
-    { key: 'medicina', name: 'Medicina', icon: '💊', color: '#EC4899' },
-    { key: 'experimentos', name: 'Experimentos', icon: '🔬', color: '#F59E0B' },
-    { key: 'noticias', name: 'Noticias', icon: '📰', color: '#10B981' },
-    { key: 'datos-curiosos', name: 'Datos Curiosos', icon: '💡', color: '#8B5CF6' }
+    { key: 'quimica', name: 'Química', icon: '⚗️', color: '#1E90FF' },
+    { key: 'biologia', name: 'Biología', icon: '🧬', color: '#2E8B57' },
+    { key: 'geografia', name: 'Geografía', icon: '🌍', color: '#A0522D' },
+    { key: 'geologia', name: 'Geología', icon: '🪨', color: '#696969' },
+    { key: 'paleontologia', name: 'Paleontología', icon: '🦕', color: '#C68642' },
+    { key: 'astronomia', name: 'Astronomía', icon: '🔭', color: '#191970' },
+    { key: 'tecnologia', name: 'Tecnología', icon: '💻', color: '#00BFFF' },
+    { key: 'meteorologia', name: 'Meteorología', icon: '⛈️', color: '#87CEEB' },
+    { key: 'ingenieria', name: 'Ingeniería', icon: '⚙️', color: '#FF8C00' },
+    { key: 'historia', name: 'Historia', icon: '📚', color: '#8B6F47' },
+    { key: 'medicina', name: 'Medicina', icon: '💊', color: '#DC143C' },
+    { key: 'experimentos', name: 'Experimentos', icon: '🔬', color: '#32CD32' },
+    { key: 'noticias', name: 'Noticias', icon: '📰', color: '#E53935' },
+    { key: 'datos-curiosos', name: 'Datos Curiosos', icon: '💡', color: '#FF6F61' }
 ];
 
 let articles = [];
@@ -84,6 +84,80 @@ function initializeBlog() {
     loadAuthorInfo();
     updateFooterSocials();
     checkAdminStatus();
+    renderIntroduction();
+}
+
+// ===================== RENDERIZAR INTRODUCCIÓN =====================
+function renderIntroduction() {
+    const introSection = document.querySelector('.introduction-section');
+    if (!introSection) {
+        // Crear sección si no existe
+        const articlesSection = document.querySelector('.articles-section');
+        const newSection = document.createElement('section');
+        newSection.className = 'introduction-section';
+        newSection.style.backgroundColor = '#f8f9fa';
+        newSection.style.padding = '40px 0';
+        newSection.style.marginBottom = '40px';
+        articlesSection.parentElement.insertBefore(newSection, articlesSection);
+    }
+    
+    const saved = localStorage.getItem('blog_introduction');
+    let introData = {
+        title: '¿Qué es Science Stone?',
+        content: 'Bienvenido a Science Stone, tu fuente de información sobre ciencia, descubrimientos y conocimiento del universo.',
+        editedAt: null
+    };
+    
+    if (saved) {
+        introData = JSON.parse(saved);
+    }
+    
+    const editBtn = introData.editedAt ? `<p style="color: #999; font-size: 12px; margin-top: 10px;">Modificado: ${new Date(introData.editedAt).toLocaleString('es-ES')}</p>` : '';
+    
+    const section = document.querySelector('.introduction-section');
+    const isOwner = localStorage.getItem('owner_password');
+    
+    section.innerHTML = `
+        <div class="container">
+            <div style="max-width: 800px; margin: 0 auto;">
+                <h2 style="color: #333; font-size: 28px; margin-bottom: 15px;">${introData.title}</h2>
+                <p style="color: #666; font-size: 16px; line-height: 1.6;">${introData.content}</p>
+                ${editBtn}
+                ${isOwner ? `<button class="btn btn-primary" id="editIntroBtn" style="margin-top: 15px;"><i class="fas fa-edit"></i> Editar Introducción</button>` : ''}
+            </div>
+        </div>
+    `;
+    
+    if (isOwner) {
+        document.getElementById('editIntroBtn').addEventListener('click', () => {
+            editIntroduction();
+        });
+    }
+}
+
+function editIntroduction() {
+    const saved = localStorage.getItem('blog_introduction');
+    let introData = {
+        title: '¿Qué es Science Stone?',
+        content: 'Bienvenido a Science Stone...'
+    };
+    
+    if (saved) {
+        introData = JSON.parse(saved);
+    }
+    
+    const title = prompt('Título de la introducción:', introData.title);
+    if (!title) return;
+    
+    const content = prompt('Contenido de la introducción:', introData.content);
+    if (!content) return;
+    
+    introData.title = title;
+    introData.content = content;
+    introData.editedAt = new Date().toISOString();
+    
+    localStorage.setItem('blog_introduction', JSON.stringify(introData));
+    renderIntroduction();
 }
 
 // ===================== RENDERIZAR TARJETAS DE CATEGORÍAS =====================
@@ -147,7 +221,6 @@ function renderArticles(filter = 'todos') {
         const card = document.createElement('div');
         card.className = 'article-card';
         
-        // Variar tamaño de tarjetas masónico
         const sizes = ['normal', 'normal', 'large', 'list', 'normal'];
         const size = sizes[index % sizes.length];
         if (size === 'large') card.classList.add('article-card-large');
@@ -155,13 +228,14 @@ function renderArticles(filter = 'todos') {
         
         const categoryObj = categories.find(c => article.categories && article.categories.includes(c.key));
         const categoryName = categoryObj ? categoryObj.name : 'Ciencia';
+        const categoryColor = categoryObj ? categoryObj.color : '#666';
         
         card.innerHTML = `
             <img src="${article.image || 'https://via.placeholder.com/300x200?text=Sin+imagen'}" 
                  alt="${article.title}" class="article-image" 
                  onerror="this.src='https://via.placeholder.com/300x200?text=Sin+imagen'">
             <div class="article-content">
-                <span class="article-category">${categoryName}</span>
+                <span class="article-category" style="background-color: ${categoryColor}; color: #000;">${categoryName}</span>
                 <h3 class="article-title">${article.title}</h3>
                 <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES')}</p>
                 <p class="article-excerpt">${article.excerpt}</p>
@@ -178,7 +252,6 @@ function renderArticles(filter = 'todos') {
 
 // ===================== EVENT LISTENERS =====================
 function setupEventListeners() {
-    // Menú hamburguesa
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.getElementById('navMenu');
 
@@ -188,7 +261,7 @@ function setupEventListeners() {
             navMenu.classList.toggle('active');
         });
 
-        document.querySelectorAll('.nav-link, .dropdown-item').forEach(link => {
+        document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
@@ -196,7 +269,6 @@ function setupEventListeners() {
         });
     }
 
-    // Buscador
     const searchBtn = document.getElementById('searchBtn');
     const searchBar = document.getElementById('searchBar');
     const closeSearch = document.getElementById('closeSearch');
@@ -222,6 +294,11 @@ function setupEventListeners() {
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
+            if (query.length === 0) {
+                renderArticles(currentFilter);
+                return;
+            }
+
             const grid = document.getElementById('articlesGrid');
             grid.innerHTML = '';
 
@@ -241,13 +318,14 @@ function setupEventListeners() {
                 card.className = 'article-card';
                 const categoryObj = categories.find(c => article.categories && article.categories.includes(c.key));
                 const categoryName = categoryObj ? categoryObj.name : 'Ciencia';
+                const categoryColor = categoryObj ? categoryObj.color : '#666';
                 
                 card.innerHTML = `
                     <img src="${article.image || 'https://via.placeholder.com/300x200?text=Sin+imagen'}" 
                          alt="${article.title}" class="article-image" 
                          onerror="this.src='https://via.placeholder.com/300x200?text=Sin+imagen'">
                     <div class="article-content">
-                        <span class="article-category">${categoryName}</span>
+                        <span class="article-category" style="background-color: ${categoryColor}; color: #000;">${categoryName}</span>
                         <h3 class="article-title">${article.title}</h3>
                         <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES')}</p>
                         <p class="article-excerpt">${article.excerpt}</p>
@@ -288,16 +366,6 @@ function setupEventListeners() {
             }, 3000);
         });
     }
-
-    // Dropdown en móvil
-    const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-    dropdownToggles.forEach(toggle => {
-        toggle.addEventListener('click', (e) => {
-            e.preventDefault();
-            const dropdown = toggle.parentElement;
-            dropdown.classList.toggle('active');
-        });
-    });
 }
 
 // ===================== FUNCIONES DEL HERO ADMIN =====================

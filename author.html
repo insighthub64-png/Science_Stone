@@ -30,14 +30,8 @@
                     <a href="index.html" class="nav-link">Inicio</a>
                     <a href="index.html#articulos" class="nav-link">Artículos</a>
                     <a href="resources.html" class="nav-link">Recursos</a>
-                    
-                    <div class="nav-dropdown">
-                        <a href="#" class="nav-link dropdown-toggle">Más <i class="fas fa-chevron-down"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="author.html" class="dropdown-item active">Sobre el Autor</a>
-                            <a href="contact.html" class="dropdown-item">Contacto</a>
-                        </div>
-                    </div>
+                    <a href="author.html" class="nav-link active">Sobre el Autor</a>
+                    <a href="contact.html" class="nav-link">Contacto</a>
                     
                     <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;">
                         <i class="fas fa-cog"></i> Admin
@@ -73,17 +67,28 @@
         <div class="container">
             <!-- VISTA DEL PERFIL DEL AUTOR -->
             <div class="author-view">
-                <section class="author-profile">
-                    <!-- Se llena dinámicamente con JavaScript -->
-                </section>
+                <!-- SECCIÓN PRINCIPAL CON DOS COLUMNAS -->
+                <div class="author-main-wrapper">
+                    <!-- COLUMNA IZQUIERDA: PERFIL -->
+                    <section class="author-profile-section">
+                        <div class="author-profile">
+                            <!-- Se llena dinámicamente con JavaScript -->
+                        </div>
+                    </section>
 
-                <section class="author-details">
-                    <!-- Se llena dinámicamente con JavaScript -->
-                </section>
+                    <!-- COLUMNA DERECHA: INFORMACIÓN -->
+                    <section class="author-info-section">
+                        <h2>Información</h2>
+                        <div class="author-details">
+                            <!-- Se llena dinámicamente con JavaScript -->
+                        </div>
+                    </section>
+                </div>
 
+                <!-- SECCIÓN DE ARTÍCULOS EN FORMATO MASÓNICO -->
                 <section class="author-articles">
                     <h2>Mis Artículos</h2>
-                    <div class="articles-list">
+                    <div class="articles-grid" id="authorArticlesGrid">
                         <!-- Se llena dinámicamente con JavaScript -->
                     </div>
                 </section>
@@ -104,7 +109,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="editAuthorTitle">Título/Profesión</label>
+                        <label for="editAuthorTitle">Título/Profesi��n</label>
                         <input type="text" id="editAuthorTitle" placeholder="Ej: Científico, Educador, etc.">
                     </div>
 
@@ -186,6 +191,92 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // Actualizar renderización de artículos en author.html
+        function renderAuthorArticles() {
+            const container = document.getElementById('authorArticlesGrid');
+            if (!container) return;
+
+            // Cargar artículos
+            let articles = [];
+            try {
+                fetch('data.json').then(r => r.json()).then(data => {
+                    articles = data;
+                    const saved = localStorage.getItem('science_stone_articles');
+                    if (saved) {
+                        articles = [...articles, ...JSON.parse(saved)];
+                    }
+                    renderGrid();
+                });
+            } catch (error) {
+                const saved = localStorage.getItem('science_stone_articles');
+                if (saved) {
+                    articles = JSON.parse(saved);
+                }
+                renderGrid();
+            }
+
+            function renderGrid() {
+                const categories = [
+                    { key: 'quimica', name: 'Química' },
+                    { key: 'biologia', name: 'Biología' },
+                    { key: 'geografia', name: 'Geografía' },
+                    { key: 'geologia', name: 'Geología' },
+                    { key: 'paleontologia', name: 'Paleontología' },
+                    { key: 'astronomia', name: 'Astronomía' },
+                    { key: 'tecnologia', name: 'Tecnología' },
+                    { key: 'meteorologia', name: 'Meteorología' },
+                    { key: 'ingenieria', name: 'Ingeniería' },
+                    { key: 'historia', name: 'Historia' },
+                    { key: 'medicina', name: 'Medicina' },
+                    { key: 'experimentos', name: 'Experimentos' },
+                    { key: 'noticias', name: 'Noticias' },
+                    { key: 'datos-curiosos', name: 'Datos Curiosos' }
+                ];
+
+                container.innerHTML = '';
+                if (articles.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; color:#999; grid-column:1/-1;">No hay artículos publicados aún.</p>';
+                    return;
+                }
+
+                articles.forEach((article, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'article-card';
+                    
+                    const sizes = ['normal', 'normal', 'large', 'list', 'normal'];
+                    const size = sizes[index % sizes.length];
+                    if (size === 'large') card.classList.add('article-card-large');
+                    if (size === 'list') card.classList.add('article-card-list');
+                    
+                    const categoryObj = categories.find(c => article.categories && article.categories.includes(c.key));
+                    const categoryName = categoryObj ? categoryObj.name : 'Ciencia';
+                    
+                    card.innerHTML = `
+                        <img src="${article.image || 'https://via.placeholder.com/300x200'}" alt="${article.title}" class="article-image">
+                        <div class="article-content">
+                            <span class="article-category">${categoryName}</span>
+                            <h3 class="article-title">${article.title}</h3>
+                            <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES')}</p>
+                            <p class="article-excerpt">${article.excerpt}</p>
+                        </div>
+                    `;
+                    
+                    card.addEventListener('click', () => {
+                        window.location.href = `article.html?id=${article.id}`;
+                    });
+                    
+                    container.appendChild(card);
+                });
+            }
+        }
+
+        // Llamar función después de cargar page
+        setTimeout(() => {
+            renderAuthorArticles();
+        }, 500);
+    </script>
 
     <script src="author.js"></script>
 </body>

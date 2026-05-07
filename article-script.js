@@ -1,19 +1,19 @@
-// ===================== ARTICLE-SCRIPT.JS =====================
+// ===================== ARTICLE-SCRIPT.JS MEJORADO =====================
 const categories = [
-    { key: 'quimica', name: 'Química', icon: '⚗️', color: '#FF6B6B' },
-    { key: 'biologia', name: 'Biología', icon: '🧬', color: '#4ECDC4' },
-    { key: 'geografia', name: 'Geografía', icon: '🌍', color: '#FFD93D' },
-    { key: 'geologia', name: 'Geología', icon: '🪨', color: '#A0826D' },
-    { key: 'paleontologia', name: 'Paleontología', icon: '🦕', color: '#C38D5D' },
-    { key: 'astronomia', name: 'Astronomía', icon: '🔭', color: '#1E3A8A' },
-    { key: 'tecnologia', name: 'Tecnología', icon: '💻', color: '#06B6D4' },
-    { key: 'meteorologia', name: 'Meteorología', icon: '⛈️', color: '#9CA3AF' },
-    { key: 'ingenieria', name: 'Ingeniería', icon: '⚙️', color: '#8B5CF6' },
-    { key: 'historia', name: 'Historia', icon: '📚', color: '#DC2626' },
-    { key: 'medicina', name: 'Medicina', icon: '💊', color: '#EC4899' },
-    { key: 'experimentos', name: 'Experimentos', icon: '🔬', color: '#F59E0B' },
-    { key: 'noticias', name: 'Noticias', icon: '📰', color: '#10B981' },
-    { key: 'datos-curiosos', name: 'Datos Curiosos', icon: '💡', color: '#8B5CF6' }
+    { key: 'quimica', name: 'Química', icon: '⚗️', color: '#1E90FF' },
+    { key: 'biologia', name: 'Biología', icon: '🧬', color: '#2E8B57' },
+    { key: 'geografia', name: 'Geografía', icon: '🌍', color: '#A0522D' },
+    { key: 'geologia', name: 'Geología', icon: '🪨', color: '#696969' },
+    { key: 'paleontologia', name: 'Paleontología', icon: '🦕', color: '#C68642' },
+    { key: 'astronomia', name: 'Astronomía', icon: '🔭', color: '#191970' },
+    { key: 'tecnologia', name: 'Tecnología', icon: '💻', color: '#00BFFF' },
+    { key: 'meteorologia', name: 'Meteorología', icon: '⛈️', color: '#87CEEB' },
+    { key: 'ingenieria', name: 'Ingeniería', icon: '⚙️', color: '#FF8C00' },
+    { key: 'historia', name: 'Historia', icon: '📚', color: '#8B6F47' },
+    { key: 'medicina', name: 'Medicina', icon: '💊', color: '#DC143C' },
+    { key: 'experimentos', name: 'Experimentos', icon: '🔬', color: '#32CD32' },
+    { key: 'noticias', name: 'Noticias', icon: '📰', color: '#E53935' },
+    { key: 'datos-curiosos', name: 'Datos Curiosos', icon: '💡', color: '#FF6F61' }
 ];
 
 let articles = [];
@@ -55,13 +55,14 @@ function renderArticle() {
     const container = document.getElementById('articleContent');
     const categoryObj = categories.find(c => currentArticle.categories && currentArticle.categories.includes(c.key));
     const categoryName = categoryObj ? categoryObj.name : 'Ciencia';
+    const categoryColor = categoryObj ? categoryObj.color : '#666';
     const authorName = localStorage.getItem('author_name') || 'Administrador';
     
     let mediaHTML = '';
     if (currentArticle.images && currentArticle.images.length > 0) {
         currentArticle.images.forEach((img, index) => {
             const credit = currentArticle.imageCredits && currentArticle.imageCredits[index] ? `<p class="image-credit">Crédito: ${currentArticle.imageCredits[index]}</p>` : '';
-            mediaHTML += `<figure class="article-figure"><img src="${img}" alt="Imagen" class="article-full-image"><figcaption>${credit}</figcaption></figure>`;
+            mediaHTML += `<figure class="article-figure"><img src="${img}" alt="Imagen" class="article-full-image" onerror="this.src='https://via.placeholder.com/600x400'"><figcaption>${credit}</figcaption></figure>`;
         });
     }
     
@@ -98,7 +99,7 @@ function renderArticle() {
     
     container.innerHTML = `
         <div class="article-header">
-            <span class="article-category-badge">${categoryName}</span>
+            <span class="article-category-badge" style="background-color: ${categoryColor}; color: #000;">${categoryObj ? categoryObj.icon : '📄'} ${categoryName}</span>
             <h1>${currentArticle.title}</h1>
             <div class="article-meta">
                 <p>Por: <strong>${authorName}</strong></p>
@@ -132,11 +133,11 @@ function renderArticle() {
         <div class="rating-section">
             <p>¿Qué te pareció este artículo?</p>
             <div class="stars" id="starsRating">
-                <i class="far fa-star" data-rating="1" onclick="setRating(1)"></i>
-                <i class="far fa-star" data-rating="2" onclick="setRating(2)"></i>
-                <i class="far fa-star" data-rating="3" onclick="setRating(3)"></i>
-                <i class="far fa-star" data-rating="4" onclick="setRating(4)"></i>
-                <i class="far fa-star" data-rating="5" onclick="setRating(5)"></i>
+                <i class="far fa-star" data-rating="1" onclick="setRating(1)" style="cursor:pointer;"></i>
+                <i class="far fa-star" data-rating="2" onclick="setRating(2)" style="cursor:pointer;"></i>
+                <i class="far fa-star" data-rating="3" onclick="setRating(3)" style="cursor:pointer;"></i>
+                <i class="far fa-star" data-rating="4" onclick="setRating(4)" style="cursor:pointer;"></i>
+                <i class="far fa-star" data-rating="5" onclick="setRating(5)" style="cursor:pointer;"></i>
             </div>
         </div>
         
@@ -219,9 +220,11 @@ function loadRating() {
     const savedRating = localStorage.getItem(`rating_${currentArticle.id}`) || '0';
     
     stars.forEach(star => {
-        star.classList.remove('active');
+        star.classList.remove('fas', 'active');
+        star.classList.add('far');
         if (parseInt(star.dataset.rating) <= parseInt(savedRating)) {
-            star.classList.add('active');
+            star.classList.remove('far');
+            star.classList.add('fas', 'active');
         }
     });
 }
@@ -236,9 +239,14 @@ function loadComments() {
     const commentsList = document.getElementById('commentsList');
     const comments = JSON.parse(localStorage.getItem(`comments_${currentArticle.id}`) || '[]');
     
+    if (comments.length === 0) {
+        commentsList.innerHTML = '<p style="text-align:center; color:#999;">No hay comentarios aún. ¡Sé el primero en comentar!</p>';
+        return;
+    }
+    
     commentsList.innerHTML = comments.map(comment => `
         <div class="comment">
-            <div class="comment-author">${comment.name}</div>
+            <div class="comment-author"><strong>${comment.name}</strong></div>
             <div class="comment-text">${comment.text}</div>
             <div class="comment-date">${new Date(comment.date).toLocaleDateString('es-ES')}</div>
         </div>
@@ -278,7 +286,7 @@ function setupEventListeners() {
             navMenu.classList.toggle('active');
         });
 
-        document.querySelectorAll('.nav-link, .dropdown-item').forEach(link => {
+        document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');

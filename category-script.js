@@ -1,19 +1,19 @@
-// ===================== CATEGORY-SCRIPT.JS =====================
+// ===================== CATEGORY-SCRIPT.JS ACTUALIZADO =====================
 const categories = [
-    { key: 'quimica', name: 'Química', icon: '⚗️', color: '#FF6B6B' },
-    { key: 'biologia', name: 'Biología', icon: '🧬', color: '#4ECDC4' },
-    { key: 'geografia', name: 'Geografía', icon: '🌍', color: '#FFD93D' },
-    { key: 'geologia', name: 'Geología', icon: '🪨', color: '#A0826D' },
-    { key: 'paleontologia', name: 'Paleontología', icon: '🦕', color: '#C38D5D' },
-    { key: 'astronomia', name: 'Astronomía', icon: '🔭', color: '#1E3A8A' },
-    { key: 'tecnologia', name: 'Tecnología', icon: '💻', color: '#06B6D4' },
-    { key: 'meteorologia', name: 'Meteorología', icon: '⛈️', color: '#9CA3AF' },
-    { key: 'ingenieria', name: 'Ingeniería', icon: '⚙️', color: '#8B5CF6' },
-    { key: 'historia', name: 'Historia', icon: '📚', color: '#DC2626' },
-    { key: 'medicina', name: 'Medicina', icon: '💊', color: '#EC4899' },
-    { key: 'experimentos', name: 'Experimentos', icon: '🔬', color: '#F59E0B' },
-    { key: 'noticias', name: 'Noticias', icon: '📰', color: '#10B981' },
-    { key: 'datos-curiosos', name: 'Datos Curiosos', icon: '💡', color: '#8B5CF6' }
+    { key: 'quimica', name: 'Química', icon: '⚗️', color: '#1E90FF' },
+    { key: 'biologia', name: 'Biología', icon: '🧬', color: '#2E8B57' },
+    { key: 'geografia', name: 'Geografía', icon: '🌍', color: '#A0522D' },
+    { key: 'geologia', name: 'Geología', icon: '🪨', color: '#696969' },
+    { key: 'paleontologia', name: 'Paleontología', icon: '🦕', color: '#C68642' },
+    { key: 'astronomia', name: 'Astronomía', icon: '🔭', color: '#191970' },
+    { key: 'tecnologia', name: 'Tecnología', icon: '💻', color: '#00BFFF' },
+    { key: 'meteorologia', name: 'Meteorología', icon: '⛈️', color: '#87CEEB' },
+    { key: 'ingenieria', name: 'Ingeniería', icon: '⚙️', color: '#FF8C00' },
+    { key: 'historia', name: 'Historia', icon: '📚', color: '#8B6F47' },
+    { key: 'medicina', name: 'Medicina', icon: '💊', color: '#DC143C' },
+    { key: 'experimentos', name: 'Experimentos', icon: '🔬', color: '#32CD32' },
+    { key: 'noticias', name: 'Noticias', icon: '📰', color: '#E53935' },
+    { key: 'datos-curiosos', name: 'Datos Curiosos', icon: '💡', color: '#FF6F61' }
 ];
 
 let articles = [];
@@ -56,10 +56,17 @@ async function loadCategory() {
 }
 
 function renderPage() {
-    // Actualizar títulos
-    document.getElementById('categoryTitle').textContent = currentCategory.name;
-    document.getElementById('categoryDescription').textContent = `Explora todos los artículos de ${currentCategory.name}`;
+    // Actualizar títulos y color del hero
+    const heroSection = document.getElementById('categoryHero');
+    heroSection.style.background = `linear-gradient(135deg, ${currentCategory.color} 0%, ${currentCategory.color}dd 100%)`;
+    
+    document.getElementById('categoryTitle').innerHTML = `${currentCategory.icon} ${currentCategory.name}`;
+    document.getElementById('categoryDescription').textContent = `Explora los artículos de ${currentCategory.name}`;
     document.title = `${currentCategory.name} - Science Stone`;
+    
+    // Cambiar color del texto a negro
+    document.getElementById('categoryTitle').style.color = '#000';
+    document.getElementById('categoryDescription').style.color = '#000';
     
     renderArticles();
 }
@@ -97,7 +104,7 @@ function renderArticles() {
                  alt="${article.title}" class="article-image" 
                  onerror="this.src='https://via.placeholder.com/300x200'">
             <div class="article-content">
-                <span class="article-category">${currentCategory.name}</span>
+                <span class="article-category" style="background-color: ${currentCategory.color}; color: #000;">${currentCategory.name}</span>
                 <h3 class="article-title">${article.title}</h3>
                 <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES')}</p>
                 <p class="article-excerpt">${article.excerpt}</p>
@@ -120,6 +127,13 @@ function setupEventListeners() {
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-link, .dropdown-item').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
         });
     }
     
@@ -169,7 +183,7 @@ function setupEventListeners() {
                     <img src="${article.image || 'https://via.placeholder.com/300x200'}" 
                          alt="${article.title}" class="article-image">
                     <div class="article-content">
-                        <span class="article-category">${currentCategory.name}</span>
+                        <span class="article-category" style="background-color: ${currentCategory.color}; color: #000;">${currentCategory.name}</span>
                         <h3 class="article-title">${article.title}</h3>
                         <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES')}</p>
                         <p class="article-excerpt">${article.excerpt}</p>

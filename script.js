@@ -51,6 +51,7 @@ async function loadAllData() {
 
 function initializeWebsite() {
     renderCategoryCards();
+    renderFeaturedArticles();
     renderArticles();
     setupEventListeners();
     loadAuthorInfo();
@@ -98,7 +99,7 @@ function editIntroduction() {
 function renderCategoryCards() {
     const grid = document.getElementById('categoriesGrid');
     grid.innerHTML = categories.map(cat => `
-        <div class="category-card" style="border-top: 3px solid ${cat.color};">
+        <div class="category-card" style="background: linear-gradient(135deg, ${cat.color}80 0%, ${cat.color}40 100%); color: white; border-top: 3px solid ${cat.color};">
             <div class="category-icon">${cat.icon}</div>
             <h3>${cat.name}</h3>
         </div>
@@ -107,18 +108,20 @@ function renderCategoryCards() {
     document.querySelectorAll('.category-card').forEach((card, index) => {
         card.addEventListener('click', () => {
             const category = categories[index].key;
-            window.location.href = `category.html?cat=${category}`;
+            window.open(`category-view.html?cat=${category}`, '_blank');
         });
     });
 }
 
-// ===================== RENDERIZAR ARTÍCULOS CON PATRÓN PREMIUM =====================
-function renderArticles() {
-    const grid = document.getElementById('articlesGrid');
-    const noArticles = document.getElementById('noArticles');
+// ===================== RENDERIZAR ARTÍCULOS DESTACADOS =====================
+function renderFeaturedArticles() {
+    const grid = document.getElementById('featuredGrid');
+    const noArticles = document.getElementById('noFeaturedArticles');
     grid.innerHTML = '';
 
-    if (articles.length === 0) {
+    const featured = articles.filter(a => a.featured === true);
+
+    if (featured.length === 0) {
         grid.style.display = 'none';
         noArticles.style.display = 'block';
         return;
@@ -127,9 +130,57 @@ function renderArticles() {
     grid.style.display = 'grid';
     noArticles.style.display = 'none';
 
-    articles.forEach((article, index) => {
+    featured.forEach((article) => {
         const card = document.createElement('div');
-        card.className = 'article-card';
+        card.className = 'article-card featured';
+        card.style.cursor = 'pointer';
+        
+        const categoryObj = categories.find(c => article.categories && article.categories.includes(c.key));
+        const categoryName = categoryObj ? `${categoryObj.icon} ${categoryObj.name}` : '📄 Ciencia';
+        const categoryColor = categoryObj ? categoryObj.color : '#666666';
+        
+        card.innerHTML = `
+            <img src="${article.image || 'https://via.placeholder.com/600x400?text=Science+Stone'}" 
+                 alt="${article.title}" 
+                 class="article-image"
+                 onerror="this.src='https://via.placeholder.com/600x400?text=Science+Stone'">
+            <div class="article-content" style="background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);">
+                <span class="article-category" style="background: ${categoryColor}; color: white;">${categoryName}</span>
+                <h3 class="article-title" style="color: white;">${article.title}</h3>
+                <p class="article-excerpt" style="color: rgba(255,255,255,0.9);">${article.excerpt}</p>
+                <p class="article-date" style="color: rgba(255,255,255,0.8);">${new Date(article.date).toLocaleDateString('es-ES', {year: 'numeric', month: 'long', day: 'numeric'})}</p>
+            </div>
+        `;
+
+        card.addEventListener('click', () => {
+            window.open(`article-view.html?id=${article.id}`, '_blank');
+        });
+        
+        grid.appendChild(card);
+    });
+}
+
+// ===================== RENDERIZAR ARTÍCULOS GENERALES =====================
+function renderArticles() {
+    const grid = document.getElementById('articlesGrid');
+    const noArticles = document.getElementById('noArticles');
+    grid.innerHTML = '';
+
+    const notFeatured = articles.filter(a => a.featured !== true);
+
+    if (notFeatured.length === 0) {
+        grid.style.display = 'none';
+        noArticles.style.display = 'block';
+        return;
+    }
+
+    grid.style.display = 'grid';
+    noArticles.style.display = 'none';
+
+    notFeatured.forEach((article) => {
+        const card = document.createElement('div');
+        card.className = 'article-card general';
+        card.style.cursor = 'pointer';
         
         const categoryObj = categories.find(c => article.categories && article.categories.includes(c.key));
         const categoryName = categoryObj ? `${categoryObj.icon} ${categoryObj.name}` : '📄 Ciencia';
@@ -141,7 +192,7 @@ function renderArticles() {
                  class="article-image"
                  onerror="this.src='https://via.placeholder.com/600x400?text=Science+Stone'">
             <div class="article-content">
-                <span class="article-category" style="color: ${categoryColor};">${categoryName}</span>
+                <span class="article-category" style="background: linear-gradient(135deg, ${categoryColor}dd 0%, ${categoryColor}aa 100%); color: white;">${categoryName}</span>
                 <h3 class="article-title">${article.title}</h3>
                 <p class="article-excerpt">${article.excerpt}</p>
                 <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES', {year: 'numeric', month: 'long', day: 'numeric'})}</p>
@@ -149,7 +200,7 @@ function renderArticles() {
         `;
 
         card.addEventListener('click', () => {
-            window.location.href = `article.html?id=${article.id}`;
+            window.open(`article-view.html?id=${article.id}`, '_blank');
         });
         
         grid.appendChild(card);
@@ -228,6 +279,7 @@ function setupEventListeners() {
             filtered.forEach(article => {
                 const card = document.createElement('div');
                 card.className = 'article-card';
+                card.style.cursor = 'pointer';
                 const categoryObj = categories.find(c => article.categories && article.categories.includes(c.key));
                 const categoryName = categoryObj ? `${categoryObj.icon} ${categoryObj.name}` : '📄 Ciencia';
                 const categoryColor = categoryObj ? categoryObj.color : '#666666';
@@ -238,14 +290,14 @@ function setupEventListeners() {
                          class="article-image"
                          onerror="this.src='https://via.placeholder.com/600x400'">
                     <div class="article-content">
-                        <span class="article-category" style="color: ${categoryColor};">${categoryName}</span>
+                        <span class="article-category" style="background: ${categoryColor}; color: white;">${categoryName}</span>
                         <h3 class="article-title">${article.title}</h3>
                         <p class="article-excerpt">${article.excerpt}</p>
                         <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES', {year: 'numeric', month: 'long', day: 'numeric'})}</p>
                     </div>
                 `;
                 card.addEventListener('click', () => {
-                    window.location.href = `article.html?id=${article.id}`;
+                    window.open(`article-view.html?id=${article.id}`, '_blank');
                 });
                 grid.appendChild(card);
             });
@@ -315,7 +367,7 @@ function updateFooterSocials() {
 function checkAdminStatus() {
     const adminBtn = document.getElementById('adminNavBtn');
     if (localStorage.getItem('owner_password')) {
-        adminBtn.style.display = 'inline-block';
+        if (adminBtn) adminBtn.style.display = 'inline-block';
     }
 }
 

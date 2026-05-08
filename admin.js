@@ -18,6 +18,7 @@ const categories = [
 
 let articles = [];
 let currentEditingId = null;
+let selectedFormat = 'standard';
 
 // ===================== VERIFICAR AUTENTICACIÓN =====================
 window.addEventListener('load', () => {
@@ -37,6 +38,7 @@ function initializeAdmin() {
     loadHeroInfo();
     loadIntroInfo();
     setupFormListeners();
+    setupFormatSelector();
 }
 
 function loadArticles() {
@@ -89,6 +91,19 @@ function renderArticlesList() {
     `).join('');
 }
 
+function setupFormatSelector() {
+    document.querySelectorAll('.format-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.format-option').forEach(o => o.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedFormat = this.dataset.format;
+            document.getElementById('articleFormat').value = selectedFormat;
+        });
+    });
+    // Seleccionar por defecto
+    document.querySelector('[data-format="standard"]').click();
+}
+
 function setupFormListeners() {
     // Artículos
     document.getElementById('articleForm').addEventListener('submit', (e) => {
@@ -136,6 +151,7 @@ function saveArticle() {
     const tags = document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t);
     const sources = document.getElementById('sources').value.trim();
     const featured = document.getElementById('featured').checked;
+    const format = document.getElementById('articleFormat').value;
 
     const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked'))
         .map(cb => cb.value);
@@ -158,6 +174,7 @@ function saveArticle() {
             tags,
             sources,
             featured,
+            format,
             editedAt: new Date().toISOString()
         };
         alert('✅ Artículo actualizado');
@@ -174,6 +191,7 @@ function saveArticle() {
             tags,
             sources,
             featured,
+            format,
             date: new Date().toISOString(),
             links: [],
             videos: [],
@@ -206,6 +224,16 @@ function editArticle(id) {
     document.getElementById('sources').value = article.sources || '';
     document.getElementById('featured').checked = article.featured || false;
 
+    // Establecer formato
+    const format = article.format || 'standard';
+    document.querySelectorAll('.format-option').forEach(o => {
+        o.classList.remove('selected');
+        if (o.dataset.format === format) {
+            o.classList.add('selected');
+            selectedFormat = format;
+        }
+    });
+
     document.querySelectorAll('.category-checkbox').forEach(cb => {
         cb.checked = article.categories.includes(cb.value);
     });
@@ -232,6 +260,7 @@ function resetArticleForm() {
     currentEditingId = null;
     document.getElementById('cancelArticleBtn').style.display = 'none';
     document.querySelector('#articleForm button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Publicar Artículo';
+    setupFormatSelector();
 }
 
 function saveResource() {
@@ -387,9 +416,14 @@ function saveHero() {
 
     if (imageUrl) {
         localStorage.setItem('hero_image', imageUrl);
+        const hero = document.getElementById('heroSection');
+        if (hero) {
+            hero.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('${imageUrl}')`;
+        }
     }
     localStorage.setItem('hero_color1', color1);
     localStorage.setItem('hero_color2', color2);
+    localStorage.setItem('hero_gradient', `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`);
 
     alert('✅ Sección Hero actualizada');
 }
@@ -434,10 +468,12 @@ function insertFormat(format) {
     document.getElementById('contentEditor').focus();
 }
 
-function insertHeading(tag) {
-    if (tag) {
-        document.execCommand('formatBlock', false, tag);
+function changeTextColor() {
+    const color = prompt('Ingresa el color (ej: #FF0000 o red):');
+    if (color) {
+        document.execCommand('foreColor', false, color);
     }
+    document.getElementById('contentEditor').focus();
 }
 
 function insertLink() {
@@ -451,6 +487,45 @@ function insertImage() {
     const url = prompt('URL de la imagen:');
     if (url) {
         document.execCommand('insertImage', false, url);
+    }
+}
+
+function insertTable() {
+    const rows = prompt('Número de filas:');
+    const cols = prompt('Número de columnas:');
+    if (rows && cols) {
+        let html = '<table border="1" style="width: 100%; border-collapse: collapse;"><tbody>';
+        for (let i = 0; i < rows; i++) {
+            html += '<tr>';
+            for (let j = 0; j < cols; j++) {
+                html += '<td style="padding: 10px;">Celda</td>';
+            }
+            html += '</tr>';
+        }
+        html += '</tbody></table>';
+        document.execCommand('insertHTML', false, html);
+    }
+}
+
+function insertVideo() {
+    const url = prompt('URL del video (YouTube o similar):');
+    if (url) {
+        let embedCode = '';
+        if (url.includes('youtube.com') || url.includes('youtu.be')) {
+            const videoId = url.includes('youtu.be') ? url.split('/')[3] : url.split('v=')[1];
+            embedCode = `<iframe width="100%" height="400" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+        } else {
+            embedCode = `<video width="100%" height="400" controls><source src="${url}" type="video/mp4"></video>`;
+        }
+        document.execCommand('insertHTML', false, embedCode);
+    }
+}
+
+function insertAudio() {
+    const url = prompt('URL del audio:');
+    if (url) {
+        const embedCode = `<audio style="width: 100%;" controls><source src="${url}" type="audio/mpeg">Tu navegador no soporta audio</audio>`;
+        document.execCommand('insertHTML', false, embedCode);
     }
 }
 

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artículo - Science Stone</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="logo">
+                    <div class="logo-animated">
+                        <span class="logo-icon">⚛️</span>
+                        <span class="logo-text">Science Stone</span>
+                    </div>
+                    <p class="tagline">Editorial de Ciencia</p>
+                </a>
+                <div class="search-container">
+                    <button class="search-btn" onclick="window.history.back()" title="Volver">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ARTÍCULO -->
+    <main class="article-container" id="articleContainer">
+        <div class="container">
+            <article id="articleContent">
+                <!-- Se llena dinámicamente -->
+            </article>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Science Stone</h4>
+                    <p>Tu fuente editorial de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="index.html#articulos">Artículos</a></li>
+                        <li><a href="resources.html">Recursos</a></li>
+                        <li><a href="author.html">Sobre el Autor</a></li>
+                        <li><a href="contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Science Stone. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Obtener ID del artículo de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const articleId = parseInt(urlParams.get('id'));
+
+        // Cargar todos los artículos
+        async function loadArticle() {
+            try {
+                const response = await fetch('data.json');
+                let articles = await response.json();
+                
+                const savedArticles = localStorage.getItem('science_stone_articles');
+                if (savedArticles) {
+                    articles = [...articles, ...JSON.parse(savedArticles)];
+                }
+
+                const article = articles.find(a => a.id === articleId);
+                if (!article) {
+                    document.getElementById('articleContent').innerHTML = '<p>Artículo no encontrado</p>';
+                    return;
+                }
+
+                // Obtener nombre de categoría
+                const categories = [
+                    { key: 'quimica', name: 'Química', icon: '⚗️', color: '#1E90FF' },
+                    { key: 'biologia', name: 'Biología', icon: '🧬', color: '#2E8B57' },
+                    { key: 'geografia', name: 'Geografía', icon: '🌍', color: '#A0522D' },
+                    { key: 'geologia', name: 'Geología', icon: '🪨', color: '#696969' },
+                    { key: 'paleontologia', name: 'Paleontología', icon: '🦕', color: '#C68642' },
+                    { key: 'astronomia', name: 'Astronomía', icon: '🔭', color: '#191970' },
+                    { key: 'tecnologia', name: 'Tecnología', icon: '💻', color: '#00BFFF' },
+                    { key: 'meteorologia', name: 'Meteorología', icon: '⛈️', color: '#87CEEB' },
+                    { key: 'ingenieria', name: 'Ingeniería', icon: '⚙️', color: '#FF8C00' },
+                    { key: 'historia', name: 'Historia', icon: '📚', color: '#8B6F47' },
+                    { key: 'medicina', name: 'Medicina', icon: '💊', color: '#DC143C' },
+                    { key: 'experimentos', name: 'Experimentos', icon: '🔬', color: '#32CD32' },
+                    { key: 'noticias', name: 'Noticias', icon: '📰', color: '#E53935' },
+                    { key: 'datos-curiosos', name: 'Datos Curiosos', icon: '💡', color: '#FF6F61' }
+                ];
+
+                const categoryObj = categories.find(c => article.categories && article.categories.includes(c.key));
+                const categoryName = categoryObj ? `${categoryObj.icon} ${categoryObj.name}` : '📄 Ciencia';
+                const categoryColor = categoryObj ? categoryObj.color : '#666666';
+
+                // Determinar color de texto según fondo
+                const textColor = categoryObj && ['#1E90FF', '#2E8B57', '#A0522D', '#696969', '#C68642', '#191970', '#00BFFF', '#8B6F47', '#DC143C', '#32CD32', '#E53935'].includes(categoryColor) ? 'white' : 'white';
+
+                document.title = article.title + ' - Science Stone';
+                document.getElementById('articleContent').innerHTML = `
+                    <div class="article-header">
+                        <span class="article-category" style="background: ${categoryColor}; color: ${textColor}; padding: 8px 16px; border-radius: 4px; display: inline-block;">${categoryName}</span>
+                        <h1>${article.title}</h1>
+                        <div class="article-meta">
+                            <span><i class="fas fa-calendar"></i> ${new Date(article.date).toLocaleDateString('es-ES', {year: 'numeric', month: 'long', day: 'numeric'})}</span>
+                        </div>
+                    </div>
+                    ${article.image ? `<img src="${article.image}" alt="${article.title}" class="article-featured-image" onerror="this.style.display='none'">` : ''}
+                    <div class="article-body">
+                        ${article.content}
+                    </div>
+                    ${article.sources ? `<div class="article-sources"><h3>Fuentes:</h3><p>${article.sources}</p></div>` : ''}
+                    ${article.tags && article.tags.length > 0 ? `<div class="article-tags"><strong>Tags:</strong> ${article.tags.join(', ')}</div>` : ''}
+                `;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('articleContent').innerHTML = '<p>Error al cargar el artículo</p>';
+            }
+        }
+
+        loadArticle();
+    </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categoría - Science Stone</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="logo">
+                    <div class="logo-animated">
+                        <span class="logo-icon">⚛️</span>
+                        <span class="logo-text">Science Stone</span>
+                    </div>
+                    <p class="tagline">Editorial de Ciencia</p>
+                </a>
+                <div class="search-container">
+                    <button class="search-btn" onclick="window.history.back()" title="Volver">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENIDO -->
+    <main class="category-view-container">
+        <div class="container">
+            <div class="category-header">
+                <h1 id="categoryTitle"></h1>
+                <p id="categoryDescription"></p>
+            </div>
+            <div class="articles-grid" id="categoryArticles">
+                <!-- Se llena dinámicamente -->
+            </div>
+            <div id="noCategoryArticles" class="no-articles" style="display:none;">
+                <p>No hay artículos en esta categoría aún.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Science Stone</h4>
+                    <p>Tu fuente editorial de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="index.html#articulos">Artículos</a></li>
+                        <li><a href="resources.html">Recursos</a></li>
+                        <li><a href="author.html">Sobre el Autor</a></li>
+                        <li><a href="contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Science Stone. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const categories = [
+            { key: 'quimica', name: 'Química', icon: '⚗️', color: '#1E90FF' },
+            { key: 'biologia', name: 'Biología', icon: '🧬', color: '#2E8B57' },
+            { key: 'geografia', name: 'Geografía', icon: '🌍', color: '#A0522D' },
+            { key: 'geologia', name: 'Geología', icon: '🪨', color: '#696969' },
+            { key: 'paleontologia', name: 'Paleontología', icon: '🦕', color: '#C68642' },
+            { key: 'astronomia', name: 'Astronomía', icon: '🔭', color: '#191970' },
+            { key: 'tecnologia', name: 'Tecnología', icon: '💻', color: '#00BFFF' },
+            { key: 'meteorologia', name: 'Meteorología', icon: '⛈️', color: '#87CEEB' },
+            { key: 'ingenieria', name: 'Ingeniería', icon: '⚙️', color: '#FF8C00' },
+            { key: 'historia', name: 'Historia', icon: '📚', color: '#8B6F47' },
+            { key: 'medicina', name: 'Medicina', icon: '💊', color: '#DC143C' },
+            { key: 'experimentos', name: 'Experimentos', icon: '🔬', color: '#32CD32' },
+            { key: 'noticias', name: 'Noticias', icon: '📰', color: '#E53935' },
+            { key: 'datos-curiosos', name: 'Datos Curiosos', icon: '💡', color: '#FF6F61' }
+        ];
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryKey = urlParams.get('cat');
+
+        async function loadCategory() {
+            try {
+                const response = await fetch('data.json');
+                let articles = await response.json();
+                
+                const savedArticles = localStorage.getItem('science_stone_articles');
+                if (savedArticles) {
+                    articles = [...articles, ...JSON.parse(savedArticles)];
+                }
+
+                const categoryObj = categories.find(c => c.key === categoryKey);
+                if (!categoryObj) {
+                    document.getElementById('categoryTitle').textContent = 'Categoría no encontrada';
+                    return;
+                }
+
+                document.title = categoryObj.name + ' - Science Stone';
+                document.getElementById('categoryTitle').innerHTML = `${categoryObj.icon} ${categoryObj.name}`;
+                document.getElementById('categoryDescription').textContent = `Explora todos los artículos de ${categoryObj.name}`;
+
+                const filtered = articles.filter(a => a.categories && a.categories.includes(categoryKey));
+
+                if (filtered.length === 0) {
+                    document.getElementById('categoryArticles').style.display = 'none';
+                    document.getElementById('noCategoryArticles').style.display = 'block';
+                    return;
+                }
+
+                const grid = document.getElementById('categoryArticles');
+                grid.innerHTML = filtered.map(article => {
+                    const catObj = categories.find(c => article.categories && article.categories.includes(c.key));
+                    const catName = catObj ? `${catObj.icon} ${catObj.name}` : '📄 Ciencia';
+                    const catColor = catObj ? catObj.color : '#666666';
+                    const textColor = 'white';
+
+                    return `
+                        <div class="article-card" onclick="window.open('article-view.html?id=${article.id}', '_blank')" style="cursor: pointer;">
+                            <img src="${article.image || 'https://via.placeholder.com/600x400?text=Science+Stone'}" 
+                                 alt="${article.title}" 
+                                 class="article-image"
+                                 onerror="this.src='https://via.placeholder.com/600x400?text=Science+Stone'">
+                            <div class="article-content">
+                                <span class="article-category" style="background: ${catColor}; color: ${textColor};">${catName}</span>
+                                <h3 class="article-title">${article.title}</h3>
+                                <p class="article-excerpt">${article.excerpt}</p>
+                                <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES', {year: 'numeric', month: 'long', day: 'numeric'})}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        loadCategory();
+    </script>
+</body>
+</html>

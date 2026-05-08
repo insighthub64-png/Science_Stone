@@ -1,19 +1,19 @@
-// ===================== CATEGORY-SCRIPT.JS ACTUALIZADO =====================
+// ===================== CATEGORY-SCRIPT.JS MEJORADO =====================
 const categories = [
-    { key: 'quimica', name: 'Química', icon: '⚗️', color: '#1E90FF' },
-    { key: 'biologia', name: 'Biología', icon: '🧬', color: '#2E8B57' },
-    { key: 'geografia', name: 'Geografía', icon: '🌍', color: '#A0522D' },
-    { key: 'geologia', name: 'Geología', icon: '🪨', color: '#696969' },
-    { key: 'paleontologia', name: 'Paleontología', icon: '🦕', color: '#C68642' },
-    { key: 'astronomia', name: 'Astronomía', icon: '🔭', color: '#191970' },
-    { key: 'tecnologia', name: 'Tecnología', icon: '💻', color: '#00BFFF' },
-    { key: 'meteorologia', name: 'Meteorología', icon: '⛈️', color: '#87CEEB' },
-    { key: 'ingenieria', name: 'Ingeniería', icon: '⚙️', color: '#FF8C00' },
-    { key: 'historia', name: 'Historia', icon: '📚', color: '#8B6F47' },
-    { key: 'medicina', name: 'Medicina', icon: '💊', color: '#DC143C' },
-    { key: 'experimentos', name: 'Experimentos', icon: '🔬', color: '#32CD32' },
-    { key: 'noticias', name: 'Noticias', icon: '📰', color: '#E53935' },
-    { key: 'datos-curiosos', name: 'Datos Curiosos', icon: '💡', color: '#FF6F61' }
+    { key: 'quimica', name: 'Química', icon: '⚗️', color: '#1E90FF', description: 'Explora el fascinante mundo de la química, desde reacciones moleculares hasta elementos fundamentales.' },
+    { key: 'biologia', name: 'Biología', icon: '🧬', color: '#2E8B57', description: 'Descubre la complejidad de la vida, organismos y procesos biológicos.' },
+    { key: 'geografia', name: 'Geografía', icon: '🌍', color: '#A0522D', description: 'Viaja por el planeta y conoce sus paisajes, culturas y características geográficas.' },
+    { key: 'geologia', name: 'Geología', icon: '🪨', color: '#696969', description: 'Estudia la estructura, composición y dinámica de nuestro planeta.' },
+    { key: 'paleontologia', name: 'Paleontología', icon: '🦕', color: '#C68642', description: 'Viaja al pasado a través de fósiles y especies extintas.' },
+    { key: 'astronomia', name: 'Astronomía', icon: '🔭', color: '#191970', description: 'Explora el universo, estrellas, galaxias y misterios cósmicos.' },
+    { key: 'tecnologia', name: 'Tecnología', icon: '💻', color: '#00BFFF', description: 'Descubre los últimos avances tecnológicos e innovaciones.' },
+    { key: 'meteorologia', name: 'Meteorología', icon: '⛈️', color: '#87CEEB', description: 'Comprende los fenómenos climáticos y meteorológicos.' },
+    { key: 'ingenieria', name: 'Ingeniería', icon: '⚙️', color: '#FF8C00', description: 'Conoce las aplicaciones prácticas de la ciencia en la ingeniería.' },
+    { key: 'historia', name: 'Historia', icon: '📚', color: '#8B6F47', description: 'Viaja por la historia científica y sus hitos más importantes.' },
+    { key: 'medicina', name: 'Medicina', icon: '💊', color: '#DC143C', description: 'Aprende sobre avances médicos y la salud humana.' },
+    { key: 'experimentos', name: 'Experimentos', icon: '🔬', color: '#32CD32', description: 'Realiza experimentos y descubre por ti mismo los fenómenos científicos.' },
+    { key: 'noticias', name: 'Noticias', icon: '📰', color: '#E53935', description: 'Mantente actualizado con las últimas noticias científicas.' },
+    { key: 'datos-curiosos', name: 'Datos Curiosos', icon: '💡', color: '#FF6F61', description: 'Descubre datos fascinantes y curiosidades del mundo científico.' }
 ];
 
 let articles = [];
@@ -56,17 +56,12 @@ async function loadCategory() {
 }
 
 function renderPage() {
-    // Actualizar títulos y color del hero
     const heroSection = document.getElementById('categoryHero');
-    heroSection.style.background = `linear-gradient(135deg, ${currentCategory.color} 0%, ${currentCategory.color}dd 100%)`;
-    
     document.getElementById('categoryTitle').innerHTML = `${currentCategory.icon} ${currentCategory.name}`;
-    document.getElementById('categoryDescription').textContent = `Explora los artículos de ${currentCategory.name}`;
+    document.getElementById('categoryDescription').textContent = currentCategory.description;
     document.title = `${currentCategory.name} - Science Stone`;
     
-    // Cambiar color del texto a negro
-    document.getElementById('categoryTitle').style.color = '#000';
-    document.getElementById('categoryDescription').style.color = '#000';
+    heroSection.style.background = `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), linear-gradient(135deg, ${currentCategory.color} 0%, ${currentCategory.color}dd 100%)`;
     
     renderArticles();
 }
@@ -93,21 +88,16 @@ function renderArticles() {
         const card = document.createElement('div');
         card.className = 'article-card';
         
-        // Variar tamaño de tarjetas (masónico)
-        const sizes = ['normal', 'normal', 'large', 'list'];
-        const size = sizes[index % sizes.length];
-        if (size === 'large') card.classList.add('article-card-large');
-        if (size === 'list') card.classList.add('article-card-list');
-        
         card.innerHTML = `
-            <img src="${article.image || 'https://via.placeholder.com/300x200'}" 
-                 alt="${article.title}" class="article-image" 
-                 onerror="this.src='https://via.placeholder.com/300x200'">
+            <img src="${article.image || 'https://via.placeholder.com/600x400'}" 
+                 alt="${article.title}" 
+                 class="article-image"
+                 onerror="this.src='https://via.placeholder.com/600x400'">
             <div class="article-content">
-                <span class="article-category" style="background-color: ${currentCategory.color}; color: #000;">${currentCategory.name}</span>
+                <span class="article-category" style="color: ${currentCategory.color};">${currentCategory.icon} ${currentCategory.name}</span>
                 <h3 class="article-title">${article.title}</h3>
-                <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES')}</p>
                 <p class="article-excerpt">${article.excerpt}</p>
+                <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES', {year: 'numeric', month: 'long', day: 'numeric'})}</p>
             </div>
         `;
         
@@ -129,7 +119,7 @@ function setupEventListeners() {
             navMenu.classList.toggle('active');
         });
 
-        document.querySelectorAll('.nav-link, .dropdown-item').forEach(link => {
+        document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
@@ -172,7 +162,7 @@ function setupEventListeners() {
             );
             
             if (filtered.length === 0) {
-                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;">No se encontraron artículos</div>';
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-light);">No se encontraron artículos en esta categoría.</div>';
                 return;
             }
             
@@ -180,13 +170,15 @@ function setupEventListeners() {
                 const card = document.createElement('div');
                 card.className = 'article-card';
                 card.innerHTML = `
-                    <img src="${article.image || 'https://via.placeholder.com/300x200'}" 
-                         alt="${article.title}" class="article-image">
+                    <img src="${article.image || 'https://via.placeholder.com/600x400'}" 
+                         alt="${article.title}" 
+                         class="article-image"
+                         onerror="this.src='https://via.placeholder.com/600x400'">
                     <div class="article-content">
-                        <span class="article-category" style="background-color: ${currentCategory.color}; color: #000;">${currentCategory.name}</span>
+                        <span class="article-category" style="color: ${currentCategory.color};">${currentCategory.icon} ${currentCategory.name}</span>
                         <h3 class="article-title">${article.title}</h3>
-                        <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES')}</p>
                         <p class="article-excerpt">${article.excerpt}</p>
+                        <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES', {year: 'numeric', month: 'long', day: 'numeric'})}</p>
                     </div>
                 `;
                 card.addEventListener('click', () => {
@@ -214,7 +206,7 @@ function updateFooterSocials() {
     };
     
     footerSocial.innerHTML = socials.map(social => `
-        <a href="${social.url}" class="social-link" target="_blank">
+        <a href="${social.url}" class="social-link" target="_blank" title="${social.platform}">
             <i class="${icons[social.platform] || 'fas fa-link'}"></i>
         </a>
     `).join('');
@@ -222,8 +214,7 @@ function updateFooterSocials() {
 
 function checkAdminStatus() {
     const adminBtn = document.getElementById('adminNavBtn');
-    const ownerPassword = localStorage.getItem('owner_password');
-    if (ownerPassword) {
+    if (localStorage.getItem('owner_password')) {
         adminBtn.style.display = 'inline-block';
     }
 }

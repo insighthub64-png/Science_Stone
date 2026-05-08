@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Science Stone - Blog de Ciencia</title>
+    <title>Science Stone - Blog Editorial de Ciencia</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -22,13 +22,13 @@
     <header class="header">
         <div class="navbar">
             <div class="nav-container">
-                <div class="logo">
+                <a href="index.html" class="logo">
                     <div class="logo-animated">
                         <span class="logo-icon">⚛️</span>
                         <span class="logo-text">Science Stone</span>
                     </div>
-                    <p class="tagline">Un mundo guiado por la ciencia</p>
-                </div>
+                    <p class="tagline">Editorial de Ciencia</p>
+                </a>
 
                 <div class="hamburger" id="hamburger">
                     <span></span>
@@ -38,11 +38,10 @@
 
                 <nav class="nav-menu" id="navMenu">
                     <a href="index.html" class="nav-link active">Inicio</a>
-                    <a href="index.html#articulos" class="nav-link">Artículos</a>
+                    <a href="#articulos" class="nav-link">Artículos</a>
                     <a href="resources.html" class="nav-link">Recursos</a>
                     <a href="author.html" class="nav-link">Sobre el Autor</a>
                     <a href="contact.html" class="nav-link">Contacto</a>
-                    
                     <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;">
                         <i class="fas fa-cog"></i> Admin
                     </a>
@@ -56,7 +55,7 @@
             </div>
 
             <div class="search-bar" id="searchBar">
-                <input type="text" id="searchInput" placeholder="Buscar artículos...">
+                <input type="text" id="searchInput" placeholder="Buscar artículos por título o categoría...">
                 <button class="close-search" id="closeSearch">
                     <i class="fas fa-times"></i>
                 </button>
@@ -66,66 +65,29 @@
 
     <!-- HERO SECTION -->
     <section class="hero" id="heroSection">
-        <div id="heroImage" style="position: absolute; width: 100%; height: 100%; object-fit: cover; background-size: cover; background-position: center;"></div>
-        <div id="heroVideo" style="position: absolute; width: 100%; height: 100%; object-fit: cover; display: none;"></div>
-        <div id="heroSolidColor" style="position: absolute; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: none;"></div>
-        <div id="heroAnimations" style="position: absolute; width: 100%; height: 100%;"></div>
-
         <div class="hero-content">
-            <h1>¡Bienvenido a Science Stone!</h1>
-            <p>Descubre los misterios del universo a través de la ciencia</p>
+            <h1>Bienvenido a Science Stone</h1>
+            <p>Un mundo guiado por la ciencia</p>
             <a href="#articulos" class="btn btn-primary">Explorar Artículos</a>
         </div>
+    </section>
 
-        <button class="btn btn-yellow" id="heroEditBtn" style="position: absolute; top: 20px; right: 20px; display: none;">
-            <i class="fas fa-edit"></i> Editar Hero
-        </button>
-
-        <!-- PANEL DE EDICIÓN DEL HERO (Solo Admin) -->
-        <div id="heroEditPanel" style="display: none; position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; width: 300px;">
-            <h3 style="margin-top: 0;">Editar Sección Hero</h3>
-
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Imagen de Fondo</label>
-                <input type="url" id="heroImageUrl" placeholder="URL de imagen" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
-                <input type="file" id="heroImageFile" accept="image/*" style="width: 100%; margin-top: 8px;">
-                <button onclick="updateHeroImage()" class="btn btn-small btn-cyan" style="width: 100%; margin-top: 8px;">Actualizar Imagen</button>
-            </div>
-
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Video de Fondo</label>
-                <input type="url" id="heroVideoUrl" placeholder="URL de video" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
-                <input type="file" id="heroVideoFile" accept="video/*" style="width: 100%; margin-top: 8px;">
-                <button onclick="updateHeroVideo()" class="btn btn-small btn-cyan" style="width: 100%; margin-top: 8px;">Actualizar Video</button>
-            </div>
-
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Color Sólido</label>
-                <input type="color" id="heroColor" value="#667eea" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; cursor: pointer;">
-                <button onclick="updateHeroColor()" class="btn btn-small btn-cyan" style="width: 100%; margin-top: 8px;">Aplicar Color</button>
-            </div>
-
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Animación</label>
-                <select id="heroAnimation" onchange="updateHeroAnimation()" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                    <option value="">Sin animación</option>
-                    <option value="bubbles">Burbujas</option>
-                    <option value="gears">Engranajes</option>
-                    <option value="stars">Estrellas</option>
-                    <option value="particles">Partículas</option>
-                </select>
-            </div>
-
-            <button onclick="closeHeroEditPanel()" class="btn btn-secondary" style="width: 100%;">Cerrar</button>
+    <!-- SECCIÓN "QUÉ ES" -->
+    <section class="what-is-section">
+        <div class="what-is-content">
+            <h2>¿Qué es Science Stone?</h2>
+            <p id="introductionText">
+                Science Stone es tu fuente de información editorial sobre ciencia, descubrimientos y conocimiento del universo. 
+                Nos inspiramos en la excelencia de National Geographic y la precisión de la NASA para brindarte artículos de 
+                investigación profunda, visualmente impactantes y accesibles para todos.
+            </p>
+            <button class="btn btn-primary edit-intro-btn" id="editIntroBtn" style="display:none;">
+                <i class="fas fa-edit"></i> Editar Introducción
+            </button>
         </div>
     </section>
 
-    <!-- SECCIÓN DE INTRODUCCIÓN -->
-    <section class="introduction-section">
-        <!-- Se llena dinámicamente con JavaScript -->
-    </section>
-
-    <!-- SECCIÓN DE CATEGORÍAS -->
+    <!-- SECCIÓN CATEGORÍAS -->
     <section class="categories-section">
         <div class="container">
             <h2>Explora por Categoría</h2>
@@ -135,39 +97,34 @@
         </div>
     </section>
 
-    <!-- SECCIÓN DE ARTÍCULOS -->
+    <!-- SECCIÓN ARTÍCULOS -->
     <section class="articles-section" id="articulos">
         <div class="container">
             <h2>Artículos Destacados</h2>
+            <p>Explora más artículos</p>
             
-            <!-- BOTONES DE FILTRO -->
-            <div class="filter-buttons" id="filterButtons">
-                <!-- Se llena dinámicamente -->
-            </div>
-
-            <!-- GRID DE ARTÍCULOS -->
+            <!-- GRID PREMIUM -->
             <div class="articles-grid" id="articlesGrid">
                 <!-- Se llena con JavaScript -->
             </div>
 
-            <!-- MENSAJE SIN ARTÍCULOS -->
             <div id="noArticles" class="no-articles" style="display:none;">
-                <p>No hay artículos publicados aún.</p>
+                <p>No hay artículos publicados aún. Vuelve pronto para explorar historias fascinantes del mundo científico.</p>
             </div>
         </div>
     </section>
 
-    <!-- SECCIÓN DE NEWSLETTER -->
+    <!-- NEWSLETTER PREMIUM -->
     <section class="newsletter-section">
         <div class="container">
             <div class="newsletter-content">
                 <h2>Suscríbete a Nuestro Newsletter</h2>
-                <p>Recibe las últimas noticias y artículos directamente en tu correo</p>
+                <p>Recibe artículos seleccionados y descubrimientos científicos directamente en tu bandeja de entrada</p>
                 <div class="newsletter-form">
-                    <input type="email" id="newsletterEmail" placeholder="Tu correo electrónico" required>
-                    <button class="btn btn-primary" id="subscribeBtn">Suscribirse</button>
+                    <input type="email" id="newsletterEmail" placeholder="tu@email.com" required>
+                    <button class="btn btn-primary" id="subscribeBtn">SUSCRIBIRSE</button>
                 </div>
-                <div id="subscriptionMessage" style="display:none; margin-top: 15px; text-align: center; font-weight: bold;"></div>
+                <div id="subscriptionMessage" style="display:none; margin-top: 20px;"></div>
             </div>
         </div>
     </section>
@@ -178,20 +135,20 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>Science Stone</h4>
-                    <p>Tu fuente de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
+                    <p>Tu fuente editorial de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
                 </div>
                 <div class="footer-section">
                     <h4>Enlaces Rápidos</h4>
                     <ul>
                         <li><a href="index.html">Inicio</a></li>
-                        <li><a href="index.html#articulos">Artículos</a></li>
+                        <li><a href="#articulos">Artículos</a></li>
                         <li><a href="resources.html">Recursos</a></li>
                         <li><a href="author.html">Sobre el Autor</a></li>
                         <li><a href="contact.html">Contacto</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>Sígueme</h4>
+                    <h4>Sígueme en Redes</h4>
                     <div class="social-links" id="footerSocial">
                         <!-- Se llena dinámicamente -->
                     </div>

@@ -12,13 +12,13 @@
     <header class="header">
         <div class="navbar">
             <div class="nav-container">
-                <div class="logo">
+                <a href="index.html" class="logo">
                     <div class="logo-animated">
                         <span class="logo-icon">⚛️</span>
                         <span class="logo-text">Science Stone</span>
                     </div>
-                    <p class="tagline">Un mundo guiado por la ciencia</p>
-                </div>
+                    <p class="tagline">Editorial de Ciencia</p>
+                </a>
 
                 <div class="hamburger" id="hamburger">
                     <span></span>
@@ -32,7 +32,6 @@
                     <a href="resources.html" class="nav-link">Recursos</a>
                     <a href="author.html" class="nav-link">Sobre el Autor</a>
                     <a href="contact.html" class="nav-link">Contacto</a>
-                    
                     <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;">
                         <i class="fas fa-cog"></i> Admin
                     </a>
@@ -54,14 +53,24 @@
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
+    <!-- CONTENIDO DEL ARTÍCULO -->
     <main class="article-container">
         <div class="container">
             <div id="articleContent">
-                <!-- Se llena dinámicamente con JavaScript -->
+                <!-- Se llena dinámicamente -->
             </div>
         </div>
     </main>
+
+    <!-- ARTÍCULOS RELACIONADOS -->
+    <section style="background: var(--bg-light); padding: 80px 40px;">
+        <div class="container">
+            <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 40px; text-align: center;">Artículos Relacionados</h2>
+            <div class="articles-grid" id="relatedArticles" style="max-width: 100%;">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </div>
+    </section>
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -69,7 +78,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>Science Stone</h4>
-                    <p>Tu fuente de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
+                    <p>Tu fuente editorial de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
                 </div>
                 <div class="footer-section">
                     <h4>Enlaces Rápidos</h4>
@@ -82,7 +91,7 @@
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>Sígueme</h4>
+                    <h4>Sígueme en Redes</h4>
                     <div class="social-links" id="footerSocial">
                         <!-- Se llena dinámicamente -->
                     </div>

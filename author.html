@@ -12,13 +12,13 @@
     <header class="header">
         <div class="navbar">
             <div class="nav-container">
-                <div class="logo">
+                <a href="index.html" class="logo">
                     <div class="logo-animated">
                         <span class="logo-icon">⚛️</span>
                         <span class="logo-text">Science Stone</span>
                     </div>
-                    <p class="tagline">Un mundo guiado por la ciencia</p>
-                </div>
+                    <p class="tagline">Editorial de Ciencia</p>
+                </a>
 
                 <div class="hamburger" id="hamburger">
                     <span></span>
@@ -32,7 +32,6 @@
                     <a href="resources.html" class="nav-link">Recursos</a>
                     <a href="author.html" class="nav-link active">Sobre el Autor</a>
                     <a href="contact.html" class="nav-link">Contacto</a>
-                    
                     <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;">
                         <i class="fas fa-cog"></i> Admin
                     </a>
@@ -54,112 +53,121 @@
         </div>
     </header>
 
-    <!-- HERO SECTION -->
+    <!-- HERO AUTOR -->
     <section class="author-hero">
         <div class="author-hero-content">
-            <h1>Sobre el Autor</h1>
-            <p>Conoce más acerca de quien está detrás de Science Stone</p>
+            <h1 style="font-family: var(--font-serif); font-size: 48px; font-weight: 400; letter-spacing: 1px; margin-bottom: 15px;">Sobre el Autor</h1>
+            <p style="font-size: 18px; opacity: 0.95;">Conoce quién está detrás de Science Stone</p>
         </div>
     </section>
 
-    <!-- MAIN CONTENT -->
+    <!-- CONTENIDO AUTOR -->
     <main class="author-container">
         <div class="container">
-            <!-- VISTA DEL PERFIL DEL AUTOR -->
-            <div class="author-view">
-                <!-- SECCIÓN PRINCIPAL CON DOS COLUMNAS -->
-                <div class="author-main-wrapper">
-                    <!-- COLUMNA IZQUIERDA: PERFIL -->
-                    <section class="author-profile-section">
-                        <div class="author-profile">
-                            <!-- Se llena dinámicamente con JavaScript -->
+            <!-- PERFIL AUTOR -->
+            <div class="author-main-wrapper">
+                <!-- FOTO Y INFO PRINCIPAL -->
+                <section class="author-profile-section">
+                    <div class="author-profile">
+                        <img id="authorImage" src="https://via.placeholder.com/300x300?text=Foto+de+Perfil" alt="Autor" class="author-image" onerror="this.src='https://via.placeholder.com/300x300?text=Foto+de+Perfil'">
+                        <h2 id="authorName" style="font-family: var(--font-serif); font-size: 28px; font-weight: 400; margin: 20px 0 10px;">Tu Nombre</h2>
+                        <p id="authorTitle" style="color: var(--primary-yellow); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Título Profesional</p>
+                        <p id="authorLocation" style="color: var(--text-light); font-size: 14px; margin: 15px 0;">Ubicación</p>
+                        <div id="authorSocialsDisplay" class="contact-socials" style="display: flex; gap: 15px; justify-content: center; margin: 20px 0;">
+                            <!-- Se llena dinámicamente -->
                         </div>
-                    </section>
-
-                    <!-- COLUMNA DERECHA: INFORMACIÓN -->
-                    <section class="author-info-section">
-                        <h2>Información</h2>
-                        <div class="author-details">
-                            <!-- Se llena dinámicamente con JavaScript -->
-                        </div>
-                    </section>
-                </div>
-
-                <!-- SECCIÓN DE ARTÍCULOS EN FORMATO MASÓNICO -->
-                <section class="author-articles">
-                    <h2>Mis Artículos</h2>
-                    <div class="articles-grid" id="authorArticlesGrid">
-                        <!-- Se llena dinámicamente con JavaScript -->
+                        <button class="btn btn-primary" id="editAuthorBtn" style="display:none; width: 100%; margin-top: 20px;">
+                            <i class="fas fa-edit"></i> Editar Perfil
+                        </button>
                     </div>
                 </section>
 
-                <button class="btn btn-primary" id="editAuthorBtn" style="display:none; margin-top: 30px;">
-                    <i class="fas fa-edit"></i> Editar Perfil
-                </button>
-            </div>
+                <!-- BIOGRAFÍA Y DETALLES -->
+                <section class="author-info-section">
+                    <h3 style="font-family: var(--font-serif); font-size: 24px; margin-bottom: 20px; font-weight: 400;">Biografía</h3>
+                    <p id="authorBio" style="line-height: 1.8; color: var(--text-dark); margin-bottom: 30px;">
+                        Bienvenido a Science Stone. Soy un apasionado por la ciencia y la divulgación del conocimiento...
+                    </p>
 
-            <!-- PANEL DE EDICIÓN DEL PERFIL (Solo Admin) -->
-            <div class="author-edit" style="display:none;">
-                <h2>Editar Perfil del Autor</h2>
-                
-                <form id="authorEditForm" class="contact-form">
-                    <div class="form-group">
-                        <label for="editAuthorName">Nombre Completo *</label>
-                        <input type="text" id="editAuthorName" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editAuthorTitle">Título/Profesi��n</label>
-                        <input type="text" id="editAuthorTitle" placeholder="Ej: Científico, Educador, etc.">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editAuthorBio">Biografía</label>
-                        <textarea id="editAuthorBio" rows="5" placeholder="Cuéntanos sobre ti..."></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editAuthorImage">URL de tu Foto de Perfil</label>
-                        <input type="url" id="editAuthorImage" placeholder="https://...">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editAuthorEmail">Email</label>
-                        <input type="email" id="editAuthorEmail">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editAuthorLocation">Ubicación</label>
-                        <input type="text" id="editAuthorLocation" placeholder="Tu ciudad, país">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editAuthorWebsite">Sitio Web (Opcional)</label>
-                        <input type="url" id="editAuthorWebsite" placeholder="https://tuwebsite.com">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Redes Sociales</label>
-                        <div id="authorSocialsContainer">
-                            <!-- Se llena dinámicamente -->
+                    <div style="border-top: 1px solid var(--border-light); padding-top: 30px;">
+                        <h3 style="font-family: var(--font-serif); font-size: 20px; margin-bottom: 15px; font-weight: 400;">Más Información</h3>
+                        
+                        <div style="display: grid; gap: 15px;">
+                            <div>
+                                <p style="font-weight: 600; color: var(--primary-yellow); margin-bottom: 5px;">Email</p>
+                                <p id="authorEmail" style="color: var(--text-dark);">contacto@example.com</p>
+                            </div>
+                            <div>
+                                <p style="font-weight: 600; color: var(--primary-yellow); margin-bottom: 5px;">Sitio Web</p>
+                                <p id="authorWebsite" style="color: var(--text-dark);">https://ejemplo.com</p>
+                            </div>
                         </div>
-                        <button type="button" class="btn btn-secondary btn-small" id="addAuthorSocialBtn">
-                            <i class="fas fa-plus"></i> Agregar Red Social
-                        </button>
                     </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Guardar Cambios
-                        </button>
-                        <button type="button" id="cancelAuthorEditBtn" class="btn btn-secondary">
-                            <i class="fas fa-times"></i> Cancelar
-                        </button>
-                    </div>
-                </form>
+                </section>
             </div>
+
+            <!-- ARTÍCULOS DEL AUTOR -->
+            <section class="author-articles" style="margin-top: 80px;">
+                <h2 style="font-family: var(--font-serif); font-size: 36px; margin-bottom: 50px; text-align: center; font-weight: 400;">Mis Artículos</h2>
+                <div class="articles-grid" id="authorArticlesGrid" style="max-width: 100%;">
+                    <!-- Se llena dinámicamente -->
+                </div>
+            </section>
         </div>
     </main>
+
+    <!-- PANEL EDICIÓN (ADMIN) -->
+    <div id="authorEditPanel" style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; overflow: auto;">
+        <div style="background: white; max-width: 600px; margin: 40px auto; padding: 40px; border-radius: 4px;">
+            <h2 style="font-family: var(--font-serif); font-size: 28px; margin-bottom: 30px; font-weight: 400;">Editar Perfil del Autor</h2>
+            
+            <form id="authorEditForm">
+                <div class="form-group">
+                    <label for="editAuthorName">Nombre Completo *</label>
+                    <input type="text" id="editAuthorName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editAuthorTitle">Título/Profesión</label>
+                    <input type="text" id="editAuthorTitle" placeholder="Ej: Científico, Educador">
+                </div>
+
+                <div class="form-group">
+                    <label for="editAuthorBio">Biografía</label>
+                    <textarea id="editAuthorBio" rows="5" placeholder="Cuéntanos sobre ti..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="editAuthorImage">URL de Foto de Perfil</label>
+                    <input type="url" id="editAuthorImage" placeholder="https://...">
+                </div>
+
+                <div class="form-group">
+                    <label for="editAuthorEmail">Email</label>
+                    <input type="email" id="editAuthorEmail">
+                </div>
+
+                <div class="form-group">
+                    <label for="editAuthorLocation">Ubicación</label>
+                    <input type="text" id="editAuthorLocation" placeholder="Tu ciudad, país">
+                </div>
+
+                <div class="form-group">
+                    <label for="editAuthorWebsite">Sitio Web (Opcional)</label>
+                    <input type="url" id="editAuthorWebsite" placeholder="https://tuwebsite.com">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        <i class="fas fa-save"></i> Guardar Cambios
+                    </button>
+                    <button type="button" onclick="closeAuthorEdit()" class="btn btn-secondary" style="flex: 1;">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -167,7 +175,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>Science Stone</h4>
-                    <p>Tu fuente de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
+                    <p>Tu fuente editorial de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
                 </div>
                 <div class="footer-section">
                     <h4>Enlaces Rápidos</h4>
@@ -180,7 +188,7 @@
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>Sígueme</h4>
+                    <h4>Sígueme en Redes</h4>
                     <div class="social-links" id="footerSocial">
                         <!-- Se llena dinámicamente -->
                     </div>
@@ -191,92 +199,6 @@
             </div>
         </div>
     </footer>
-
-    <script>
-        // Actualizar renderización de artículos en author.html
-        function renderAuthorArticles() {
-            const container = document.getElementById('authorArticlesGrid');
-            if (!container) return;
-
-            // Cargar artículos
-            let articles = [];
-            try {
-                fetch('data.json').then(r => r.json()).then(data => {
-                    articles = data;
-                    const saved = localStorage.getItem('science_stone_articles');
-                    if (saved) {
-                        articles = [...articles, ...JSON.parse(saved)];
-                    }
-                    renderGrid();
-                });
-            } catch (error) {
-                const saved = localStorage.getItem('science_stone_articles');
-                if (saved) {
-                    articles = JSON.parse(saved);
-                }
-                renderGrid();
-            }
-
-            function renderGrid() {
-                const categories = [
-                    { key: 'quimica', name: 'Química' },
-                    { key: 'biologia', name: 'Biología' },
-                    { key: 'geografia', name: 'Geografía' },
-                    { key: 'geologia', name: 'Geología' },
-                    { key: 'paleontologia', name: 'Paleontología' },
-                    { key: 'astronomia', name: 'Astronomía' },
-                    { key: 'tecnologia', name: 'Tecnología' },
-                    { key: 'meteorologia', name: 'Meteorología' },
-                    { key: 'ingenieria', name: 'Ingeniería' },
-                    { key: 'historia', name: 'Historia' },
-                    { key: 'medicina', name: 'Medicina' },
-                    { key: 'experimentos', name: 'Experimentos' },
-                    { key: 'noticias', name: 'Noticias' },
-                    { key: 'datos-curiosos', name: 'Datos Curiosos' }
-                ];
-
-                container.innerHTML = '';
-                if (articles.length === 0) {
-                    container.innerHTML = '<p style="text-align:center; color:#999; grid-column:1/-1;">No hay artículos publicados aún.</p>';
-                    return;
-                }
-
-                articles.forEach((article, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'article-card';
-                    
-                    const sizes = ['normal', 'normal', 'large', 'list', 'normal'];
-                    const size = sizes[index % sizes.length];
-                    if (size === 'large') card.classList.add('article-card-large');
-                    if (size === 'list') card.classList.add('article-card-list');
-                    
-                    const categoryObj = categories.find(c => article.categories && article.categories.includes(c.key));
-                    const categoryName = categoryObj ? categoryObj.name : 'Ciencia';
-                    
-                    card.innerHTML = `
-                        <img src="${article.image || 'https://via.placeholder.com/300x200'}" alt="${article.title}" class="article-image">
-                        <div class="article-content">
-                            <span class="article-category">${categoryName}</span>
-                            <h3 class="article-title">${article.title}</h3>
-                            <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES')}</p>
-                            <p class="article-excerpt">${article.excerpt}</p>
-                        </div>
-                    `;
-                    
-                    card.addEventListener('click', () => {
-                        window.location.href = `article.html?id=${article.id}`;
-                    });
-                    
-                    container.appendChild(card);
-                });
-            }
-        }
-
-        // Llamar función después de cargar page
-        setTimeout(() => {
-            renderAuthorArticles();
-        }, 500);
-    </script>
 
     <script src="author.js"></script>
 </body>

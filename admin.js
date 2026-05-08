@@ -1,600 +1,463 @@
-// ===================== ADMIN.JS MEJORADO =====================
-let articles = [];
-let editingId = null;
-
+// ===================== ADMIN.JS CMS PROFESIONAL =====================
 const categories = [
-    { key: 'quimica', name: 'Química' },
-    { key: 'biologia', name: 'Biología' },
-    { key: 'geografia', name: 'Geografía' },
-    { key: 'geologia', name: 'Geología' },
-    { key: 'paleontologia', name: 'Paleontología' },
-    { key: 'astronomia', name: 'Astronomía' },
-    { key: 'tecnologia', name: 'Tecnología' },
-    { key: 'meteorologia', name: 'Meteorología' },
-    { key: 'ingenieria', name: 'Ingeniería' },
-    { key: 'historia', name: 'Historia' },
-    { key: 'medicina', name: 'Medicina' },
-    { key: 'experimentos', name: 'Experimentos' },
-    { key: 'noticias', name: 'Noticias' },
-    { key: 'datos-curiosos', name: 'Datos Curiosos' }
+    { key: 'quimica', name: 'Química', icon: '⚗️', color: '#1E90FF' },
+    { key: 'biologia', name: 'Biología', icon: '🧬', color: '#2E8B57' },
+    { key: 'geografia', name: 'Geografía', icon: '🌍', color: '#A0522D' },
+    { key: 'geologia', name: 'Geología', icon: '🪨', color: '#696969' },
+    { key: 'paleontologia', name: 'Paleontología', icon: '🦕', color: '#C68642' },
+    { key: 'astronomia', name: 'Astronomía', icon: '🔭', color: '#191970' },
+    { key: 'tecnologia', name: 'Tecnología', icon: '💻', color: '#00BFFF' },
+    { key: 'meteorologia', name: 'Meteorología', icon: '⛈️', color: '#87CEEB' },
+    { key: 'ingenieria', name: 'Ingeniería', icon: '⚙️', color: '#FF8C00' },
+    { key: 'historia', name: 'Historia', icon: '📚', color: '#8B6F47' },
+    { key: 'medicina', name: 'Medicina', icon: '💊', color: '#DC143C' },
+    { key: 'experimentos', name: 'Experimentos', icon: '🔬', color: '#32CD32' },
+    { key: 'noticias', name: 'Noticias', icon: '📰', color: '#E53935' },
+    { key: 'datos-curiosos', name: 'Datos Curiosos', icon: '💡', color: '#FF6F61' }
 ];
 
-// ===================== CARGAR ARTÍCULOS =====================
-async function loadArticles() {
-    try {
-        const response = await fetch('data.json');
-        articles = await response.json();
-    } catch (error) {
-        articles = [];
+let articles = [];
+let currentEditingId = null;
+
+// ===================== VERIFICAR AUTENTICACIÓN =====================
+window.addEventListener('load', () => {
+    if (!localStorage.getItem('owner_password')) {
+        window.location.href = 'auth.html';
+        return;
     }
     
+    initializeAdmin();
+});
+
+function initializeAdmin() {
+    loadArticles();
+    initializeCategories();
+    loadAuthorInfo();
+    loadSocials();
+    loadHeroInfo();
+    loadIntroInfo();
+    setupFormListeners();
+}
+
+function loadArticles() {
     const saved = localStorage.getItem('science_stone_articles');
     if (saved) {
-        const savedArticles = JSON.parse(saved);
-        articles = [...articles, ...savedArticles];
+        articles = JSON.parse(saved);
     }
-    
-    renderCategoriesCheckboxes();
     renderArticlesList();
 }
 
-// ===================== RENDERIZAR CHECKBOXES DE CATEGORÍAS =====================
-function renderCategoriesCheckboxes() {
+function initializeCategories() {
     const container = document.getElementById('categoriesCheckboxes');
+    const resCategory = document.getElementById('resCategory');
+
     container.innerHTML = categories.map(cat => `
-        <div class="checkbox-item">
-            <input type="checkbox" id="cat_${cat.key}" value="${cat.key}" name="category">
-            <label for="cat_${cat.key}">${cat.name}</label>
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" value="${cat.key}" class="category-checkbox">
+            <span>${cat.icon} ${cat.name}</span>
+        </label>
+    `).join('');
+
+    resCategory.innerHTML = categories.map(cat => `
+        <option value="${cat.key}">${cat.icon} ${cat.name}</option>
+    `).join('');
+}
+
+function renderArticlesList() {
+    const container = document.getElementById('articlesList');
+    
+    if (articles.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 40px;">No hay artículos publicados aún.</p>';
+        return;
+    }
+
+    container.innerHTML = articles.map(article => `
+        <div class="article-item">
+            <div class="article-item-info">
+                <h4>${article.title}</h4>
+                <p>Publicado: ${new Date(article.date).toLocaleDateString('es-ES')}</p>
+            </div>
+            <div class="article-item-actions">
+                <button class="btn btn-small btn-primary" onclick="editArticle(${article.id})">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="btn btn-small btn-secondary" onclick="deleteArticle(${article.id})">
+                    <i class="fas fa-trash"></i> Eliminar
+                </button>
+            </div>
         </div>
     `).join('');
 }
 
-// ===================== EDITOR DE TEXTO ENRIQUECIDO =====================
-function execCommand(command) {
-    document.execCommand(command, false, null);
-    document.getElementById('contentEditor').focus();
-}
-
-function execCommandWithValue(command, value) {
-    document.execCommand(command, false, value);
-    document.getElementById('contentEditor').focus();
-}
-
-function addLink() {
-    const url = prompt('Ingresa la URL:');
-    if (url) {
-        document.execCommand('createLink', false, url);
-        document.getElementById('contentEditor').focus();
-    }
-}
-
-function insertQuote() {
-    const quote = prompt('Ingresa la cita:');
-    if (quote) {
-        document.execCommand('insertHTML', false, `<blockquote style="border-left: 4px solid #FFD700; padding-left: 15px; margin: 15px 0; font-style: italic; color: #666;">"${quote}"</blockquote>`);
-        document.getElementById('contentEditor').focus();
-    }
-}
-
-// ===================== AGREGAR IMAGEN =====================
-document.getElementById('addImageBtn')?.addEventListener('click', () => {
-    const container = document.getElementById('imagesContainer');
-    const newGroup = document.createElement('div');
-    newGroup.className = 'image-input-group';
-    newGroup.innerHTML = `
-        <input type="url" class="image-url-input" placeholder="URL de imagen (https://...)">
-        <input type="text" class="image-credit-input" placeholder="Crédito/Autor (obligatorio)">
-        <button type="button" class="btn btn-small" onclick="removeImageInput(this)">
-            <i class="fas fa-trash"></i>
-        </button>
-    `;
-    container.appendChild(newGroup);
-});
-
-// ===================== CARGAR IMAGEN DESDE PC =====================
-document.getElementById('uploadImageBtn')?.addEventListener('click', () => {
-    document.getElementById('imageFileInput').click();
-});
-
-document.getElementById('imageFileInput')?.addEventListener('change', (e) => {
-    const files = e.target.files;
-    const container = document.getElementById('imagesContainer');
-    
-    for (let file of files) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const newGroup = document.createElement('div');
-            newGroup.className = 'image-input-group';
-            newGroup.innerHTML = `
-                <input type="url" class="image-url-input" value="${event.target.result}" placeholder="URL de imagen (https://...)">
-                <input type="text" class="image-credit-input" placeholder="Crédito/Autor (obligatorio)">
-                <button type="button" class="btn btn-small" onclick="removeImageInput(this)">
-                    <i class="fas fa-trash"></i>
-                </button>
-            `;
-            container.appendChild(newGroup);
-        };
-        reader.readAsDataURL(file);
-    }
-});
-
-function removeImageInput(btn) {
-    btn.parentElement.remove();
-}
-
-// ===================== AGREGAR ENLACE EXTERNO =====================
-document.getElementById('addLinkBtn')?.addEventListener('click', () => {
-    const container = document.getElementById('linksContainer');
-    const newGroup = document.createElement('div');
-    newGroup.className = 'link-input-group';
-    newGroup.innerHTML = `
-        <input type="text" class="link-title-input" placeholder="Título del enlace">
-        <input type="url" class="link-url-input" placeholder="URL (https://...)">
-        <input type="text" class="link-description-input" placeholder="Descripción del enlace (opcional)">
-        <button type="button" class="btn btn-small" onclick="removeLinkInput(this)">
-            <i class="fas fa-trash"></i>
-        </button>
-    `;
-    container.appendChild(newGroup);
-});
-
-function removeLinkInput(btn) {
-    btn.parentElement.remove();
-}
-
-// ===================== GUARDAR ARTÍCULO =====================
-document.getElementById('articleForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const id = document.getElementById('articleId').value;
-    
-    const selectedCategories = [];
-    document.querySelectorAll('input[name="category"]:checked').forEach(checkbox => {
-        selectedCategories.push(checkbox.value);
+function setupFormListeners() {
+    // Artículos
+    document.getElementById('articleForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        saveArticle();
     });
 
-    if (selectedCategories.length === 0) {
-        showAlert('Por favor selecciona al menos una categoría', 'error');
+    // Recursos
+    document.getElementById('resourceForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        saveResource();
+    });
+
+    // Autor
+    document.getElementById('authorForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        saveAuthor();
+    });
+
+    // Redes Sociales
+    document.getElementById('socialsForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        saveSocials();
+    });
+
+    // Hero
+    document.getElementById('heroForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        saveHero();
+    });
+
+    // Introducción
+    document.getElementById('introForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        saveIntro();
+    });
+}
+
+function saveArticle() {
+    const title = document.getElementById('title').value.trim();
+    const excerpt = document.getElementById('excerpt').value.trim();
+    const content = document.getElementById('contentEditor').innerHTML;
+    const image = document.getElementById('imageUrl').value.trim() || document.getElementById('imageFile').value;
+    const imageCredit = document.getElementById('imageCredit').value.trim();
+    const tags = document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t);
+    const sources = document.getElementById('sources').value.trim();
+    const featured = document.getElementById('featured').checked;
+
+    const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked'))
+        .map(cb => cb.value);
+
+    if (!title || !excerpt || selectedCategories.length === 0) {
+        alert('Por favor completa los campos obligatorios');
         return;
     }
 
-    const content = document.getElementById('contentEditor').innerHTML.trim();
-    if (!content) {
-        showAlert('Por favor escribe contenido en el artículo', 'error');
-        return;
-    }
-
-    const images = [];
-    const credits = [];
-    document.querySelectorAll('.image-input-group').forEach(group => {
-        const url = group.querySelector('.image-url-input').value.trim();
-        const credit = group.querySelector('.image-credit-input').value.trim();
-        if (url) {
-            if (!credit) {
-                showAlert('Todos los créditos de imágenes son obligatorios', 'error');
-                return;
-            }
-            images.push(url);
-            credits.push(credit);
-        }
-    });
-
-    const mainImage = images.length > 0 ? images[0] : 'https://via.placeholder.com/300x200?text=Sin+imagen';
-
-    const videos = [];
-    const videoUrl = document.getElementById('videoUrl').value.trim();
-    const videoFile = document.getElementById('videoFile').files[0];
-
-    if (videoUrl) {
-        videos.push({
-            type: 'url',
-            url: videoUrl
-        });
-    }
-
-    if (videoFile) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            videos.push({
-                type: 'file',
-                url: e.target.result
-            });
+    if (currentEditingId) {
+        const index = articles.findIndex(a => a.id === currentEditingId);
+        articles[index] = {
+            ...articles[index],
+            title,
+            excerpt,
+            content,
+            image,
+            imageCredits: [imageCredit],
+            categories: selectedCategories,
+            tags,
+            sources,
+            featured,
+            editedAt: new Date().toISOString()
         };
-        reader.readAsDataURL(videoFile);
-    }
-
-    const links = [];
-    document.querySelectorAll('.link-input-group').forEach(group => {
-        const title = group.querySelector('.link-title-input').value.trim();
-        const url = group.querySelector('.link-url-input').value.trim();
-        const description = group.querySelector('.link-description-input').value.trim();
-        if (title && url) {
-            links.push({ title, url, description });
-        }
-    });
-
-    const newArticle = {
-        id: id ? parseInt(id) : Date.now(),
-        title: document.getElementById('title').value,
-        categories: selectedCategories,
-        image: mainImage,
-        images: images.length > 0 ? images : [mainImage],
-        imageCredits: credits,
-        date: editingId ? (articles.find(a => a.id === editingId)?.date || new Date().toISOString().split('T')[0]) : new Date().toISOString().split('T')[0],
-        excerpt: document.getElementById('excerpt').value,
-        content: content,
-        tags: document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t),
-        sources: document.getElementById('sources').value,
-        featured: document.getElementById('featured').checked,
-        videos: videos,
-        links: links,
-        comments: [],
-        likes: 0,
-        rating: 0,
-        ratings: [],
-        editedAt: new Date().toISOString()
-    };
-
-    if (editingId) {
-        const index = articles.findIndex(a => a.id === editingId);
-        if (index !== -1) {
-            articles[index] = newArticle;
-        }
-        showAlert('✅ Artículo actualizado correctamente', 'success');
-        editingId = null;
-        document.getElementById('cancelBtn').style.display = 'none';
+        alert('✅ Artículo actualizado');
     } else {
+        const newArticle = {
+            id: Date.now(),
+            title,
+            excerpt,
+            content,
+            image,
+            images: image ? [image] : [],
+            imageCredits: imageCredit ? [imageCredit] : [],
+            categories: selectedCategories,
+            tags,
+            sources,
+            featured,
+            date: new Date().toISOString(),
+            links: [],
+            videos: [],
+            comments: [],
+            likes: 0,
+            rating: 0,
+            ratings: []
+        };
         articles.push(newArticle);
-        showAlert('✅ Artículo creado correctamente', 'success');
+        alert('✅ Artículo publicado correctamente');
     }
 
-    const savedArticles = JSON.parse(localStorage.getItem('science_stone_articles') || '[]');
-    const filteredSaved = savedArticles.filter(a => a.id !== newArticle.id);
-    filteredSaved.push(newArticle);
-    localStorage.setItem('science_stone_articles', JSON.stringify(filteredSaved));
-
-    resetForm();
+    localStorage.setItem('science_stone_articles', JSON.stringify(articles));
+    resetArticleForm();
     renderArticlesList();
-});
+}
 
-// ===================== EDITAR ARTÍCULO =====================
 function editArticle(id) {
     const article = articles.find(a => a.id === id);
     if (!article) return;
 
-    document.getElementById('articleId').value = article.id;
+    currentEditingId = id;
+    
     document.getElementById('title').value = article.title;
     document.getElementById('excerpt').value = article.excerpt;
-    document.getElementById('contentEditor').innerHTML = article.content || '';
-    document.getElementById('tags').value = article.tags ? article.tags.join(', ') : '';
+    document.getElementById('contentEditor').innerHTML = article.content;
+    document.getElementById('imageUrl').value = article.image || '';
+    document.getElementById('imageCredit').value = article.imageCredits?.[0] || '';
+    document.getElementById('tags').value = (article.tags || []).join(', ');
     document.getElementById('sources').value = article.sources || '';
     document.getElementById('featured').checked = article.featured || false;
 
-    document.querySelectorAll('input[name="category"]').forEach(cb => {
-        cb.checked = article.categories && article.categories.includes(cb.value);
+    document.querySelectorAll('.category-checkbox').forEach(cb => {
+        cb.checked = article.categories.includes(cb.value);
     });
 
-    const imagesContainer = document.getElementById('imagesContainer');
-    imagesContainer.innerHTML = '';
+    document.getElementById('cancelArticleBtn').style.display = 'inline-block';
+    document.querySelector('#articleForm button[type="submit"]').innerHTML = '<i class="fas fa-check"></i> Actualizar Artículo';
     
-    if (article.images && article.images.length > 0) {
-        article.images.forEach((img, index) => {
-            const credit = article.imageCredits && article.imageCredits[index] ? article.imageCredits[index] : '';
-            const group = document.createElement('div');
-            group.className = 'image-input-group';
-            group.innerHTML = `
-                <input type="url" class="image-url-input" value="${img}" placeholder="URL de imagen">
-                <input type="text" class="image-credit-input" value="${credit}" placeholder="Crédito">
-                <button type="button" class="btn btn-small" onclick="removeImageInput(this)">
-                    <i class="fas fa-trash"></i>
-                </button>
-            `;
-            imagesContainer.appendChild(group);
-        });
-    } else {
-        const group = document.createElement('div');
-        group.className = 'image-input-group';
-        group.innerHTML = `
-            <input type="url" class="image-url-input" placeholder="URL de imagen (https://...)">
-            <input type="text" class="image-credit-input" placeholder="Crédito/Autor (obligatorio)">
-            <button type="button" class="btn btn-small" onclick="removeImageInput(this)">
-                <i class="fas fa-trash"></i>
-            </button>
-        `;
-        imagesContainer.appendChild(group);
-    }
-
-    document.getElementById('videoUrl').value = '';
-    document.getElementById('videoFile').value = '';
-    
-    if (article.videos && article.videos.length > 0) {
-        const videoUrl = article.videos.find(v => v.type === 'url');
-        if (videoUrl) {
-            document.getElementById('videoUrl').value = videoUrl.url;
-        }
-    }
-
-    const linksContainer = document.getElementById('linksContainer');
-    linksContainer.innerHTML = '';
-    
-    if (article.links && article.links.length > 0) {
-        article.links.forEach(link => {
-            const group = document.createElement('div');
-            group.className = 'link-input-group';
-            group.innerHTML = `
-                <input type="text" class="link-title-input" value="${link.title}" placeholder="Título del enlace">
-                <input type="url" class="link-url-input" value="${link.url}" placeholder="URL (https://...)">
-                <input type="text" class="link-description-input" value="${link.description || ''}" placeholder="Descripción (opcional)">
-                <button type="button" class="btn btn-small" onclick="removeLinkInput(this)">
-                    <i class="fas fa-trash"></i>
-                </button>
-            `;
-            linksContainer.appendChild(group);
-        });
-    } else {
-        const group = document.createElement('div');
-        group.className = 'link-input-group';
-        group.innerHTML = `
-            <input type="text" class="link-title-input" placeholder="Título del enlace">
-            <input type="url" class="link-url-input" placeholder="URL (https://...)">
-            <input type="text" class="link-description-input" placeholder="Descripción (opcional)">
-            <button type="button" class="btn btn-small" onclick="removeLinkInput(this)">
-                <i class="fas fa-trash"></i>
-            </button>
-        `;
-        linksContainer.appendChild(group);
-    }
-
-    editingId = id;
-    document.getElementById('cancelBtn').style.display = 'inline-block';
-    document.querySelector('.admin-form-section').scrollIntoView({ behavior: 'smooth' });
-    document.getElementById('title').focus();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ===================== ELIMINAR ARTÍCULO =====================
 function deleteArticle(id) {
-    if (confirm('¿Estás seguro de que quieres eliminar este artículo?')) {
-        articles = articles.filter(a => a.id !== id);
-        
-        const savedArticles = JSON.parse(localStorage.getItem('science_stone_articles') || '[]');
-        const filtered = savedArticles.filter(a => a.id !== id);
-        localStorage.setItem('science_stone_articles', JSON.stringify(filtered));
-        
-        renderArticlesList();
-        showAlert('✅ Artículo eliminado correctamente', 'success');
-    }
+    if (!confirm('¿Estás seguro de que deseas eliminar este artículo?')) return;
+    
+    articles = articles.filter(a => a.id !== id);
+    localStorage.setItem('science_stone_articles', JSON.stringify(articles));
+    renderArticlesList();
+    alert('✅ Artículo eliminado');
 }
 
-// ===================== RENDERIZAR LISTA DE ARTÍCULOS =====================
-function renderArticlesList() {
-    const container = document.getElementById('articlesList');
-    const search = document.getElementById('searchArticles') ? document.getElementById('searchArticles').value.toLowerCase() : '';
-    
-    const filtered = articles.filter(a =>
-        a.title.toLowerCase().includes(search) ||
-        (a.categories && a.categories.some(cat => 
-            categories.find(c => c.key === cat)?.name.toLowerCase().includes(search)
-        ))
-    );
+function resetArticleForm() {
+    document.getElementById('articleForm').reset();
+    document.getElementById('contentEditor').innerHTML = '';
+    document.querySelectorAll('.category-checkbox').forEach(cb => cb.checked = false);
+    currentEditingId = null;
+    document.getElementById('cancelArticleBtn').style.display = 'none';
+    document.querySelector('#articleForm button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Publicar Artículo';
+}
 
-    if (filtered.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">No hay artículos</p>';
+function saveResource() {
+    const title = document.getElementById('resTitle').value.trim();
+    const type = document.getElementById('resType').value;
+    const category = document.getElementById('resCategory').value;
+    const description = document.getElementById('resDescription').value.trim();
+    const url = document.getElementById('resUrl').value.trim();
+    const author = document.getElementById('resAuthor').value.trim();
+
+    if (!title || !type || !url) {
+        alert('Por favor completa los campos obligatorios');
         return;
     }
 
-    container.innerHTML = filtered.reverse().map(article => {
-        const categoryNames = article.categories ? article.categories.map(cat => {
-            const catObj = categories.find(c => c.key === cat);
-            return catObj ? catObj.name : cat;
-        }).join(', ') : 'Sin categoría';
-        
-        const editedInfo = article.editedAt ? `<br><small style="color: #999;">Modificado: ${new Date(article.editedAt).toLocaleString('es-ES')}</small>` : '';
-        const featuredBadge = article.featured ? '<i class="fas fa-star" style="color: #FFD700; margin-left: 8px;"></i>' : '';
+    const resources = JSON.parse(localStorage.getItem('science_stone_resources') || '[]');
+    resources.push({
+        id: Date.now(),
+        title,
+        type,
+        category,
+        description,
+        url,
+        author,
+        createdAt: new Date().toISOString()
+    });
 
-        return `
-            <div class="article-item">
-                <div class="article-item-header">
-                    <div>
-                        <div class="article-item-title">${article.title} ${featuredBadge}</div>
-                        <div class="article-item-date">${new Date(article.date).toLocaleDateString('es-ES')}</div>
-                        ${editedInfo}
-                        <div style="font-size: 12px; color: #666; margin-top: 5px;">${categoryNames}</div>
-                    </div>
-                </div>
-                <div class="article-item-actions">
-                    <button class="btn btn-edit" onclick="editArticle(${article.id})">
-                        <i class="fas fa-edit"></i> Editar
-                    </button>
-                    <button class="btn btn-delete" onclick="deleteArticle(${article.id})">
-                        <i class="fas fa-trash"></i> Eliminar
-                    </button>
-                </div>
-            </div>
-        `;
-    }).join('');
+    localStorage.setItem('science_stone_resources', JSON.stringify(resources));
+    document.getElementById('resourceForm').reset();
+    alert('✅ Recurso agregado correctamente');
 }
 
-// ===================== MOSTRAR ALERTAS =====================
-function showAlert(message, type) {
-    const form = document.getElementById('articleForm');
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type}`;
-    alert.textContent = message;
-    form.parentElement.insertBefore(alert, form);
-
-    setTimeout(() => alert.remove(), 4000);
+function loadAuthorInfo() {
+    document.getElementById('authorName').value = localStorage.getItem('author_name') || '';
+    document.getElementById('authorTitle').value = localStorage.getItem('author_title') || '';
+    document.getElementById('authorBio').value = localStorage.getItem('author_bio') || '';
+    document.getElementById('authorImage').value = localStorage.getItem('author_image') || '';
+    document.getElementById('authorEmail').value = localStorage.getItem('author_email') || '';
+    document.getElementById('authorLocation').value = localStorage.getItem('author_location') || '';
+    document.getElementById('authorWebsite').value = localStorage.getItem('author_website') || '';
 }
 
-// ===================== RESETEAR FORMULARIO =====================
-function resetForm() {
-    document.getElementById('articleForm').reset();
-    document.getElementById('articleId').value = '';
-    document.getElementById('contentEditor').innerHTML = '';
-    document.querySelectorAll('input[name="category"]').forEach(cb => cb.checked = false);
-    document.getElementById('featured').checked = false;
-    editingId = null;
-    document.getElementById('cancelBtn').style.display = 'none';
+function saveAuthor() {
+    localStorage.setItem('author_name', document.getElementById('authorName').value);
+    localStorage.setItem('author_title', document.getElementById('authorTitle').value);
+    localStorage.setItem('author_bio', document.getElementById('authorBio').value);
+    localStorage.setItem('author_image', document.getElementById('authorImage').value);
+    localStorage.setItem('author_email', document.getElementById('authorEmail').value);
+    localStorage.setItem('author_location', document.getElementById('authorLocation').value);
+    localStorage.setItem('author_website', document.getElementById('authorWebsite').value);
+    alert('✅ Perfil actualizado');
+}
+
+function loadSocials() {
+    const socials = JSON.parse(localStorage.getItem('author_socials') || '[]');
+    const container = document.getElementById('socialsContainer');
     
-    const imagesContainer = document.getElementById('imagesContainer');
-    imagesContainer.innerHTML = `
-        <div class="image-input-group">
-            <input type="url" class="image-url-input" placeholder="URL de imagen (https://...)">
-            <input type="text" class="image-credit-input" placeholder="Crédito/Autor (obligatorio)">
-            <button type="button" class="btn btn-small" onclick="removeImageInput(this)">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
-    `;
+    if (socials.length === 0) {
+        addSocialInput();
+        return;
+    }
 
-    const linksContainer = document.getElementById('linksContainer');
-    linksContainer.innerHTML = `
-        <div class="link-input-group">
-            <input type="text" class="link-title-input" placeholder="Título del enlace">
-            <input type="url" class="link-url-input" placeholder="URL (https://...)">
-            <input type="text" class="link-description-input" placeholder="Descripción (opcional)">
-            <button type="button" class="btn btn-small" onclick="removeLinkInput(this)">
+    container.innerHTML = socials.map((social, index) => `
+        <div style="background: var(--bg-light); padding: 15px; border-radius: 4px; margin-bottom: 10px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end;">
+            <div>
+                <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 5px;">Red Social</label>
+                <select class="social-platform" data-index="${index}">
+                    <option value="facebook" ${social.platform === 'facebook' ? 'selected' : ''}>Facebook</option>
+                    <option value="twitter" ${social.platform === 'twitter' ? 'selected' : ''}>Twitter</option>
+                    <option value="instagram" ${social.platform === 'instagram' ? 'selected' : ''}>Instagram</option>
+                    <option value="linkedin" ${social.platform === 'linkedin' ? 'selected' : ''}>LinkedIn</option>
+                    <option value="youtube" ${social.platform === 'youtube' ? 'selected' : ''}>YouTube</option>
+                    <option value="whatsapp" ${social.platform === 'whatsapp' ? 'selected' : ''}>WhatsApp</option>
+                    <option value="telegram" ${social.platform === 'telegram' ? 'selected' : ''}>Telegram</option>
+                </select>
+            </div>
+            <div>
+                <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 5px;">URL</label>
+                <input type="url" class="social-url" value="${social.url}" data-index="${index}" placeholder="https://...">
+            </div>
+            <button type="button" class="btn btn-small btn-secondary" onclick="removeSocialInput(${index})">
                 <i class="fas fa-trash"></i>
             </button>
         </div>
-    `;
+    `).join('');
 }
 
-// ===================== CANCELAR EDICIÓN =====================
-document.getElementById('cancelBtn')?.addEventListener('click', () => {
-    resetForm();
-});
+function addSocialInput() {
+    const container = document.getElementById('socialsContainer');
+    const newIndex = container.children.length;
+    
+    const div = document.createElement('div');
+    div.style.cssText = 'background: var(--bg-light); padding: 15px; border-radius: 4px; margin-bottom: 10px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end;';
+    div.innerHTML = `
+        <div>
+            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 5px;">Red Social</label>
+            <select class="social-platform" data-index="${newIndex}">
+                <option value="facebook">Facebook</option>
+                <option value="twitter">Twitter</option>
+                <option value="instagram">Instagram</option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="youtube">YouTube</option>
+                <option value="whatsapp">WhatsApp</option>
+                <option value="telegram">Telegram</option>
+            </select>
+        </div>
+        <div>
+            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 5px;">URL</label>
+            <input type="url" class="social-url" data-index="${newIndex}" placeholder="https://...">
+        </div>
+        <button type="button" class="btn btn-small btn-secondary" onclick="removeSocialInput(${newIndex})">
+            <i class="fas fa-trash"></i>
+        </button>
+    `;
+    
+    container.appendChild(div);
+}
 
-// ===================== BUSCAR ARTÍCULOS =====================
-document.getElementById('searchArticles')?.addEventListener('input', renderArticlesList);
+function removeSocialInput(index) {
+    const inputs = document.querySelectorAll('.social-platform');
+    if (inputs.length > 1) {
+        inputs[index].closest('div').parentElement.remove();
+    } else {
+        alert('Debes mantener al menos una red social');
+    }
+}
 
-// ===================== REFRESH BUTTON =====================
-document.getElementById('refreshBtn')?.addEventListener('click', () => {
-    loadArticles();
-    showAlert('✅ Artículos actualizados', 'success');
-});
+function saveSocials() {
+    const socials = [];
+    document.querySelectorAll('.social-platform').forEach((select, index) => {
+        const platform = select.value;
+        const url = document.querySelectorAll('.social-url')[index].value;
+        
+        if (url.trim()) {
+            socials.push({ platform, url });
+        }
+    });
 
-// ===================== ESTILOS ADICIONALES PARA EDITOR =====================
-const style = document.createElement('style');
-style.textContent = `
-    .editor-toolbar {
-        display: flex;
-        gap: 5px;
-        background: #f5f5f5;
-        padding: 10px;
-        border-radius: 6px 6px 0 0;
-        border: 2px solid #ddd;
-        border-bottom: none;
-        flex-wrap: wrap;
-        align-items: center;
+    localStorage.setItem('author_socials', JSON.stringify(socials));
+    alert('✅ Redes sociales actualizadas');
+}
+
+function loadHeroInfo() {
+    document.getElementById('heroImageUrl').value = localStorage.getItem('hero_image') || '';
+    document.getElementById('heroColor1').value = localStorage.getItem('hero_color1') || '#667eea';
+    document.getElementById('heroColor2').value = localStorage.getItem('hero_color2') || '#764ba2';
+}
+
+function saveHero() {
+    const imageUrl = document.getElementById('heroImageUrl').value.trim();
+    const color1 = document.getElementById('heroColor1').value;
+    const color2 = document.getElementById('heroColor2').value;
+
+    if (imageUrl) {
+        localStorage.setItem('hero_image', imageUrl);
+    }
+    localStorage.setItem('hero_color1', color1);
+    localStorage.setItem('hero_color2', color2);
+
+    alert('✅ Sección Hero actualizada');
+}
+
+function loadIntroInfo() {
+    const saved = localStorage.getItem('blog_introduction');
+    if (saved) {
+        const data = JSON.parse(saved);
+        document.getElementById('introContent').value = data.content;
+    }
+}
+
+function saveIntro() {
+    const content = document.getElementById('introContent').value.trim();
+    
+    if (!content) {
+        alert('Por favor escribe la introducción');
+        return;
     }
 
-    .editor-btn {
-        width: 35px;
-        height: 35px;
-        padding: 0;
-        border: 1px solid #ddd;
-        background: white;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        color: #333;
-    }
+    const data = {
+        content,
+        editedAt: new Date().toISOString()
+    };
 
-    .editor-btn:hover {
-        background: #FFD700;
-        color: #000;
-        border-color: #FFD700;
-    }
+    localStorage.setItem('blog_introduction', JSON.stringify(data));
+    alert('✅ Introducción actualizada');
+}
 
-    .separator {
-        width: 1px;
-        height: 25px;
-        background: #ddd;
-        margin: 0 5px;
-    }
+// ===================== NAVEGACIÓN TABS =====================
+function switchTab(tabName) {
+    document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.classList.remove('active'));
+    
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+    event.target.classList.add('active');
+}
 
-    .editor-select {
-        padding: 6px 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-family: 'Philosopher', sans-serif;
-        background: white;
-        color: #333;
-        cursor: pointer;
-        font-size: 12px;
-    }
+// ===================== EDITOR ENRIQUECIDO =====================
+function insertFormat(format) {
+    document.execCommand(format);
+    document.getElementById('contentEditor').focus();
+}
 
-    .editor-select:hover {
-        border-color: #FFD700;
+function insertHeading(tag) {
+    if (tag) {
+        document.execCommand('formatBlock', false, tag);
     }
+}
 
-    #contentEditor {
-        border: 2px solid #ddd;
-        border-radius: 0 0 6px 6px;
-        padding: 15px;
-        min-height: 250px;
-        font-family: 'Philosopher', sans-serif;
-        font-size: 14px;
-        line-height: 1.6;
-        color: #333;
-        outline: none;
+function insertLink() {
+    const url = prompt('URL del enlace:');
+    if (url) {
+        document.execCommand('createLink', false, url);
     }
+}
 
-    #contentEditor:focus {
-        border-color: #FFD700;
-        box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+function insertImage() {
+    const url = prompt('URL de la imagen:');
+    if (url) {
+        document.execCommand('insertImage', false, url);
     }
+}
 
-    #contentEditor blockquote {
-        border-left: 4px solid #FFD700 !important;
-        padding-left: 15px !important;
-        margin: 15px 0 !important;
-        font-style: italic;
-        color: #666;
+// ===================== LOGOUT =====================
+function logout() {
+    if (confirm('¿Deseas cerrar sesión?')) {
+        localStorage.removeItem('owner_password');
+        window.location.href = 'index.html';
     }
-
-    .link-input-group {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 12px;
-    }
-
-    .link-title-input {
-        flex: 1;
-        padding: 10px;
-        border: 2px solid #ddd;
-        border-radius: 6px;
-        font-family: 'Philosopher', sans-serif;
-    }
-
-    .link-url-input {
-        flex: 2;
-        padding: 10px;
-        border: 2px solid #ddd;
-        border-radius: 6px;
-        font-family: 'Philosopher', sans-serif;
-    }
-
-    .link-description-input {
-        flex: 1.5;
-        padding: 10px;
-        border: 2px solid #ddd;
-        border-radius: 6px;
-        font-family: 'Philosopher', sans-serif;
-    }
-
-    .link-title-input:focus,
-    .link-url-input:focus,
-    .link-description-input:focus {
-        outline: none;
-        border-color: #FFD700;
-    }
-`;
-document.head.appendChild(style);
-
-// ===================== INICIALIZAR =====================
-loadArticles();
+}

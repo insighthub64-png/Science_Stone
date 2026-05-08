@@ -6,48 +6,121 @@
     <title>Recursos - Science Stone</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .resource-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .resource-icon {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+        }
+
+        .resource-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .resource-type {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .resource-title {
+            font-family: var(--font-serif);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .resource-description {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .resource-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-light);
+            padding-top: 15px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .resource-download {
+            color: var(--primary-yellow);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
     <!-- HEADER / NAVBAR -->
     <header class="header">
         <div class="navbar">
             <div class="nav-container">
-                <!-- LOGO -->
-                <div class="logo">
+                <a href="index.html" class="logo">
                     <div class="logo-animated">
                         <span class="logo-icon">⚛️</span>
                         <span class="logo-text">Science Stone</span>
                     </div>
-                    <p class="tagline">Un mundo guiado por la ciencia</p>
-                </div>
+                    <p class="tagline">Editorial de Ciencia</p>
+                </a>
 
-                <!-- MENÚ HAMBURGUESA MÓVIL -->
                 <div class="hamburger" id="hamburger">
                     <span></span>
                     <span></span>
                     <span></span>
                 </div>
 
-                <!-- NAVEGACIÓN PRINCIPAL -->
                 <nav class="nav-menu" id="navMenu">
                     <a href="index.html" class="nav-link">Inicio</a>
                     <a href="index.html#articulos" class="nav-link">Artículos</a>
                     <a href="resources.html" class="nav-link active">Recursos</a>
-                    
-                    <div class="nav-dropdown">
-                        <a href="#" class="nav-link dropdown-toggle">Más <i class="fas fa-chevron-down"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="author.html" class="dropdown-item">Sobre el Autor</a>
-                            <a href="contact.html" class="dropdown-item">Contacto</a>
-                        </div>
-                    </div>
-                    
+                    <a href="author.html" class="nav-link">Sobre el Autor</a>
+                    <a href="contact.html" class="nav-link">Contacto</a>
                     <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;">
                         <i class="fas fa-cog"></i> Admin
                     </a>
                 </nav>
 
-                <!-- BUSCADOR -->
                 <div class="search-container">
                     <button class="search-btn" id="searchBtn">
                         <i class="fas fa-search"></i>
@@ -55,7 +128,6 @@
                 </div>
             </div>
 
-            <!-- BARRA DE BÚSQUEDA EXPANDIDA -->
             <div class="search-bar" id="searchBar">
                 <input type="text" id="searchInput" placeholder="Buscar recursos...">
                 <button class="close-search" id="closeSearch">
@@ -65,21 +137,36 @@
         </div>
     </header>
 
-    <!-- HERO SECTION -->
+    <!-- HERO RECURSOS -->
     <section class="resources-hero">
-        <div class="resources-hero-content">
-            <h1>Recursos Educativos</h1>
-            <p>Encuentra materiales de apoyo para ampliar tu conocimiento científico</p>
+        <div style="text-align: center; color: white;">
+            <h1 style="font-family: var(--font-serif); font-size: 48px; margin-bottom: 15px; font-weight: 400; letter-spacing: 1px;">Centro de Recursos</h1>
+            <p style="font-size: 18px; opacity: 0.95;">Biblioteca digital con material educativo de apoyo</p>
         </div>
     </section>
 
-    <!-- FILTROS DE CATEGORÍA -->
-    <section class="resources-section">
+    <!-- CONTENIDO RECURSOS -->
+    <main class="resources-container">
         <div class="container">
-            <h2 class="section-title" style="color: #000;">Recursos por Categoría</h2>
-            
-            <div class="filter-buttons" id="filterButtons" style="justify-content: center;">
-                <button class="filter-btn active" data-filter="todos">Todos</button>
+            <!-- FILTROS -->
+            <div style="margin-bottom: 40px;">
+                <h2 style="font-family: var(--font-serif); font-size: 28px; margin-bottom: 25px; font-weight: 400;">Filtrar por Tipo</h2>
+                <div class="filter-buttons" id="filterButtonsResources">
+                    <button class="filter-btn active" data-filter="todos">Todos</button>
+                    <button class="filter-btn" data-filter="pdf"><i class="fas fa-file-pdf"></i> PDFs</button>
+                    <button class="filter-btn" data-filter="libro"><i class="fas fa-book"></i> Libros</button>
+                    <button class="filter-btn" data-filter="video"><i class="fas fa-video"></i> Videos</button>
+                    <button class="filter-btn" data-filter="infografia"><i class="fas fa-image"></i> Infografías</button>
+                    <button class="filter-btn" data-filter="audio"><i class="fas fa-podcast"></i> Audio</button>
+                </div>
+            </div>
+
+            <!-- FILTRAR POR CATEGORÍA -->
+            <div style="margin-bottom: 40px;">
+                <h2 style="font-family: var(--font-serif); font-size: 28px; margin-bottom: 25px; font-weight: 400;">Filtrar por Categoría</h2>
+                <div class="filter-buttons" id="categoryFiltersResources">
+                    <!-- Se llena dinámicamente -->
+                </div>
             </div>
 
             <!-- GRID DE RECURSOS -->
@@ -87,100 +174,72 @@
                 <!-- Se llena con JavaScript -->
             </div>
 
-            <!-- MENSAJE SIN RECURSOS -->
             <div id="noResources" class="no-articles" style="display:none;">
-                <p>No hay recursos publicados aún.</p>
+                <p>No hay recursos en esta categoría.</p>
+            </div>
+
+            <!-- BOTÓN AGREGAR RECURSO (ADMIN) -->
+            <button class="btn btn-primary" id="addResourceBtn" style="display:none; margin-top: 40px; width: auto;">
+                <i class="fas fa-plus"></i> Agregar Nuevo Recurso
+            </button>
+
+            <!-- MODAL AGREGAR RECURSO -->
+            <div id="addResourceModal" style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; overflow: auto;">
+                <div style="background: white; max-width: 600px; margin: 40px auto; padding: 40px; border-radius: 4px;">
+                    <h2 style="font-family: var(--font-serif); font-size: 28px; margin-bottom: 30px; font-weight: 400;">Agregar Nuevo Recurso</h2>
+                    
+                    <form id="addResourceForm">
+                        <div class="form-group">
+                            <label for="resourceTitle">Título *</label>
+                            <input type="text" id="resourceTitle" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="resourceType">Tipo de Recurso *</label>
+                            <select id="resourceType" required>
+                                <option value="pdf">PDF</option>
+                                <option value="libro">Libro</option>
+                                <option value="video">Video</option>
+                                <option value="infografia">Infografía</option>
+                                <option value="audio">Audio</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="resourceCategory">Categoría *</label>
+                            <select id="resourceCategory" required>
+                                <!-- Se llena dinámicamente -->
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="resourceDescription">Descripción</label>
+                            <textarea id="resourceDescription" rows="4" placeholder="Describe el recurso..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="resourceUrl">URL del Recurso *</label>
+                            <input type="url" id="resourceUrl" placeholder="https://..." required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="resourceAuthor">Autor/Fuente</label>
+                            <input type="text" id="resourceAuthor" placeholder="Nombre del autor o sitio web">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" style="flex: 1;">
+                                <i class="fas fa-save"></i> Guardar Recurso
+                            </button>
+                            <button type="button" onclick="closeAddResource()" class="btn btn-secondary" style="flex: 1;">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </section>
-
-    <!-- BOTÓN AGREGAR RECURSO (Solo Admin) -->
-    <div class="add-resource-btn-container" id="addResourceBtnContainer" style="display:none; text-align: center; padding: 30px;">
-        <button class="btn btn-primary" id="addResourceBtn" style="font-size: 16px; padding: 15px 30px;">
-            <i class="fas fa-plus"></i> Agregar Nuevo Recurso
-        </button>
-    </div>
-
-    <!-- MODAL PARA AGREGAR/EDITAR RECURSOS (Solo Admin) -->
-    <div id="resourceModal" class="resource-modal" style="display:none;">
-        <div class="resource-modal-content">
-            <button class="modal-close" onclick="closeResourceModal()">&times;</button>
-            <h2 id="resourceModalTitle">Agregar Nuevo Recurso</h2>
-            
-            <form id="resourceForm" class="resource-form">
-                <div class="form-group">
-                    <label for="resourceTitle">Título del Recurso *</label>
-                    <input type="text" id="resourceTitle" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="resourceType">Tipo de Recurso *</label>
-                    <select id="resourceType" required>
-                        <option value="">Selecciona un tipo</option>
-                        <option value="video">Video</option>
-                        <option value="podcast">Podcast</option>
-                        <option value="libro">Libro/PDF</option>
-                        <option value="revista">Revista</option>
-                        <option value="articulo">Artículo</option>
-                        <option value="tesis">Tesis</option>
-                        <option value="debate">Debate</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="resourceCategory">Categoría *</label>
-                    <select id="resourceCategory" required>
-                        <option value="">Selecciona categoría</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="resourceImage">Imagen/Portada (URL)</label>
-                    <input type="url" id="resourceImage" placeholder="https://...">
-                </div>
-
-                <div class="form-group">
-                    <label for="resourceImageFile">O carga desde tu PC</label>
-                    <input type="file" id="resourceImageFile" accept="image/*">
-                </div>
-
-                <div class="form-group">
-                    <label for="resourceUrl">URL del Recurso</label>
-                    <input type="url" id="resourceUrl" placeholder="https://...">
-                </div>
-
-                <div class="form-group">
-                    <label for="resourceFile">O carga un archivo (Video, PDF, etc.)</label>
-                    <input type="file" id="resourceFile" accept="video/*,.pdf,.mp3,.epub">
-                    <small>Máx. 100MB</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="resourceDescription">Descripción *</label>
-                    <textarea id="resourceDescription" rows="4" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="resourceAuthor">Autor/Fuente</label>
-                    <input type="text" id="resourceAuthor">
-                </div>
-
-                <div class="form-group">
-                    <label for="resourceLink">Enlace de Referencia (opcional)</label>
-                    <input type="url" id="resourceLink" placeholder="https://...">
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Guardar Recurso
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="closeResourceModal()">
-                        <i class="fas fa-times"></i> Cancelar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
+    </main>
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -188,7 +247,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>Science Stone</h4>
-                    <p>Tu fuente de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
+                    <p>Tu fuente editorial de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
                 </div>
                 <div class="footer-section">
                     <h4>Enlaces Rápidos</h4>
@@ -201,7 +260,7 @@
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>Sígueme</h4>
+                    <h4>Sígueme en Redes</h4>
                     <div class="social-links" id="footerSocial">
                         <!-- Se llena dinámicamente -->
                     </div>

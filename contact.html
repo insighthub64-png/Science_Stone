@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -12,13 +12,13 @@
     <header class="header">
         <div class="navbar">
             <div class="nav-container">
-                <div class="logo">
+                <a href="index.html" class="logo">
                     <div class="logo-animated">
                         <span class="logo-icon">⚛️</span>
                         <span class="logo-text">Science Stone</span>
                     </div>
-                    <p class="tagline">Un mundo guiado por la ciencia</p>
-                </div>
+                    <p class="tagline">Editorial de Ciencia</p>
+                </a>
 
                 <div class="hamburger" id="hamburger">
                     <span></span>
@@ -32,8 +32,7 @@
                     <a href="resources.html" class="nav-link">Recursos</a>
                     <a href="author.html" class="nav-link">Sobre el Autor</a>
                     <a href="contact.html" class="nav-link active">Contacto</a>
-                    
-                    <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;" title="Panel de administración">
+                    <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;">
                         <i class="fas fa-cog"></i> Admin
                     </a>
                 </nav>
@@ -54,19 +53,19 @@
         </div>
     </header>
 
-    <!-- HERO SECTION CONTACTO -->
+    <!-- HERO CONTACTO -->
     <section class="contact-hero">
         <div class="contact-hero-content">
-            <h1>Ponte en Contacto</h1>
-            <p>¿Tienes preguntas o sugerencias? Me encantaría escucharte</p>
+            <h1 style="font-family: var(--font-serif); font-size: 48px; margin-bottom: 15px; font-weight: 400; letter-spacing: 1px;">Ponte en Contacto</h1>
+            <p style="font-size: 18px; opacity: 0.95;">¿Tienes preguntas o sugerencias? Me encantaría escucharte</p>
         </div>
     </section>
 
-    <!-- MAIN CONTENT -->
+    <!-- CONTACTO -->
     <main class="contact-container">
         <div class="container">
             <div class="contact-wrapper">
-                <!-- FORMULARIO DE CONTACTO -->
+                <!-- FORMULARIO -->
                 <section class="contact-form-section">
                     <h2>Envíame un Mensaje</h2>
                     
@@ -83,35 +82,34 @@
 
                         <div class="form-group">
                             <label for="contactPhone">Teléfono (Opcional)</label>
-                            <div class="phone-input-group">
-                                <select id="contactCountry" class="country-code-select">
-                                    <option value="+502">🇬🇹 +502 (Guatemala)</option>
-                                    <option value="+503">🇸🇻 +503 (El Salvador)</option>
-                                    <option value="+504">🇭🇳 +504 (Honduras)</option>
-                                    <option value="+505">🇳🇮 +505 (Nicaragua)</option>
-                                    <option value="+506">🇨🇷 +506 (Costa Rica)</option>
-                                    <option value="+507">🇵🇦 +507 (Panamá)</option>
-                                    <option value="+1">🇺🇸 +1 (USA)</option>
-                                    <option value="+1">🇨🇦 +1 (Canadá)</option>
-                                    <option value="+52">🇲🇽 +52 (México)</option>
-                                    <option value="+34">🇪🇸 +34 (España)</option>
-                                    <option value="+55">🇧🇷 +55 (Brasil)</option>
-                                    <option value="+51">🇵🇪 +51 (Perú)</option>
-                                    <option value="+56">🇨🇱 +56 (Chile)</option>
-                                    <option value="+57">🇨🇴 +57 (Colombia)</option>
-                                    <option value="+54">🇦🇷 +54 (Argentina)</option>
-                                    <option value="+39">🇮🇹 +39 (Italia)</option>
-                                    <option value="+33">🇫🇷 +33 (Francia)</option>
-                                    <option value="+49">🇩🇪 +49 (Alemania)</option>
-                                    <option value="+44">🇬🇧 +44 (Reino Unido)</option>
-                                    <option value="+64">🇳🇿 +64 (Nueva Zelanda)</option>
-                                    <option value="+61">🇦🇺 +61 (Australia)</option>
-                                    <option value="+81">🇯🇵 +81 (Japón)</option>
-                                    <option value="+86">🇨🇳 +86 (China)</option>
-                                    <option value="+91">🇮🇳 +91 (India)</option>
-                                    <option value="+27">🇿🇦 +27 (Sudáfrica)</option>
+                            <div class="phone-input-group" style="display: grid; grid-template-columns: 120px 1fr; gap: 10px;">
+                                <select id="contactCountry" style="border: 1px solid var(--border-light); padding: 12px; border-radius: 4px; font-family: var(--font-sans);">
+                                    <option value="+502">🇬🇹 +502</option>
+                                    <option value="+503">🇸🇻 +503</option>
+                                    <option value="+504">🇭🇳 +504</option>
+                                    <option value="+505">🇳🇮 +505</option>
+                                    <option value="+506">🇨🇷 +506</option>
+                                    <option value="+507">🇵🇦 +507</option>
+                                    <option value="+1">🇺🇸 +1</option>
+                                    <option value="+52">🇲🇽 +52</option>
+                                    <option value="+34">🇪🇸 +34</option>
+                                    <option value="+55">🇧🇷 +55</option>
+                                    <option value="+51">🇵🇪 +51</option>
+                                    <option value="+56">🇨🇱 +56</option>
+                                    <option value="+57">🇨🇴 +57</option>
+                                    <option value="+54">🇦🇷 +54</option>
+                                    <option value="+39">🇮🇹 +39</option>
+                                    <option value="+33">🇫🇷 +33</option>
+                                    <option value="+49">🇩🇪 +49</option>
+                                    <option value="+44">🇬🇧 +44</option>
+                                    <option value="+64">🇳🇿 +64</option>
+                                    <option value="+61">🇦🇺 +61</option>
+                                    <option value="+81">🇯🇵 +81</option>
+                                    <option value="+86">🇨🇳 +86</option>
+                                    <option value="+91">🇮🇳 +91</option>
+                                    <option value="+27">🇿🇦 +27</option>
                                 </select>
-                                <input type="tel" id="contactPhoneNumber" placeholder="123456789" maxlength="15">
+                                <input type="tel" id="contactPhoneNumber" placeholder="1234567890" maxlength="15" style="border: 1px solid var(--border-light); padding: 12px; border-radius: 4px;">
                             </div>
                         </div>
 
@@ -127,7 +125,7 @@
 
                         <div class="form-group">
                             <label for="contactType">Tipo de Consulta</label>
-                            <select id="contactType">
+                            <select id="contactType" required>
                                 <option value="general">Consulta General</option>
                                 <option value="suggestion">Sugerencia</option>
                                 <option value="collaboration">Colaboración</option>
@@ -136,13 +134,13 @@
                             </select>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-send"></i> Enviar Mensaje
+                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px;">
+                            <i class="fas fa-paper-plane"></i> ENVIAR MENSAJE
                         </button>
                     </form>
                 </section>
 
-                <!-- INFORMACIÓN DE CONTACTO -->
+                <!-- INFORMACIÓN -->
                 <section class="contact-info-section">
                     <h2>Información de Contacto</h2>
 
@@ -152,8 +150,8 @@
                         </div>
                         <div class="contact-details">
                             <h3>Email</h3>
-                            <p id="infoEmail">correo@example.com</p>
-                            <a href="mailto:correo@example.com" class="contact-link">Enviar Email</a>
+                            <p id="infoEmail">contacto@sciencestone.com</p>
+                            <a href="mailto:contacto@sciencestone.com" class="contact-link">Enviar Email</a>
                         </div>
                     </div>
 
@@ -184,7 +182,7 @@
                         </div>
                         <div class="contact-details">
                             <h3>Sígueme en Redes</h3>
-                            <div class="contact-socials" id="contactSocials">
+                            <div class="contact-socials" id="contactSocials" style="display: flex; gap: 15px; margin-top: 10px;">
                                 <!-- Se llena dinámicamente -->
                             </div>
                         </div>
@@ -201,92 +199,6 @@
                     </div>
                 </section>
             </div>
-
-            <!-- PANEL DE EDICIÓN DE CONTACTO (Solo para propietario) -->
-            <section class="contact-edit" id="contactEdit" style="display:none; margin-top: 40px;">
-                <h2>Editar Información de Contacto</h2>
-                
-                <form id="contactEditForm" class="contact-form">
-                    <div class="form-group">
-                        <label for="editContactEmail">Email *</label>
-                        <input type="email" id="editContactEmail" placeholder="tu@email.com" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editContactPhone">Teléfono</label>
-                        <div class="phone-input-group">
-                            <select id="editContactCountry" class="country-code-select">
-                                <option value="+502" selected>🇬🇹 +502 (Guatemala)</option>
-                                <option value="+503">🇸🇻 +503 (El Salvador)</option>
-                                <option value="+504">🇭🇳 +504 (Honduras)</option>
-                                <option value="+505">🇳🇮 +505 (Nicaragua)</option>
-                                <option value="+506">🇨🇷 +506 (Costa Rica)</option>
-                                <option value="+507">🇵🇦 +507 (Panamá)</option>
-                                <option value="+1">🇺🇸 +1 (USA)</option>
-                                <option value="+1">🇨🇦 +1 (Canadá)</option>
-                                <option value="+52">🇲🇽 +52 (México)</option>
-                                <option value="+34">🇪🇸 +34 (España)</option>
-                                <option value="+55">🇧🇷 +55 (Brasil)</option>
-                                <option value="+51">🇵🇪 +51 (Perú)</option>
-                                <option value="+56">🇨🇱 +56 (Chile)</option>
-                                <option value="+57">🇨🇴 +57 (Colombia)</option>
-                                <option value="+54">🇦🇷 +54 (Argentina)</option>
-                                <option value="+39">🇮🇹 +39 (Italia)</option>
-                                <option value="+33">🇫🇷 +33 (Francia)</option>
-                                <option value="+49">🇩🇪 +49 (Alemania)</option>
-                                <option value="+44">🇬🇧 +44 (Reino Unido)</option>
-                                <option value="+64">🇳🇿 +64 (Nueva Zelanda)</option>
-                                <option value="+61">🇦🇺 +61 (Australia)</option>
-                                <option value="+81">🇯🇵 +81 (Japón)</option>
-                                <option value="+86">🇨🇳 +86 (China)</option>
-                                <option value="+91">🇮🇳 +91 (India)</option>
-                                <option value="+27">🇿🇦 +27 (Sudáfrica)</option>
-                            </select>
-                            <input type="tel" id="editContactPhoneNumber" placeholder="1234-5678" maxlength="15">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editContactLocation">Ubicación</label>
-                        <input type="text" id="editContactLocation" placeholder="Tu Ciudad, País">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Redes Sociales</label>
-                        <div id="contactSocialsEditContainer">
-                            <div class="social-input-group">
-                                <select class="social-platform">
-                                    <option value="facebook">Facebook</option>
-                                    <option value="twitter">Twitter</option>
-                                    <option value="instagram">Instagram</option>
-                                    <option value="linkedin">LinkedIn</option>
-                                    <option value="youtube">YouTube</option>
-                                </select>
-                                <input type="url" class="social-url" placeholder="https://...">
-                                <button type="button" class="btn btn-small" onclick="removeSocialInput(this)">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-secondary btn-small" id="addContactSocialBtn">
-                            <i class="fas fa-plus"></i> Agregar Red Social
-                        </button>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Guardar Cambios
-                        </button>
-                        <button type="button" id="cancelContactEditBtn" class="btn btn-secondary">
-                            <i class="fas fa-times"></i> Cancelar
-                        </button>
-                    </div>
-                </form>
-            </section>
-
-            <button class="btn btn-primary" id="editContactBtn" style="display:none; margin-top: 20px;">
-                <i class="fas fa-edit"></i> Editar Información de Contacto
-            </button>
         </div>
     </main>
 
@@ -296,7 +208,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>Science Stone</h4>
-                    <p>Tu fuente de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
+                    <p>Tu fuente editorial de información sobre ciencia, descubrimientos y conocimiento del universo.</p>
                 </div>
                 <div class="footer-section">
                     <h4>Enlaces Rápidos</h4>
@@ -309,7 +221,7 @@
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>Sígueme</h4>
+                    <h4>Sígueme en Redes</h4>
                     <div class="social-links" id="footerSocial">
                         <!-- Se llena dinámicamente -->
                     </div>

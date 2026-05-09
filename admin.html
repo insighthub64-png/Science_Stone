@@ -129,6 +129,7 @@
             border-radius: 4px;
             font-size: 13px;
             transition: all 0.2s ease;
+            min-width: 36px;
         }
 
         .editor-btn:hover {
@@ -149,14 +150,33 @@
             border-radius: 0 0 4px 4px;
             min-height: 400px;
             padding: 15px;
+            font-size: 16px;
+            line-height: 1.6;
+            outline: none;
+        }
+        
+        .quill-editor:focus {
+            border-color: var(--primary-yellow);
+            box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.1);
+        }
+        
+        .quill-editor img,
+        .quill-editor video,
+        .quill-editor audio {
+            max-width: 100%;
+            margin: 10px 0;
+            cursor: move;
         }
         
         .color-palette {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
             gap: 8px;
-            max-width: 300px;
+            max-width: 400px;
             margin: 10px 0;
+            padding: 15px;
+            background: var(--bg-light);
+            border-radius: 4px;
         }
         
         .color-option {
@@ -174,11 +194,12 @@
         }
         
         .font-selector {
-            padding: 8px;
+            padding: 8px 12px;
             border: 1px solid var(--border-light);
             border-radius: 4px;
             background: white;
             cursor: pointer;
+            font-size: 13px;
         }
     </style>
 </head>
@@ -248,7 +269,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Categorías *</label>
+                            <label>Categorías (Selecciona múltiples) *</label>
                             <div id="categoriesCheckboxes" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
                                 <!-- Se llena dinámicamente -->
                             </div>
@@ -330,7 +351,7 @@
                             </div>
                             
                             <!-- Paleta de colores oculta -->
-                            <div id="colorPalette" style="display:none; margin: 10px 0;">
+                            <div id="colorPalette" style="display:none;">
                                 <div class="color-palette">
                                     <div class="color-option" onclick="applyColor('#000000')" style="background: #000000;" title="Negro"></div>
                                     <div class="color-option" onclick="applyColor('#333333')" style="background: #333333;" title="Gris oscuro"></div>
@@ -371,11 +392,20 @@
                             </label>
                         </div>
 
+                        <div class="form-group">
+                            <label>Artículos Relacionados</label>
+                            <button type="button" class="btn btn-secondary" onclick="selectRelatedArticles()">
+                                <i class="fas fa-link"></i> Seleccionar Artículos
+                            </button>
+                            <input type="hidden" id="relatedArticles" value="[]">
+                            <div id="relatedArticlesList" style="margin-top: 10px; font-size: 12px;"></div>
+                        </div>
+
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary btn-large">
                                 <i class="fas fa-save"></i> Publicar Artículo
                             </button>
-                            <button type="button" id="cancelArticleBtn" class="btn btn-secondary btn-large" style="display:none;">
+                            <button type="button" id="cancelArticleBtn" class="btn btn-secondary btn-large" onclick="resetArticleForm()" style="display:none;">
                                 <i class="fas fa-times"></i> Cancelar
                             </button>
                         </div>

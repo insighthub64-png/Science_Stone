@@ -1,4 +1,4 @@
-// ===================== ADMIN.JS CMS PROFESIONAL =====================
+// ===================== ADMIN.JS CMS PROFESIONAL AVANZADO =====================
 const categories = [
     { key: 'quimica', name: 'Química', icon: '⚗️', color: '#1E90FF' },
     { key: 'biologia', name: 'Biología', icon: '🧬', color: '#2E8B57' },
@@ -39,6 +39,7 @@ function initializeAdmin() {
     loadIntroInfo();
     setupFormListeners();
     setupFormatSelector();
+    setupContentEditor();
 }
 
 function loadArticles() {
@@ -73,22 +74,30 @@ function renderArticlesList() {
         return;
     }
 
-    container.innerHTML = articles.map(article => `
-        <div class="article-item">
-            <div class="article-item-info">
-                <h4>${article.title}</h4>
-                <p>Publicado: ${new Date(article.date).toLocaleDateString('es-ES')}</p>
+    container.innerHTML = articles.map(article => {
+        const cats = article.categories.map(cat => {
+            const catObj = categories.find(c => c.key === cat);
+            return catObj ? `${catObj.icon} ${catObj.name}` : cat;
+        }).join(', ');
+        
+        return `
+            <div class="article-item">
+                <div class="article-item-info">
+                    <h4>${article.title}</h4>
+                    <p>📅 Publicado: ${new Date(article.date).toLocaleDateString('es-ES')}</p>
+                    <p style="font-size: 12px; color: var(--primary-yellow); margin-top: 5px;">📑 ${cats}</p>
+                </div>
+                <div class="article-item-actions">
+                    <button class="btn btn-small btn-primary" onclick="editArticle(${article.id})">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button class="btn btn-small btn-secondary" onclick="deleteArticle(${article.id})">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                </div>
             </div>
-            <div class="article-item-actions">
-                <button class="btn btn-small btn-primary" onclick="editArticle(${article.id})">
-                    <i class="fas fa-edit"></i> Editar
-                </button>
-                <button class="btn btn-small btn-secondary" onclick="deleteArticle(${article.id})">
-                    <i class="fas fa-trash"></i> Eliminar
-                </button>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 function setupFormatSelector() {
@@ -100,45 +109,53 @@ function setupFormatSelector() {
             document.getElementById('articleFormat').value = selectedFormat;
         });
     });
-    // Seleccionar por defecto
     document.querySelector('[data-format="standard"]').click();
 }
 
 function setupFormListeners() {
-    // Artículos
     document.getElementById('articleForm').addEventListener('submit', (e) => {
         e.preventDefault();
         saveArticle();
     });
 
-    // Recursos
     document.getElementById('resourceForm').addEventListener('submit', (e) => {
         e.preventDefault();
         saveResource();
     });
 
-    // Autor
     document.getElementById('authorForm').addEventListener('submit', (e) => {
         e.preventDefault();
         saveAuthor();
     });
 
-    // Redes Sociales
     document.getElementById('socialsForm').addEventListener('submit', (e) => {
         e.preventDefault();
         saveSocials();
     });
 
-    // Hero
     document.getElementById('heroForm').addEventListener('submit', (e) => {
         e.preventDefault();
         saveHero();
     });
 
-    // Introducción
     document.getElementById('introForm').addEventListener('submit', (e) => {
         e.preventDefault();
         saveIntro();
+    });
+}
+
+function setupContentEditor() {
+    const editor = document.getElementById('contentEditor');
+    if (!editor) return;
+    
+    // Hacer contenteditable draggable
+    editor.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        editor.style.background = 'rgba(255, 204, 0, 0.1)';
+    });
+    
+    editor.addEventListener('dragleave', () => {
+        editor.style.background = 'white';
     });
 }
 
@@ -146,18 +163,19 @@ function saveArticle() {
     const title = document.getElementById('title').value.trim();
     const excerpt = document.getElementById('excerpt').value.trim();
     const content = document.getElementById('contentEditor').innerHTML;
-    const image = document.getElementById('imageUrl').value.trim() || document.getElementById('imageFile').value;
+    const image = document.getElementById('imageUrl').value.trim();
     const imageCredit = document.getElementById('imageCredit').value.trim();
     const tags = document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t);
     const sources = document.getElementById('sources').value.trim();
     const featured = document.getElementById('featured').checked;
     const format = document.getElementById('articleFormat').value;
+    const relatedArticles = JSON.parse(document.getElementById('relatedArticles').value || '[]');
 
     const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked'))
         .map(cb => cb.value);
 
     if (!title || !excerpt || selectedCategories.length === 0) {
-        alert('Por favor completa los campos obligatorios');
+        alert('❗ Por favor completa los campos obligatorios');
         return;
     }
 
@@ -175,6 +193,7 @@ function saveArticle() {
             sources,
             featured,
             format,
+            relatedArticles,
             editedAt: new Date().toISOString()
         };
         alert('✅ Artículo actualizado');
@@ -192,6 +211,7 @@ function saveArticle() {
             sources,
             featured,
             format,
+            relatedArticles,
             date: new Date().toISOString(),
             links: [],
             videos: [],
@@ -223,8 +243,8 @@ function editArticle(id) {
     document.getElementById('tags').value = (article.tags || []).join(', ');
     document.getElementById('sources').value = article.sources || '';
     document.getElementById('featured').checked = article.featured || false;
+    document.getElementById('relatedArticles').value = JSON.stringify(article.relatedArticles || []);
 
-    // Establecer formato
     const format = article.format || 'standard';
     document.querySelectorAll('.format-option').forEach(o => {
         o.classList.remove('selected');
@@ -416,10 +436,6 @@ function saveHero() {
 
     if (imageUrl) {
         localStorage.setItem('hero_image', imageUrl);
-        const hero = document.getElementById('heroSection');
-        if (hero) {
-            hero.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('${imageUrl}')`;
-        }
     }
     localStorage.setItem('hero_color1', color1);
     localStorage.setItem('hero_color2', color2);
@@ -462,17 +478,36 @@ function switchTab(tabName) {
     event.target.classList.add('active');
 }
 
-// ===================== EDITOR ENRIQUECIDO =====================
+// ===================== EDITOR DE TEXTO AVANZADO =====================
+function alignText(alignment) {
+    const alignMap = {
+        'left': 'justifyLeft',
+        'center': 'justifyCenter',
+        'right': 'justifyRight',
+        'justify': 'justifyFull'
+    };
+    document.execCommand(alignMap[alignment]);
+    document.getElementById('contentEditor').focus();
+}
+
 function insertFormat(format) {
     document.execCommand(format);
     document.getElementById('contentEditor').focus();
 }
 
-function changeTextColor() {
-    const color = prompt('Ingresa el color (ej: #FF0000 o red):');
-    if (color) {
-        document.execCommand('foreColor', false, color);
-    }
+function changeFontFamily(font) {
+    document.execCommand('fontName', false, font);
+    document.getElementById('contentEditor').focus();
+}
+
+function openColorPalette() {
+    const palette = document.getElementById('colorPalette');
+    palette.style.display = palette.style.display === 'none' ? 'block' : 'none';
+}
+
+function applyColor(color) {
+    document.execCommand('foreColor', false, color);
+    document.getElementById('colorPalette').style.display = 'none';
     document.getElementById('contentEditor').focus();
 }
 
@@ -486,19 +521,74 @@ function insertLink() {
 function insertImage() {
     const url = prompt('URL de la imagen:');
     if (url) {
-        document.execCommand('insertImage', false, url);
+        const img = `<img src="${url}" style="max-width: 100%; height: auto; border-radius: 8px; margin: 15px 0; display: block;" alt="Imagen">`;
+        document.execCommand('insertHTML', false, img);
     }
+}
+
+function uploadImage() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = `<img src="${event.target.result}" style="max-width: 100%; height: auto; border-radius: 8px; margin: 15px 0; display: block; cursor: move;" alt="Imagen" draggable="true">`;
+                document.execCommand('insertHTML', false, img);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    input.click();
+}
+
+function uploadVideo() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'video/*';
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const vid = `<video width="100%" height="400" controls style="border-radius: 8px; margin: 15px 0; display: block; cursor: move;" draggable="true"><source src="${event.target.result}" type="video/mp4"></video>`;
+                document.execCommand('insertHTML', false, vid);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    input.click();
+}
+
+function uploadAudio() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'audio/*';
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const aud = `<audio width="100%" controls style="margin: 15px 0; display: block; cursor: move;" draggable="true"><source src="${event.target.result}" type="audio/mpeg"></audio>`;
+                document.execCommand('insertHTML', false, aud);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    input.click();
 }
 
 function insertTable() {
     const rows = prompt('Número de filas:');
     const cols = prompt('Número de columnas:');
     if (rows && cols) {
-        let html = '<table border="1" style="width: 100%; border-collapse: collapse;"><tbody>';
+        let html = '<table border="1" style="width: 100%; border-collapse: collapse; margin: 15px 0;"><tbody>';
         for (let i = 0; i < rows; i++) {
             html += '<tr>';
             for (let j = 0; j < cols; j++) {
-                html += '<td style="padding: 10px;">Celda</td>';
+                html += '<td style="padding: 10px; border: 1px solid #ddd;">Celda</td>';
             }
             html += '</tr>';
         }
@@ -508,25 +598,94 @@ function insertTable() {
 }
 
 function insertVideo() {
-    const url = prompt('URL del video (YouTube o similar):');
-    if (url) {
-        let embedCode = '';
-        if (url.includes('youtube.com') || url.includes('youtu.be')) {
-            const videoId = url.includes('youtu.be') ? url.split('/')[3] : url.split('v=')[1];
-            embedCode = `<iframe width="100%" height="400" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-        } else {
-            embedCode = `<video width="100%" height="400" controls><source src="${url}" type="video/mp4"></video>`;
+    const response = prompt('Selecciona: 1 para URL, 2 para subir archivo');
+    if (response === '1') {
+        const url = prompt('URL del video (YouTube o similar):');
+        if (url) {
+            let embedCode = '';
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                const videoId = url.includes('youtu.be') ? url.split('/')[3] : url.split('v=')[1];
+                embedCode = `<iframe width="100%" height="400" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="border-radius: 8px; margin: 15px 0; display: block; cursor: move;" draggable="true"></iframe>`;
+            } else {
+                embedCode = `<video width="100%" height="400" controls style="border-radius: 8px; margin: 15px 0; display: block; cursor: move;" draggable="true"><source src="${url}" type="video/mp4"></video>`;
+            }
+            document.execCommand('insertHTML', false, embedCode);
         }
-        document.execCommand('insertHTML', false, embedCode);
+    } else {
+        uploadVideo();
     }
 }
 
 function insertAudio() {
-    const url = prompt('URL del audio:');
-    if (url) {
-        const embedCode = `<audio style="width: 100%;" controls><source src="${url}" type="audio/mpeg">Tu navegador no soporta audio</audio>`;
-        document.execCommand('insertHTML', false, embedCode);
+    const response = prompt('Selecciona: 1 para URL, 2 para subir archivo');
+    if (response === '1') {
+        const url = prompt('URL del audio:');
+        if (url) {
+            const embedCode = `<audio style="width: 100%; margin: 15px 0; display: block; cursor: move;" controls draggable="true"><source src="${url}" type="audio/mpeg">Tu navegador no soporta audio</audio>`;
+            document.execCommand('insertHTML', false, embedCode);
+        }
+    } else {
+        uploadAudio();
     }
+}
+
+function insertImage() {
+    const response = prompt('Selecciona: 1 para URL, 2 para subir archivo');
+    if (response === '1') {
+        const url = prompt('URL de la imagen:');
+        if (url) {
+            const img = `<img src="${url}" style="max-width: 100%; height: auto; border-radius: 8px; margin: 15px 0; display: block; cursor: move;" alt="Imagen" draggable="true">`;
+            document.execCommand('insertHTML', false, img);
+        }
+    } else {
+        uploadImage();
+    }
+}
+
+function selectRelatedArticles() {
+    const availableArticles = articles.filter(a => a.id !== currentEditingId);
+    if (availableArticles.length === 0) {
+        alert('No hay otros artículos disponibles');
+        return;
+    }
+    
+    let html = '<div style="max-height: 400px; overflow-y: auto;">';
+    availableArticles.forEach(article => {
+        html += `
+            <label style="display: block; padding: 10px; cursor: pointer; border-bottom: 1px solid #eee;">
+                <input type="checkbox" value="${article.id}" class="related-article-checkbox">
+                <span>${article.title}</span>
+            </label>
+        `;
+    });
+    html += '</div>';
+    
+    const modalHtml = `
+        <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;">
+            <div style="background: white; padding: 30px; border-radius: 8px; max-width: 500px; width: 90%;">
+                <h3 style="margin-top: 0;">Seleccionar Artículos Relacionados</h3>
+                ${html}
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button onclick="saveRelatedArticles()" class="btn btn-primary" style="flex: 1;">Guardar</button>
+                    <button onclick="closeRelatedModal()" class="btn btn-secondary" style="flex: 1;">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+function saveRelatedArticles() {
+    const selected = Array.from(document.querySelectorAll('.related-article-checkbox:checked'))
+        .map(cb => parseInt(cb.value));
+    document.getElementById('relatedArticles').value = JSON.stringify(selected);
+    closeRelatedModal();
+}
+
+function closeRelatedModal() {
+    const modal = document.querySelector('div[style*="position: fixed"]');
+    if (modal) modal.remove();
 }
 
 // ===================== LOGOUT =====================

@@ -147,8 +147,38 @@
             background: white;
             border: 1px solid var(--border-light);
             border-radius: 0 0 4px 4px;
-            min-height: 300px;
+            min-height: 400px;
             padding: 15px;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+            gap: 8px;
+            max-width: 300px;
+            margin: 10px 0;
+        }
+        
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .color-option:hover {
+            border-color: var(--text-dark);
+            transform: scale(1.1);
+        }
+        
+        .font-selector {
+            padding: 8px;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -239,15 +269,19 @@
                             <label>Formato de Visualización *</label>
                             <div class="format-selector" id="formatSelector">
                                 <div class="format-option" data-format="standard" title="Estándar">
+                                    📋
                                     <div style="font-size: 12px; margin-top: 10px;">Estándar</div>
                                 </div>
                                 <div class="format-option" data-format="large" title="Grande">
+                                    📰
                                     <div style="font-size: 12px; margin-top: 10px;">Grande</div>
                                 </div>
                                 <div class="format-option" data-format="small" title="Pequeño">
+                                    📝
                                     <div style="font-size: 12px; margin-top: 10px;">Pequeño</div>
                                 </div>
                                 <div class="format-option" data-format="list" title="Lista">
+                                    📋
                                     <div style="font-size: 12px; margin-top: 10px;">Lista</div>
                                 </div>
                             </div>
@@ -257,21 +291,66 @@
                         <div class="form-group">
                             <label>Contenido *</label>
                             <div class="editor-toolbar">
+                                <!-- Alineación -->
+                                <button type="button" class="editor-btn" onclick="alignText('left')" title="Alinear a izquierda"><i class="fas fa-align-left"></i></button>
+                                <button type="button" class="editor-btn" onclick="alignText('center')" title="Centrar"><i class="fas fa-align-center"></i></button>
+                                <button type="button" class="editor-btn" onclick="alignText('right')" title="Alinear a derecha"><i class="fas fa-align-right"></i></button>
+                                <button type="button" class="editor-btn" onclick="alignText('justify')" title="Justificar"><i class="fas fa-align-justify"></i></button>
+                                <div class="separator"></div>
+                                
+                                <!-- Formato de texto -->
                                 <button type="button" class="editor-btn" onclick="insertFormat('bold')" title="Negrita"><i class="fas fa-bold"></i></button>
                                 <button type="button" class="editor-btn" onclick="insertFormat('italic')" title="Cursiva"><i class="fas fa-italic"></i></button>
                                 <button type="button" class="editor-btn" onclick="insertFormat('underline')" title="Subrayado"><i class="fas fa-underline"></i></button>
                                 <button type="button" class="editor-btn" onclick="insertFormat('strikeThrough')" title="Tachado"><i class="fas fa-strikethrough"></i></button>
                                 <div class="separator"></div>
-                                <button type="button" class="editor-btn" onclick="changeTextColor()" title="Color de texto"><i class="fas fa-palette"></i></button>
-                                <button type="button" class="editor-btn" onclick="insertFormat('insertUnorderedList')" title="Lista"><i class="fas fa-list-ul"></i></button>
-                                <button type="button" class="editor-btn" onclick="insertFormat('insertOrderedList')" title="Lista numerada"><i class="fas fa-list-ol"></i></button>
+                                
+                                <!-- Colores y fuentes -->
+                                <button type="button" class="editor-btn" onclick="openColorPalette()" title="Color de texto"><i class="fas fa-palette"></i></button>
+                                <select class="font-selector" id="fontSelect" onchange="changeFontFamily(this.value)">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Georgia">Georgia</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Verdana">Verdana</option>
+                                </select>
                                 <div class="separator"></div>
+                                
+                                <!-- Listas y estructuras -->
+                                <button type="button" class="editor-btn" onclick="insertFormat('insertUnorderedList')" title="Lista sin orden"><i class="fas fa-list-ul"></i></button>
+                                <button type="button" class="editor-btn" onclick="insertFormat('insertOrderedList')" title="Lista numerada"><i class="fas fa-list-ol"></i></button>
+                                <button type="button" class="editor-btn" onclick="insertTable()" title="Tabla"><i class="fas fa-table"></i></button>
+                                <div class="separator"></div>
+                                
+                                <!-- Contenido multimedia -->
                                 <button type="button" class="editor-btn" onclick="insertLink()" title="Enlace"><i class="fas fa-link"></i></button>
                                 <button type="button" class="editor-btn" onclick="insertImage()" title="Imagen"><i class="fas fa-image"></i></button>
-                                <button type="button" class="editor-btn" onclick="insertTable()" title="Tabla"><i class="fas fa-table"></i></button>
                                 <button type="button" class="editor-btn" onclick="insertVideo()" title="Video"><i class="fas fa-video"></i></button>
                                 <button type="button" class="editor-btn" onclick="insertAudio()" title="Audio"><i class="fas fa-music"></i></button>
                             </div>
+                            
+                            <!-- Paleta de colores oculta -->
+                            <div id="colorPalette" style="display:none; margin: 10px 0;">
+                                <div class="color-palette">
+                                    <div class="color-option" onclick="applyColor('#000000')" style="background: #000000;" title="Negro"></div>
+                                    <div class="color-option" onclick="applyColor('#333333')" style="background: #333333;" title="Gris oscuro"></div>
+                                    <div class="color-option" onclick="applyColor('#666666')" style="background: #666666;" title="Gris"></div>
+                                    <div class="color-option" onclick="applyColor('#999999')" style="background: #999999;" title="Gris claro"></div>
+                                    <div class="color-option" onclick="applyColor('#DC143C')" style="background: #DC143C;" title="Rojo"></div>
+                                    <div class="color-option" onclick="applyColor('#FF0000')" style="background: #FF0000;" title="Rojo brillante"></div>
+                                    <div class="color-option" onclick="applyColor('#FF6F61')" style="background: #FF6F61;" title="Rosa coral"></div>
+                                    <div class="color-option" onclick="applyColor('#FF8C00')" style="background: #FF8C00;" title="Naranja"></div>
+                                    <div class="color-option" onclick="applyColor('#FFD700')" style="background: #FFD700;" title="Oro"></div>
+                                    <div class="color-option" onclick="applyColor('#32CD32')" style="background: #32CD32;" title="Verde lima"></div>
+                                    <div class="color-option" onclick="applyColor('#2E8B57')" style="background: #2E8B57;" title="Verde"></div>
+                                    <div class="color-option" onclick="applyColor('#00BFFF')" style="background: #00BFFF;" title="Cian"></div>
+                                    <div class="color-option" onclick="applyColor('#1E90FF')" style="background: #1E90FF;" title="Azul"></div>
+                                    <div class="color-option" onclick="applyColor('#191970')" style="background: #191970;" title="Azul oscuro"></div>
+                                    <div class="color-option" onclick="applyColor('#9932CC')" style="background: #9932CC;" title="Púrpura"></div>
+                                    <div class="color-option" onclick="applyColor('#8B008B')" style="background: #8B008B;" title="Magenta"></div>
+                                </div>
+                            </div>
+                            
                             <div id="contentEditor" contenteditable="true" class="quill-editor" style="min-height: 400px;"></div>
                         </div>
 

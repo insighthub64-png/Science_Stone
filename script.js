@@ -58,6 +58,22 @@ function initializeWebsite() {
     updateFooterSocials();
     checkAdminStatus();
     loadIntroduction();
+    applyHeroBackground();
+}
+
+// ===================== HERO BACKGROUND =====================
+function applyHeroBackground() {
+    const heroSection = document.getElementById('heroSection');
+    if (!heroSection) return;
+
+    const heroImage = localStorage.getItem('hero_image');
+    const heroGradient = localStorage.getItem('hero_gradient');
+
+    if (heroImage) {
+        heroSection.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('${heroImage}')`;
+    } else if (heroGradient) {
+        heroSection.style.background = heroGradient;
+    }
 }
 
 // ===================== INTRODUCCIÓN EDITABLE =====================
@@ -65,39 +81,20 @@ function loadIntroduction() {
     const saved = localStorage.getItem('blog_introduction');
     if (saved) {
         const data = JSON.parse(saved);
-        document.getElementById('introductionText').textContent = data.content;
-    }
-    
-    const editBtn = document.getElementById('editIntroBtn');
-    if (localStorage.getItem('owner_password')) {
-        editBtn.style.display = 'inline-block';
-        editBtn.addEventListener('click', editIntroduction);
-    }
-}
-
-function editIntroduction() {
-    const saved = localStorage.getItem('blog_introduction');
-    let content = 'Science Stone es tu fuente editorial de ciencia...';
-    
-    if (saved) {
-        content = JSON.parse(saved).content;
-    }
-    
-    const newContent = prompt('Edita la introducción del blog:', content);
-    if (newContent && newContent.trim()) {
-        const data = {
-            content: newContent,
-            editedAt: new Date().toISOString()
-        };
-        localStorage.setItem('blog_introduction', JSON.stringify(data));
-        document.getElementById('introductionText').textContent = newContent;
-        alert('✅ Introducción actualizada');
+        const introText = document.getElementById('introductionText');
+        if (introText) {
+            introText.textContent = data.content;
+            if (data.font) introText.style.fontFamily = data.font;
+            if (data.size) introText.style.fontSize = data.size + 'px';
+        }
     }
 }
 
 // ===================== RENDERIZAR CATEGORÍAS =====================
 function renderCategoryCards() {
     const grid = document.getElementById('categoriesGrid');
+    if (!grid) return;
+
     grid.innerHTML = categories.map(cat => `
         <div class="category-card" style="background: linear-gradient(135deg, ${cat.color}80 0%, ${cat.color}40 100%); color: white; border-top: 3px solid ${cat.color};">
             <div class="category-icon">${cat.icon}</div>
@@ -108,7 +105,7 @@ function renderCategoryCards() {
     document.querySelectorAll('.category-card').forEach((card, index) => {
         card.addEventListener('click', () => {
             const category = categories[index].key;
-            window.open(`category-view.html?cat=${category}`, '_blank');
+            window.location.href = `category-view.html?cat=${category}`;
         });
     });
 }
@@ -117,8 +114,9 @@ function renderCategoryCards() {
 function renderFeaturedArticles() {
     const grid = document.getElementById('featuredGrid');
     const noArticles = document.getElementById('noFeaturedArticles');
-    grid.innerHTML = '';
+    if (!grid || !noArticles) return;
 
+    grid.innerHTML = '';
     const featured = articles.filter(a => a.featured === true);
 
     if (featured.length === 0) {
@@ -153,7 +151,7 @@ function renderFeaturedArticles() {
         `;
 
         card.addEventListener('click', () => {
-            window.open(`article-view.html?id=${article.id}`, '_blank');
+            window.location.href = `article-view.html?id=${article.id}`;
         });
         
         grid.appendChild(card);
@@ -164,8 +162,9 @@ function renderFeaturedArticles() {
 function renderArticles() {
     const grid = document.getElementById('articlesGrid');
     const noArticles = document.getElementById('noArticles');
-    grid.innerHTML = '';
+    if (!grid || !noArticles) return;
 
+    grid.innerHTML = '';
     const notFeatured = articles.filter(a => a.featured !== true);
 
     if (notFeatured.length === 0) {
@@ -200,7 +199,7 @@ function renderArticles() {
         `;
 
         card.addEventListener('click', () => {
-            window.open(`article-view.html?id=${article.id}`, '_blank');
+            window.location.href = `article-view.html?id=${article.id}`;
         });
         
         grid.appendChild(card);
@@ -297,7 +296,7 @@ function setupEventListeners() {
                     </div>
                 `;
                 card.addEventListener('click', () => {
-                    window.open(`article-view.html?id=${article.id}`, '_blank');
+                    window.location.href = `article-view.html?id=${article.id}`;
                 });
                 grid.appendChild(card);
             });
@@ -328,8 +327,9 @@ function setupEventListeners() {
 
 function showMessage(message, type) {
     const messageEl = document.getElementById('subscriptionMessage');
+    if (!messageEl) return;
+
     messageEl.textContent = message;
-    messageEl.className = type;
     messageEl.style.display = 'block';
     messageEl.style.color = type === 'success' ? '#2E8B57' : '#DC143C';
     
@@ -365,7 +365,7 @@ function updateFooterSocials() {
 }
 
 function checkAdminStatus() {
-    const adminBtn = document.getElementById('adminNavBtn');
+    const adminBtn = document.querySelector('.admin-btn');
     if (localStorage.getItem('owner_password')) {
         if (adminBtn) adminBtn.style.display = 'inline-block';
     }

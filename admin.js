@@ -17,6 +17,7 @@ const categories = [
 ];
 
 let articles = [];
+let authors = [];
 let currentEditingId = null;
 let selectedFormat = 'standard';
 
@@ -26,22 +27,24 @@ window.addEventListener('load', () => {
         window.location.href = 'auth.html';
         return;
     }
-    
     initializeAdmin();
 });
 
 function initializeAdmin() {
     loadArticles();
+    loadAuthors();
     initializeCategories();
-    loadAuthorInfo();
-    loadSocials();
+    loadContactInfo();
     loadHeroInfo();
     loadIntroInfo();
     setupFormListeners();
     setupFormatSelector();
     setupContentEditor();
+    updateStatistics();
+    loadCommentsList();
 }
 
+// ===================== CARGAR ARTÍCULOS =====================
 function loadArticles() {
     const saved = localStorage.getItem('science_stone_articles');
     if (saved) {
@@ -50,6 +53,98 @@ function loadArticles() {
     renderArticlesList();
 }
 
+// ===================== CARGAR AUTORES =====================
+function loadAuthors() {
+    const saved = localStorage.getItem('science_stone_authors');
+    if (saved) {
+        authors = JSON.parse(saved);
+    } else {
+        // Crear autor predeterminado
+        authors = [{
+            id: Date.now(),
+            name: localStorage.getItem('author_name') || 'Administrador',
+            title: localStorage.getItem('author_title') || '',
+            bio: localStorage.getItem('author_bio') || '',
+            image: localStorage.getItem('author_image') || '',
+            email: localStorage.getItem('author_email') || '',
+            location: localStorage.getItem('author_location') || '',
+            website: localStorage.getItem('author_website') || ''
+        }];
+        saveAuthors();
+    }
+    renderAuthorsList();
+    updateAuthorSelect();
+}
+
+function renderAuthorsList() {
+    const container = document.getElementById('authorsList');
+    if (!container) return;
+    
+    if (authors.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 40px;">No hay autores registrados.</p>';
+        return;
+    }
+
+    container.innerHTML = authors.map(author => `
+        <div class="article-item">
+            <div class="article-item-info">
+                <h4>${author.name}</h4>
+                <p>${author.title || 'Sin título'}</p>
+                <p style="font-size: 12px; color: var(--text-light); margin-top: 5px;">${author.email}</p>
+            </div>
+            <div class="article-item-actions">
+                <button class="btn btn-small btn-primary" onclick="editAuthor(${author.id})">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="btn btn-small btn-secondary" onclick="deleteAuthor(${author.id})">
+                    <i class="fas fa-trash"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateAuthorSelect() {
+    const select = document.getElementById('articleAuthor');
+    if (!select) return;
+    
+    select.innerHTML = '<option value="">Selecciona un autor</option>' + 
+        authors.map(author => `<option value="${author.id}">${author.name}</option>`).join('');
+}
+
+function editAuthor(id) {
+    const author = authors.find(a => a.id === id);
+    if (!author) return;
+
+    document.getElementById('authorName').value = author.name;
+    document.getElementById('authorTitle').value = author.title;
+    document.getElementById('authorBio').value = author.bio;
+    document.getElementById('authorImage').value = author.image;
+    document.getElementById('authorEmail').value = author.email;
+    document.getElementById('authorLocation').value = author.location;
+    document.getElementById('authorWebsite').value = author.website;
+
+    document.querySelector('#authorForm button[type="submit"]').innerHTML = '<i class="fas fa-check"></i> Actualizar Autor';
+    document.querySelector('#authorForm button[type="submit"]').dataset.editingId = id;
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function deleteAuthor(id) {
+    if (!confirm('¿Estás seguro de que deseas eliminar este autor?')) return;
+    
+    authors = authors.filter(a => a.id !== id);
+    saveAuthors();
+    renderAuthorsList();
+    updateAuthorSelect();
+    alert('✅ Autor eliminado');
+}
+
+function saveAuthors() {
+    localStorage.setItem('science_stone_authors', JSON.stringify(authors));
+}
+
+// ===================== INICIALIZAR CATEGORÍAS =====================
 function initializeCategories() {
     const container = document.getElementById('categoriesCheckboxes');
     const resCategory = document.getElementById('resCategory');
@@ -66,6 +161,7 @@ function initializeCategories() {
     `).join('');
 }
 
+// ===================== RENDERIZAR ARTÍCULOS =====================
 function renderArticlesList() {
     const container = document.getElementById('articlesList');
     
@@ -80,11 +176,14 @@ function renderArticlesList() {
             return catObj ? `${catObj.icon} ${catObj.name}` : cat;
         }).join(', ');
         
+        const author = authors.find(a => a.id === article.authorId);
+        const authorName = author ? author.name : 'Desconocido';
+        
         return `
             <div class="article-item">
                 <div class="article-item-info">
                     <h4>${article.title}</h4>
-                    <p>📅 Publicado: ${new Date(article.date).toLocaleDateString('es-ES')}</p>
+                    <p>👤 ${authorName} | 📅 ${new Date(article.date).toLocaleDateString('es-ES')}</p>
                     <p style="font-size: 12px; color: var(--primary-yellow); margin-top: 5px;">📑 ${cats}</p>
                 </div>
                 <div class="article-item-actions">
@@ -100,6 +199,7 @@ function renderArticlesList() {
     }).join('');
 }
 
+// ===================== SETUP =====================
 function setupFormatSelector() {
     document.querySelectorAll('.format-option').forEach(option => {
         option.addEventListener('click', function() {
@@ -109,7 +209,6 @@ function setupFormatSelector() {
             document.getElementById('articleFormat').value = selectedFormat;
         });
     });
-    document.querySelector('[data-format="standard"]').click();
 }
 
 function setupFormListeners() {
@@ -128,9 +227,9 @@ function setupFormListeners() {
         saveAuthor();
     });
 
-    document.getElementById('socialsForm').addEventListener('submit', (e) => {
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        saveSocials();
+        saveContact();
     });
 
     document.getElementById('heroForm').addEventListener('submit', (e) => {
@@ -148,7 +247,6 @@ function setupContentEditor() {
     const editor = document.getElementById('contentEditor');
     if (!editor) return;
     
-    // Hacer contenteditable draggable
     editor.addEventListener('dragover', (e) => {
         e.preventDefault();
         editor.style.background = 'rgba(255, 204, 0, 0.1)';
@@ -159,6 +257,7 @@ function setupContentEditor() {
     });
 }
 
+// ===================== GUARDAR ARTÍCULO =====================
 function saveArticle() {
     const title = document.getElementById('title').value.trim();
     const excerpt = document.getElementById('excerpt').value.trim();
@@ -170,11 +269,12 @@ function saveArticle() {
     const featured = document.getElementById('featured').checked;
     const format = document.getElementById('articleFormat').value;
     const relatedArticles = JSON.parse(document.getElementById('relatedArticles').value || '[]');
+    const authorId = parseInt(document.getElementById('articleAuthor').value);
 
     const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked'))
         .map(cb => cb.value);
 
-    if (!title || !excerpt || selectedCategories.length === 0) {
+    if (!title || !excerpt || selectedCategories.length === 0 || !authorId) {
         alert('❗ Por favor completa los campos obligatorios');
         return;
     }
@@ -194,6 +294,7 @@ function saveArticle() {
             featured,
             format,
             relatedArticles,
+            authorId,
             editedAt: new Date().toISOString()
         };
         alert('✅ Artículo actualizado');
@@ -212,6 +313,7 @@ function saveArticle() {
             featured,
             format,
             relatedArticles,
+            authorId,
             date: new Date().toISOString(),
             links: [],
             videos: [],
@@ -244,15 +346,10 @@ function editArticle(id) {
     document.getElementById('sources').value = article.sources || '';
     document.getElementById('featured').checked = article.featured || false;
     document.getElementById('relatedArticles').value = JSON.stringify(article.relatedArticles || []);
+    document.getElementById('articleAuthor').value = article.authorId || '';
 
     const format = article.format || 'standard';
-    document.querySelectorAll('.format-option').forEach(o => {
-        o.classList.remove('selected');
-        if (o.dataset.format === format) {
-            o.classList.add('selected');
-            selectedFormat = format;
-        }
-    });
+    document.getElementById('articleFormat').value = format;
 
     document.querySelectorAll('.category-checkbox').forEach(cb => {
         cb.checked = article.categories.includes(cb.value);
@@ -280,9 +377,9 @@ function resetArticleForm() {
     currentEditingId = null;
     document.getElementById('cancelArticleBtn').style.display = 'none';
     document.querySelector('#articleForm button[type="submit"]').innerHTML = '<i class="fas fa-save"></i> Publicar Artículo';
-    setupFormatSelector();
 }
 
+// ===================== RECURSOS =====================
 function saveResource() {
     const title = document.getElementById('resTitle').value.trim();
     const type = document.getElementById('resType').value;
@@ -313,116 +410,66 @@ function saveResource() {
     alert('✅ Recurso agregado correctamente');
 }
 
-function loadAuthorInfo() {
-    document.getElementById('authorName').value = localStorage.getItem('author_name') || '';
-    document.getElementById('authorTitle').value = localStorage.getItem('author_title') || '';
-    document.getElementById('authorBio').value = localStorage.getItem('author_bio') || '';
-    document.getElementById('authorImage').value = localStorage.getItem('author_image') || '';
-    document.getElementById('authorEmail').value = localStorage.getItem('author_email') || '';
-    document.getElementById('authorLocation').value = localStorage.getItem('author_location') || '';
-    document.getElementById('authorWebsite').value = localStorage.getItem('author_website') || '';
-}
-
+// ===================== AUTORES =====================
 function saveAuthor() {
-    localStorage.setItem('author_name', document.getElementById('authorName').value);
-    localStorage.setItem('author_title', document.getElementById('authorTitle').value);
-    localStorage.setItem('author_bio', document.getElementById('authorBio').value);
-    localStorage.setItem('author_image', document.getElementById('authorImage').value);
-    localStorage.setItem('author_email', document.getElementById('authorEmail').value);
-    localStorage.setItem('author_location', document.getElementById('authorLocation').value);
-    localStorage.setItem('author_website', document.getElementById('authorWebsite').value);
-    alert('✅ Perfil actualizado');
-}
+    const name = document.getElementById('authorName').value.trim();
+    const title = document.getElementById('authorTitle').value.trim();
+    const bio = document.getElementById('authorBio').value.trim();
+    const image = document.getElementById('authorImage').value.trim();
+    const email = document.getElementById('authorEmail').value.trim();
+    const location = document.getElementById('authorLocation').value.trim();
+    const website = document.getElementById('authorWebsite').value.trim();
 
-function loadSocials() {
-    const socials = JSON.parse(localStorage.getItem('author_socials') || '[]');
-    const container = document.getElementById('socialsContainer');
-    
-    if (socials.length === 0) {
-        addSocialInput();
+    if (!name) {
+        alert('El nombre es obligatorio');
         return;
     }
 
-    container.innerHTML = socials.map((social, index) => `
-        <div style="background: var(--bg-light); padding: 15px; border-radius: 4px; margin-bottom: 10px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end;">
-            <div>
-                <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 5px;">Red Social</label>
-                <select class="social-platform" data-index="${index}">
-                    <option value="facebook" ${social.platform === 'facebook' ? 'selected' : ''}>Facebook</option>
-                    <option value="twitter" ${social.platform === 'twitter' ? 'selected' : ''}>Twitter</option>
-                    <option value="instagram" ${social.platform === 'instagram' ? 'selected' : ''}>Instagram</option>
-                    <option value="linkedin" ${social.platform === 'linkedin' ? 'selected' : ''}>LinkedIn</option>
-                    <option value="youtube" ${social.platform === 'youtube' ? 'selected' : ''}>YouTube</option>
-                    <option value="whatsapp" ${social.platform === 'whatsapp' ? 'selected' : ''}>WhatsApp</option>
-                    <option value="telegram" ${social.platform === 'telegram' ? 'selected' : ''}>Telegram</option>
-                </select>
-            </div>
-            <div>
-                <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 5px;">URL</label>
-                <input type="url" class="social-url" value="${social.url}" data-index="${index}" placeholder="https://...">
-            </div>
-            <button type="button" class="btn btn-small btn-secondary" onclick="removeSocialInput(${index})">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
-    `).join('');
-}
+    const submitBtn = document.querySelector('#authorForm button[type="submit"]');
+    const editingId = submitBtn.dataset.editingId;
 
-function addSocialInput() {
-    const container = document.getElementById('socialsContainer');
-    const newIndex = container.children.length;
-    
-    const div = document.createElement('div');
-    div.style.cssText = 'background: var(--bg-light); padding: 15px; border-radius: 4px; margin-bottom: 10px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end;';
-    div.innerHTML = `
-        <div>
-            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 5px;">Red Social</label>
-            <select class="social-platform" data-index="${newIndex}">
-                <option value="facebook">Facebook</option>
-                <option value="twitter">Twitter</option>
-                <option value="instagram">Instagram</option>
-                <option value="linkedin">LinkedIn</option>
-                <option value="youtube">YouTube</option>
-                <option value="whatsapp">WhatsApp</option>
-                <option value="telegram">Telegram</option>
-            </select>
-        </div>
-        <div>
-            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 5px;">URL</label>
-            <input type="url" class="social-url" data-index="${newIndex}" placeholder="https://...">
-        </div>
-        <button type="button" class="btn btn-small btn-secondary" onclick="removeSocialInput(${newIndex})">
-            <i class="fas fa-trash"></i>
-        </button>
-    `;
-    
-    container.appendChild(div);
-}
-
-function removeSocialInput(index) {
-    const inputs = document.querySelectorAll('.social-platform');
-    if (inputs.length > 1) {
-        inputs[index].closest('div').parentElement.remove();
+    if (editingId) {
+        const index = authors.findIndex(a => a.id == editingId);
+        authors[index] = {
+            ...authors[index],
+            name, title, bio, image, email, location, website
+        };
+        delete submitBtn.dataset.editingId;
+        submitBtn.innerHTML = '<i class="fas fa-save"></i> Guardar Autor';
+        alert('✅ Autor actualizado');
     } else {
-        alert('Debes mantener al menos una red social');
+        authors.push({
+            id: Date.now(),
+            name, title, bio, image, email, location, website
+        });
+        alert('✅ Autor agregado');
     }
+
+    saveAuthors();
+    document.getElementById('authorForm').reset();
+    renderAuthorsList();
+    updateAuthorSelect();
 }
 
-function saveSocials() {
-    const socials = [];
-    document.querySelectorAll('.social-platform').forEach((select, index) => {
-        const platform = select.value;
-        const url = document.querySelectorAll('.social-url')[index].value;
-        
-        if (url.trim()) {
-            socials.push({ platform, url });
-        }
-    });
-
-    localStorage.setItem('author_socials', JSON.stringify(socials));
-    alert('✅ Redes sociales actualizadas');
+// ===================== CONTACTO =====================
+function loadContactInfo() {
+    document.getElementById('contactEmail').value = localStorage.getItem('contact_email') || 'insight.hub64@gmail.com';
+    document.getElementById('contactPhone').value = localStorage.getItem('contact_phone') || '';
+    document.getElementById('contactAddress').value = localStorage.getItem('contact_address') || '';
+    document.getElementById('contactCity').value = localStorage.getItem('contact_city') || '';
+    document.getElementById('contactCountry').value = localStorage.getItem('contact_country') || '';
 }
 
+function saveContact() {
+    localStorage.setItem('contact_email', document.getElementById('contactEmail').value);
+    localStorage.setItem('contact_phone', document.getElementById('contactPhone').value);
+    localStorage.setItem('contact_address', document.getElementById('contactAddress').value);
+    localStorage.setItem('contact_city', document.getElementById('contactCity').value);
+    localStorage.setItem('contact_country', document.getElementById('contactCountry').value);
+    alert('✅ Información de contacto actualizada');
+}
+
+// ===================== HERO =====================
 function loadHeroInfo() {
     document.getElementById('heroImageUrl').value = localStorage.getItem('hero_image') || '';
     document.getElementById('heroColor1').value = localStorage.getItem('hero_color1') || '#667eea';
@@ -444,16 +491,21 @@ function saveHero() {
     alert('✅ Sección Hero actualizada');
 }
 
+// ===================== INTRODUCCIÓN =====================
 function loadIntroInfo() {
     const saved = localStorage.getItem('blog_introduction');
     if (saved) {
         const data = JSON.parse(saved);
         document.getElementById('introContent').value = data.content;
+        document.getElementById('introFont').value = data.font || 'Arial';
+        document.getElementById('introSize').value = data.size || '16';
     }
 }
 
 function saveIntro() {
     const content = document.getElementById('introContent').value.trim();
+    const font = document.getElementById('introFont').value;
+    const size = document.getElementById('introSize').value;
     
     if (!content) {
         alert('Por favor escribe la introducción');
@@ -462,6 +514,8 @@ function saveIntro() {
 
     const data = {
         content,
+        font,
+        size,
         editedAt: new Date().toISOString()
     };
 
@@ -478,7 +532,7 @@ function switchTab(tabName) {
     event.target.classList.add('active');
 }
 
-// ===================== EDITOR DE TEXTO AVANZADO =====================
+// ===================== EDITOR DE TEXTO =====================
 function alignText(alignment) {
     const alignMap = {
         'left': 'justifyLeft',
@@ -496,8 +550,44 @@ function insertFormat(format) {
 }
 
 function changeFontFamily(font) {
-    document.execCommand('fontName', false, font);
+    if (font) document.execCommand('fontName', false, font);
     document.getElementById('contentEditor').focus();
+}
+
+function changeFontSize(size) {
+    if (size) document.execCommand('fontSize', false, size);
+    document.getElementById('contentEditor').focus();
+}
+
+function setLineHeight(height) {
+    const editor = document.getElementById('contentEditor');
+    const selection = window.getSelection();
+    
+    if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const span = document.createElement('span');
+        span.style.lineHeight = height;
+        range.surroundContents(span);
+    }
+    editor.focus();
+}
+
+function indent() {
+    document.execCommand('indent');
+    document.getElementById('contentEditor').focus();
+}
+
+function outdent() {
+    document.execCommand('outdent');
+    document.getElementById('contentEditor').focus();
+}
+
+function insertTextBox() {
+    const text = prompt('Escribe el texto del cuadro:');
+    if (text) {
+        const box = `<div style="border: 2px solid var(--primary-yellow); padding: 15px; border-radius: 8px; background: rgba(255, 204, 0, 0.05); margin: 15px 0;">${text}</div>`;
+        document.execCommand('insertHTML', false, box);
+    }
 }
 
 function openColorPalette() {
@@ -505,9 +595,20 @@ function openColorPalette() {
     palette.style.display = palette.style.display === 'none' ? 'block' : 'none';
 }
 
+function openHighlightPalette() {
+    const palette = document.getElementById('highlightPalette');
+    palette.style.display = palette.style.display === 'none' ? 'block' : 'none';
+}
+
 function applyColor(color) {
     document.execCommand('foreColor', false, color);
     document.getElementById('colorPalette').style.display = 'none';
+    document.getElementById('contentEditor').focus();
+}
+
+function applyHighlight(color) {
+    document.execCommand('backColor', false, color);
+    document.getElementById('highlightPalette').style.display = 'none';
     document.getElementById('contentEditor').focus();
 }
 
@@ -518,11 +619,16 @@ function insertLink() {
     }
 }
 
-function insertImage() {
-    const url = prompt('URL de la imagen:');
-    if (url) {
-        const img = `<img src="${url}" style="max-width: 100%; height: auto; border-radius: 8px; margin: 15px 0; display: block;" alt="Imagen">`;
-        document.execCommand('insertHTML', false, img);
+function insertImageDialog() {
+    const response = prompt('Selecciona: 1 para URL, 2 para subir archivo');
+    if (response === '1') {
+        const url = prompt('URL de la imagen:');
+        if (url) {
+            const img = `<img src="${url}" style="max-width: 100%; height: auto; border-radius: 8px; margin: 15px 0; display: block; cursor: move;" alt="Imagen" draggable="true">`;
+            document.execCommand('insertHTML', false, img);
+        }
+    } else {
+        uploadImage();
     }
 }
 
@@ -544,60 +650,7 @@ function uploadImage() {
     input.click();
 }
 
-function uploadVideo() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'video/*';
-    input.onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const vid = `<video width="100%" height="400" controls style="border-radius: 8px; margin: 15px 0; display: block; cursor: move;" draggable="true"><source src="${event.target.result}" type="video/mp4"></video>`;
-                document.execCommand('insertHTML', false, vid);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-    input.click();
-}
-
-function uploadAudio() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'audio/*';
-    input.onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const aud = `<audio width="100%" controls style="margin: 15px 0; display: block; cursor: move;" draggable="true"><source src="${event.target.result}" type="audio/mpeg"></audio>`;
-                document.execCommand('insertHTML', false, aud);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-    input.click();
-}
-
-function insertTable() {
-    const rows = prompt('Número de filas:');
-    const cols = prompt('Número de columnas:');
-    if (rows && cols) {
-        let html = '<table border="1" style="width: 100%; border-collapse: collapse; margin: 15px 0;"><tbody>';
-        for (let i = 0; i < rows; i++) {
-            html += '<tr>';
-            for (let j = 0; j < cols; j++) {
-                html += '<td style="padding: 10px; border: 1px solid #ddd;">Celda</td>';
-            }
-            html += '</tr>';
-        }
-        html += '</tbody></table>';
-        document.execCommand('insertHTML', false, html);
-    }
-}
-
-function insertVideo() {
+function insertVideoDialog() {
     const response = prompt('Selecciona: 1 para URL, 2 para subir archivo');
     if (response === '1') {
         const url = prompt('URL del video (YouTube o similar):');
@@ -616,7 +669,25 @@ function insertVideo() {
     }
 }
 
-function insertAudio() {
+function uploadVideo() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'video/*';
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const vid = `<video width="100%" height="400" controls style="border-radius: 8px; margin: 15px 0; display: block; cursor: move;" draggable="true"><source src="${event.target.result}" type="video/mp4"></video>`;
+                document.execCommand('insertHTML', false, vid);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    input.click();
+}
+
+function insertAudioDialog() {
     const response = prompt('Selecciona: 1 para URL, 2 para subir archivo');
     if (response === '1') {
         const url = prompt('URL del audio:');
@@ -629,17 +700,66 @@ function insertAudio() {
     }
 }
 
-function insertImage() {
-    const response = prompt('Selecciona: 1 para URL, 2 para subir archivo');
-    if (response === '1') {
-        const url = prompt('URL de la imagen:');
-        if (url) {
-            const img = `<img src="${url}" style="max-width: 100%; height: auto; border-radius: 8px; margin: 15px 0; display: block; cursor: move;" alt="Imagen" draggable="true">`;
-            document.execCommand('insertHTML', false, img);
+function uploadAudio() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'audio/*';
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const aud = `<audio style="width: 100%; margin: 15px 0; display: block; cursor: move;" controls draggable="true"><source src="${event.target.result}" type="audio/mpeg">Tu navegador no soporta audio</audio>`;
+                document.execCommand('insertHTML', false, aud);
+            };
+            reader.readAsDataURL(file);
         }
-    } else {
-        uploadImage();
+    };
+    input.click();
+}
+
+function insertTable() {
+    const rows = prompt('Número de filas:');
+    const cols = prompt('Número de columnas:');
+    if (rows && cols) {
+        let html = '<table border="1" style="width: 100%; border-collapse: collapse; margin: 15px 0; cursor: move;" draggable="true"><tbody>';
+        for (let i = 0; i < rows; i++) {
+            html += '<tr>';
+            for (let j = 0; j < cols; j++) {
+                html += '<td style="padding: 10px; border: 1px solid #ddd;">Celda</td>';
+            }
+            html += '</tr>';
+        }
+        html += '</tbody></table>';
+        document.execCommand('insertHTML', false, html);
     }
+}
+
+function previewArticle() {
+    const title = document.getElementById('title').value;
+    const excerpt = document.getElementById('excerpt').value;
+    const content = document.getElementById('contentEditor').innerHTML;
+    const image = document.getElementById('imageUrl').value;
+
+    const authorId = document.getElementById('articleAuthor').value;
+    const author = authors.find(a => a.id == authorId);
+    const authorName = author ? author.name : 'Desconocido';
+
+    const html = `
+        <div style="max-width: 900px;">
+            <img src="${image || 'https://via.placeholder.com/900x500'}" style="width: 100%; border-radius: 8px; margin-bottom: 30px;">
+            <h1 style="font-family: Georgia; font-size: 40px; margin-bottom: 10px;">${title}</h1>
+            <p style="font-size: 14px; color: #666; margin-bottom: 30px;">Por ${authorName}</p>
+            <div style="font-size: 16px; line-height: 1.8; color: #333;">${content}</div>
+        </div>
+    `;
+
+    document.getElementById('previewContent').innerHTML = html;
+    document.getElementById('previewModal').classList.add('active');
+}
+
+function closePreview() {
+    document.getElementById('previewModal').classList.remove('active');
 }
 
 function selectRelatedArticles() {
@@ -688,9 +808,78 @@ function closeRelatedModal() {
     if (modal) modal.remove();
 }
 
+// ===================== ESTADÍSTICAS =====================
+function updateStatistics() {
+    document.getElementById('statsArticles').textContent = articles.length;
+    
+    const resources = JSON.parse(localStorage.getItem('science_stone_resources') || '[]');
+    document.getElementById('statsResources').textContent = resources.length;
+    
+    let totalLikes = 0;
+    let totalComments = 0;
+    articles.forEach(article => {
+        totalLikes += parseInt(localStorage.getItem(`likes_${article.id}`) || '0');
+        const comments = JSON.parse(localStorage.getItem(`comments_${article.id}`) || '[]');
+        totalComments += comments.length;
+    });
+    
+    document.getElementById('statsLikes').textContent = totalLikes;
+    document.getElementById('statsComments').textContent = totalComments;
+    
+    const subscribers = JSON.parse(localStorage.getItem('newsletter_emails') || '[]');
+    document.getElementById('statsSubscribers').textContent = subscribers.length;
+    
+    const subscribersList = document.getElementById('subscribersList');
+    if (subscribersList) {
+        subscribersList.innerHTML = subscribers.length > 0 
+            ? subscribers.map(email => `<div style="padding: 8px; border-bottom: 1px solid white;">📧 ${email}</div>`).join('')
+            : '<p style="text-align: center; color: white;">No hay suscriptores aún</p>';
+    }
+}
+
+// ===================== COMENTARIOS =====================
+function loadCommentsList() {
+    const articlesComments = document.getElementById('articlesCommentsList');
+    const contactMessages = document.getElementById('contactMessagesList');
+    
+    if (!articlesComments || !contactMessages) return;
+
+    let allComments = [];
+    articles.forEach(article => {
+        const comments = JSON.parse(localStorage.getItem(`comments_${article.id}`) || '[]');
+        comments.forEach(comment => {
+            allComments.push({
+                articleTitle: article.title,
+                ...comment
+            });
+        });
+    });
+
+    articlesComments.innerHTML = allComments.length > 0
+        ? allComments.map(c => `
+            <div class="comment-item">
+                <p style="font-weight: 600; color: var(--primary-yellow);">${c.articleTitle}</p>
+                <p style="margin: 5px 0;"><strong>${c.name}:</strong> ${c.text}</p>
+                <p style="font-size: 11px; color: #999; margin: 5px 0;">${new Date(c.date).toLocaleString('es-ES')}</p>
+            </div>
+        `).join('')
+        : '<p style="text-align: center; color: #999;">No hay comentarios aún</p>';
+
+    const messages = JSON.parse(localStorage.getItem('contact_messages') || '[]');
+    contactMessages.innerHTML = messages.length > 0
+        ? messages.map(m => `
+            <div class="comment-item">
+                <p style="font-weight: 600;">De: ${m.email}</p>
+                <p style="margin: 5px 0;"><strong>${m.subject}:</strong> ${m.message}</p>
+                <p style="font-size: 11px; color: #999; margin: 5px 0;">${new Date(m.date).toLocaleString('es-ES')}</p>
+            </div>
+        `).join('')
+        : '<p style="text-align: center; color: #999;">No hay mensajes de contacto</p>';
+}
+
 // ===================== LOGOUT =====================
 function logout() {
-    if (confirm('¿Deseas cerrar sesión?')) {
+    if (confirm('��Deseas cerrar sesión?')) {
         localStorage.removeItem('owner_password');
         window.location.href = 'index.html';
     }

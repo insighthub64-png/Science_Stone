@@ -6,163 +6,9 @@
     <title>Categoría - Science Stone</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .category-view-container {
-            min-height: 100vh;
-            background: var(--bg-light);
-        }
-        
-        .category-banner {
-            padding: 60px 40px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .category-banner::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1;
-        }
-        
-        .category-header {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            color: white;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        
-        .category-header h1 {
-            font-family: var(--font-serif);
-            font-size: 64px;
-            font-weight: 400;
-            margin: 0 0 20px 0;
-            letter-spacing: 2px;
-        }
-        
-        .category-icon {
-            font-size: 80px;
-            display: block;
-            margin-bottom: 20px;
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .category-header p {
-            font-size: 18px;
-            opacity: 0.95;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .category-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 40px;
-        }
-        
-        .articles-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-        }
-        
-        .article-card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: var(--shadow-subtle);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .article-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-hover);
-        }
-        
-        .article-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-        
-        .article-content {
-            padding: 25px;
-        }
-        
-        .article-category {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-        }
-        
-        .article-title {
-            font-family: var(--font-serif);
-            font-size: 18px;
-            font-weight: 600;
-            margin: 12px 0;
-            line-height: 1.4;
-            color: var(--text-dark);
-        }
-        
-        .article-excerpt {
-            font-size: 14px;
-            color: var(--text-light);
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-        
-        .article-date {
-            font-size: 12px;
-            color: var(--text-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        @media (max-width: 768px) {
-            .category-banner {
-                padding: 40px 20px;
-            }
-            
-            .category-header h1 {
-                font-size: 42px;
-            }
-            
-            .category-icon {
-                font-size: 60px;
-            }
-            
-            .category-content {
-                padding: 30px 20px;
-            }
-            
-            .articles-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 20px;
-            }
-        }
-    </style>
 </head>
 <body>
-    <!-- HEADER -->
+    <!-- HEADER / NAVBAR -->
     <header class="header">
         <div class="navbar">
             <div class="nav-container">
@@ -173,35 +19,57 @@
                     </div>
                     <p class="tagline">Editorial de Ciencia</p>
                 </a>
+
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <nav class="nav-menu" id="navMenu">
+                    <a href="index.html" class="nav-link">Inicio</a>
+                    <a href="index.html#articulos" class="nav-link">Artículos</a>
+                    <a href="resources.html" class="nav-link">Recursos</a>
+                    <a href="author.html" class="nav-link">Sobre el Autor</a>
+                    <a href="contact.html" class="nav-link">Contacto</a>
+                    <a href="auth.html" class="nav-link admin-btn" style="display:none;">
+                        <i class="fas fa-cog"></i> Admin
+                    </a>
+                </nav>
+
                 <div class="search-container">
-                    <button class="search-btn" onclick="window.history.back()" title="Volver">
-                        <i class="fas fa-arrow-left"></i>
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
                     </button>
                 </div>
+            </div>
+
+            <div class="search-bar" id="searchBar">
+                <input type="text" id="searchInput" placeholder="Buscar artículos...">
+                <button class="close-search" id="closeSearch">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- BANNER DE CATEGORÍA -->
-    <div class="category-view-container" id="categoryView">
-        <div class="category-banner" id="categoryBanner">
-            <div class="category-header">
-                <span class="category-icon" id="categoryIcon"></span>
-                <h1 id="categoryTitle"></h1>
-                <p id="categoryDescription"></p>
-            </div>
-        </div>
-        
-        <!-- CONTENIDO -->
-        <div class="category-content">
-            <div class="articles-grid" id="categoryArticles">
+    <!-- CATEGORÍA -->
+    <main style="background: white; padding: 60px 40px; min-height: 100vh;">
+        <div class="container">
+            <h1 style="font-family: var(--font-serif); font-size: 44px; margin-bottom: 10px; font-weight: 400;">
+                <span id="categoryTitle">Categoría</span>
+            </h1>
+            <p style="color: var(--text-light); margin-bottom: 50px; font-size: 16px;" id="categoryDescription"></p>
+
+            <div class="articles-grid" id="categoryGrid">
                 <!-- Se llena dinámicamente -->
             </div>
-            <div id="noCategoryArticles" class="no-articles" style="display:none;">
+
+            <div id="noArticles" class="no-articles" style="display:none;">
                 <p>No hay artículos en esta categoría aún.</p>
             </div>
         </div>
-    </div>
+    </main>
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -220,6 +88,12 @@
                         <li><a href="author.html">Sobre el Autor</a></li>
                         <li><a href="contact.html">Contacto</a></li>
                     </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Sígueme en Redes</h4>
+                    <div class="social-links" id="footerSocial">
+                        <!-- Se llena dinámicamente -->
+                    </div>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -246,71 +120,132 @@
             { key: 'datos-curiosos', name: 'Datos Curiosos', icon: '💡', color: '#FF6F61' }
         ];
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const categoryKey = urlParams.get('cat');
+        let articles = [];
 
-        async function loadCategory() {
+        async function loadCategoryArticles() {
+            const params = new URLSearchParams(window.location.search);
+            const categoryKey = params.get('cat');
+
             try {
                 const response = await fetch('data.json');
-                let articles = await response.json();
-                
+                articles = await response.json();
                 const savedArticles = localStorage.getItem('science_stone_articles');
                 if (savedArticles) {
                     articles = [...articles, ...JSON.parse(savedArticles)];
                 }
-
-                const categoryObj = categories.find(c => c.key === categoryKey);
-                if (!categoryObj) {
-                    document.getElementById('categoryTitle').textContent = 'Categoría no encontrada';
-                    return;
-                }
-
-                document.title = categoryObj.name + ' - Science Stone';
-                document.getElementById('categoryTitle').textContent = categoryObj.name;
-                document.getElementById('categoryIcon').textContent = categoryObj.icon;
-                document.getElementById('categoryDescription').textContent = `Explora todos los artículos sobre ${categoryObj.name}`;
-                
-                // Establecer fondo degradado
-                const banner = document.getElementById('categoryBanner');
-                banner.style.background = `linear-gradient(135deg, ${categoryObj.color}dd 0%, ${categoryObj.color}aa 100%)`;
-
-                const filtered = articles.filter(a => a.categories && a.categories.includes(categoryKey));
-
-                if (filtered.length === 0) {
-                    document.getElementById('categoryArticles').style.display = 'none';
-                    document.getElementById('noCategoryArticles').style.display = 'block';
-                    return;
-                }
-
-                const grid = document.getElementById('categoryArticles');
-                grid.innerHTML = filtered.map(article => {
-                    const catObj = categories.find(c => article.categories && article.categories.includes(c.key));
-                    const catName = catObj ? `${catObj.icon} ${catObj.name}` : '📄 Ciencia';
-                    const catColor = catObj ? catObj.color : '#666666';
-                    const isLight = ['#00BFFF', '#87CEEB', '#FFD700', '#FF6F61', '#C68642', '#A0522D', '#8B6F47'].includes(catColor);
-                    const textColor = isLight ? '#1a1a1a' : '#ffffff';
-
-                    return `
-                        <div class="article-card" onclick="window.open('article-view.html?id=${article.id}', '_blank')">
-                            <img src="${article.image || 'https://via.placeholder.com/600x400?text=Science+Stone'}" 
-                                 alt="${article.title}" 
-                                 class="article-image"
-                                 onerror="this.src='https://via.placeholder.com/600x400?text=Science+Stone'">
-                            <div class="article-content">
-                                <span class="article-category" style="background: linear-gradient(135deg, ${catColor}dd 0%, ${catColor}aa 100%); color: ${textColor};">${catName}</span>
-                                <h3 class="article-title">${article.title}</h3>
-                                <p class="article-excerpt">${article.excerpt}</p>
-                                <p class="article-date"><i class="fas fa-calendar"></i> ${new Date(article.date).toLocaleDateString('es-ES', {year: 'numeric', month: 'long', day: 'numeric'})}</p>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
             } catch (error) {
-                console.error('Error:', error);
+                const savedArticles = localStorage.getItem('science_stone_articles');
+                if (savedArticles) {
+                    articles = JSON.parse(savedArticles);
+                }
+            }
+
+            const category = categories.find(c => c.key === categoryKey);
+            if (!category) {
+                document.getElementById('categoryTitle').textContent = 'Categoría no encontrada';
+                document.getElementById('noArticles').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('categoryTitle').textContent = `${category.icon} ${category.name}`;
+            document.getElementById('categoryDescription').textContent = `Artículos sobre ${category.name.toLowerCase()}`;
+
+            const filtered = articles.filter(a => a.categories && a.categories.includes(categoryKey));
+
+            if (filtered.length === 0) {
+                document.getElementById('noArticles').style.display = 'block';
+                return;
+            }
+
+            const grid = document.getElementById('categoryGrid');
+            grid.innerHTML = filtered.map(article => {
+                const categoryObj = categories.find(c => article.categories && article.categories.includes(c.key));
+                const categoryName = categoryObj ? `${categoryObj.icon} ${categoryObj.name}` : '📄 Ciencia';
+                const categoryColor = categoryObj ? categoryObj.color : '#666666';
+
+                return `
+                    <div class="article-card" style="cursor: pointer;" onclick="window.location.href='article-view.html?id=${article.id}'">
+                        <img src="${article.image || 'https://via.placeholder.com/600x400'}" alt="${article.title}" class="article-image" onerror="this.src='https://via.placeholder.com/600x400'">
+                        <div class="article-content">
+                            <span class="article-category" style="background: ${categoryColor}; color: white;">${categoryName}</span>
+                            <h3 class="article-title">${article.title}</h3>
+                            <p class="article-excerpt">${article.excerpt}</p>
+                            <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES', {year: 'numeric', month: 'long', day: 'numeric'})}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            setupEventListeners();
+            updateFooterSocials();
+            checkAdminStatus();
+        }
+
+        function setupEventListeners() {
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('navMenu');
+
+            if (hamburger) {
+                hamburger.addEventListener('click', () => {
+                    hamburger.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        hamburger.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    });
+                });
+            }
+
+            const searchBtn = document.getElementById('searchBtn');
+            const searchBar = document.getElementById('searchBar');
+            const closeSearch = document.getElementById('closeSearch');
+
+            if (searchBtn) {
+                searchBtn.addEventListener('click', () => {
+                    searchBar.classList.toggle('active');
+                });
+            }
+
+            if (closeSearch) {
+                closeSearch.addEventListener('click', () => {
+                    searchBar.classList.remove('active');
+                });
             }
         }
 
-        loadCategory();
+        function updateFooterSocials() {
+            const footerSocial = document.getElementById('footerSocial');
+            if (!footerSocial) return;
+
+            const socials = JSON.parse(localStorage.getItem('author_socials') || '[]');
+            const icons = {
+                facebook: 'fab fa-facebook',
+                twitter: 'fab fa-twitter',
+                instagram: 'fab fa-instagram',
+                linkedin: 'fab fa-linkedin',
+                youtube: 'fab fa-youtube',
+                whatsapp: 'fab fa-whatsapp',
+                telegram: 'fab fa-telegram'
+            };
+
+            footerSocial.innerHTML = socials.map(social => `
+                <a href="${social.url}" class="social-link" target="_blank" title="${social.platform}">
+                    <i class="${icons[social.platform] || 'fas fa-link'}"></i>
+                </a>
+            `).join('');
+        }
+
+        function checkAdminStatus() {
+            const adminBtn = document.querySelector('.admin-btn');
+            if (localStorage.getItem('owner_password')) {
+                if (adminBtn) adminBtn.style.display = 'inline-block';
+            }
+        }
+
+        loadCategoryArticles();
     </script>
 </body>
 </html>

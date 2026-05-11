@@ -60,10 +60,15 @@ async function loadArticle() {
 
 function renderArticle() {
     const container = document.getElementById('articleContent');
+    if (!container) return;
+
     const categoryObj = categories.find(c => currentArticle.categories && currentArticle.categories.includes(c.key));
     const categoryName = categoryObj ? categoryObj.name : 'Ciencia';
     const categoryColor = categoryObj ? categoryObj.color : '#666666';
-    const authorName = localStorage.getItem('author_name') || 'Administrador';
+    
+    const authors = JSON.parse(localStorage.getItem('science_stone_authors') || '[]');
+    const author = authors.find(a => a.id === currentArticle.authorId);
+    const authorName = author ? author.name : localStorage.getItem('author_name') || 'Administrador';
     
     let mediaHTML = '';
     if (currentArticle.images && currentArticle.images.length > 0) {
@@ -78,40 +83,6 @@ function renderArticle() {
                 </figure>
             `;
         });
-    }
-    
-    if (currentArticle.videos && currentArticle.videos.length > 0) {
-        currentArticle.videos.forEach(video => {
-            if (video.type === 'url') {
-                mediaHTML += `<div style="margin: 40px 0; text-align: center;">
-                    <iframe style="width: 100%; max-width: 600px; height: 400px; border-radius: 4px;" 
-                            src="${video.url}" allowfullscreen></iframe>
-                </div>`;
-            }
-        });
-    }
-    
-    let linksHTML = '';
-    if (currentArticle.links && currentArticle.links.length > 0) {
-        linksHTML = `<div style="background: var(--bg-light); padding: 30px; border-radius: 4px; margin: 40px 0;">
-            <h4 style="font-family: var(--font-serif); margin-bottom: 15px;">Enlaces Relacionados</h4>
-            <ul style="list-style: none;">`;
-        currentArticle.links.forEach(link => {
-            linksHTML += `<li style="margin-bottom: 12px;">
-                <a href="${link.url}" target="_blank" style="color: var(--primary-yellow); text-decoration: none; font-weight: 600;">
-                    ${link.title} <i class="fas fa-external-link-alt"></i>
-                </a>
-                ${link.description ? `<p style="font-size: 13px; color: var(--text-light); margin-top: 5px;">${link.description}</p>` : ''}
-            </li>`;
-        });
-        linksHTML += `</ul></div>`;
-    }
-    
-    let sourcesHTML = '';
-    if (currentArticle.sources) {
-        sourcesHTML = `<div style="background: var(--bg-light); padding: 30px; border-radius: 4px; margin: 40px 0;">
-            <p style="margin: 0;"><strong>Fuentes:</strong> ${currentArticle.sources}</p>
-        </div>`;
     }
     
     let tagsHTML = '';
@@ -132,7 +103,7 @@ function renderArticle() {
             <span class="article-category" style="color: ${categoryColor}; font-size: 13px;">
                 ${categoryObj ? categoryObj.icon : '📄'} ${categoryName}
             </span>
-            <h1 style="font-family: var(--font-serif); font-size: 48px; margin: 20px 0; font-weight: 400; line-height: 1.3;">
+            <h1 style="font-family: var(--font-serif); font-size: 48px; margin: 20px 0; font-weight: 400; line-height: 1.3; color: #1a1a1a;">
                 ${currentArticle.title}
             </h1>
             <div style="color: var(--text-light); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 20px;">
@@ -144,58 +115,49 @@ function renderArticle() {
         
         ${mediaHTML}
         
-        <div class="article-body">
+        <div class="article-body" style="color: #1a1a1a;">
             ${currentArticle.content}
         </div>
         
-        ${linksHTML}
-        ${sourcesHTML}
         ${tagsHTML}
         
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin: 40px 0; padding: 30px 0; border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);">
             <button class="btn btn-primary" id="likeBtn" onclick="toggleLike()" style="width: 100%; padding: 12px;">
                 <i class="far fa-heart"></i> Me gusta
             </button>
-            <button class="btn btn-primary" id="favoriteBtn" onclick="toggleFavorite()" style="width: 100%; padding: 12px;">
-                <i class="far fa-bookmark"></i> Guardar
-            </button>
             <button class="btn btn-primary" id="shareBtn" onclick="shareArticle()" style="width: 100%; padding: 12px;">
                 <i class="fas fa-share-alt"></i> Compartir
             </button>
-        </div>
-        
-        <div style="background: var(--bg-light); padding: 30px; border-radius: 4px; margin: 40px 0;">
-            <p style="margin-bottom: 20px; font-size: 16px;">¿Qué te pareció este artículo?</p>
-            <div class="stars" id="starsRating" style="display: flex; gap: 10px; font-size: 28px;">
-                <i class="far fa-star" data-rating="1" onclick="setRating(1)" style="cursor: pointer; transition: all 0.2s;"></i>
-                <i class="far fa-star" data-rating="2" onclick="setRating(2)" style="cursor: pointer; transition: all 0.2s;"></i>
-                <i class="far fa-star" data-rating="3" onclick="setRating(3)" style="cursor: pointer; transition: all 0.2s;"></i>
-                <i class="far fa-star" data-rating="4" onclick="setRating(4)" style="cursor: pointer; transition: all 0.2s;"></i>
-                <i class="far fa-star" data-rating="5" onclick="setRating(5)" style="cursor: pointer; transition: all 0.2s;"></i>
-            </div>
         </div>
         
         <div style="margin: 40px 0;">
             <h3 style="font-family: var(--font-serif); font-size: 24px; margin-bottom: 25px; font-weight: 400;">Comentarios</h3>
             <div style="background: var(--bg-light); padding: 25px; border-radius: 4px; margin-bottom: 25px;">
                 <input type="text" id="commentName" placeholder="Tu nombre" maxlength="50" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border-light); border-radius: 4px;">
-                <textarea id="commentText" placeholder="Comparte tu opinión sobre este artículo..." rows="4" maxlength="500" style="width: 100%; padding: 12px; border: 1px solid var(--border-light); border-radius: 4px; font-family: var(--font-sans);"></textarea>
+                <textarea id="commentText" placeholder="Comparte tu opinión sobre este artículo..." rows="4" maxlength="500" style="width: 100%; padding: 12px; border: 1px solid var(--border-light); border-radius: 4px;"></textarea>
                 <button class="btn btn-primary" onclick="submitComment()" style="margin-top: 15px; width: 100%; padding: 12px;">Publicar Comentario</button>
             </div>
             <div id="commentsList">
                 <!-- Se llena dinámicamente -->
             </div>
         </div>
+        
+        <div id="relatedArticles" style="margin: 60px 0; padding: 40px 0; border-top: 2px solid var(--border-light);">
+            <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 30px; font-weight: 400;">Artículos Relacionados</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </div>
     `;
     
-    loadRating();
     loadComments();
     updateSocialButtons();
 }
 
 function renderRelatedArticles() {
     const container = document.getElementById('relatedArticles');
-    
+    if (!container) return;
+
     const related = articles.filter(a => 
         a.id !== currentArticle.id &&
         a.categories && currentArticle.categories &&
@@ -203,43 +165,36 @@ function renderRelatedArticles() {
     ).slice(0, 3);
 
     if (related.length === 0) {
-        container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-light);">No hay artículos relacionados.</p>';
+        container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-light); padding: 40px;">No hay artículos relacionados.</p>';
         return;
     }
 
-    container.innerHTML = related.map(article => {
-        const categoryObj = categories.find(c => article.categories && article.categories.includes(c.key));
-        const categoryName = categoryObj ? `${categoryObj.icon} ${categoryObj.name}` : '📄 Ciencia';
-        const categoryColor = categoryObj ? categoryObj.color : '#666666';
-        
-        return `
-            <div class="article-card" onclick="window.location.href='article.html?id=${article.id}'" style="cursor: pointer;">
-                <img src="${article.image || 'https://via.placeholder.com/600x400'}" alt="${article.title}" class="article-image" onerror="this.src='https://via.placeholder.com/600x400'">
-                <div class="article-content">
-                    <span class="article-category" style="color: ${categoryColor};">${categoryName}</span>
-                    <h3 class="article-title">${article.title}</h3>
-                    <p class="article-excerpt">${article.excerpt}</p>
-                    <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES', {year: 'numeric', month: 'long', day: 'numeric'})}</p>
+    const grid = container.querySelector('div[style*="grid-template-columns"]');
+    if (grid) {
+        grid.innerHTML = related.map(article => {
+            const categoryObj = categories.find(c => article.categories && article.categories.includes(c.key));
+            const categoryName = categoryObj ? `${categoryObj.icon} ${categoryObj.name}` : '📄 Ciencia';
+            const categoryColor = categoryObj ? categoryObj.color : '#666666';
+            
+            return `
+                <div class="article-card" onclick="window.location.href='article-view.html?id=${article.id}'" style="cursor: pointer;">
+                    <img src="${article.image || 'https://via.placeholder.com/600x400'}" alt="${article.title}" class="article-image" onerror="this.src='https://via.placeholder.com/600x400'">
+                    <div class="article-content">
+                        <span class="article-category" style="color: ${categoryColor};">${categoryName}</span>
+                        <h3 class="article-title">${article.title}</h3>
+                        <p class="article-excerpt">${article.excerpt}</p>
+                        <p class="article-date">${new Date(article.date).toLocaleDateString('es-ES', {year: 'numeric', month: 'long', day: 'numeric'})}</p>
+                    </div>
                 </div>
-            </div>
-        `;
-    }).join('');
+            `;
+        }).join('');
+    }
 }
 
 // ===================== FUNCIONES SOCIALES =====================
 function toggleLike() {
     const likes = parseInt(localStorage.getItem(`likes_${currentArticle.id}`) || '0');
     localStorage.setItem(`likes_${currentArticle.id}`, likes + 1);
-    updateSocialButtons();
-}
-
-function toggleFavorite() {
-    const isFavorite = localStorage.getItem(`favorite_${currentArticle.id}`);
-    if (isFavorite) {
-        localStorage.removeItem(`favorite_${currentArticle.id}`);
-    } else {
-        localStorage.setItem(`favorite_${currentArticle.id}`, 'true');
-    }
     updateSocialButtons();
 }
 
@@ -254,54 +209,46 @@ function shareArticle() {
             url: url
         });
     } else {
-        alert(`Comparte este enlace:\n${url}`);
+        // Compartir en redes sociales
+        const whatsapp = `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`;
+        const facebook = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        const twitter = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+        
+        const shareHTML = `
+            <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 8px; z-index: 1000; box-shadow: 0 0 30px rgba(0,0,0,0.3);">
+                <h3 style="margin-top: 0;">Compartir en Redes Sociales</h3>
+                <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                    <a href="${facebook}" target="_blank" class="btn btn-primary"><i class="fab fa-facebook"></i> Facebook</a>
+                    <a href="${twitter}" target="_blank" class="btn btn-primary"><i class="fab fa-twitter"></i> Twitter</a>
+                    <a href="${whatsapp}" target="_blank" class="btn btn-primary"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" class="btn btn-secondary" style="width: 100%;">Cerrar</button>
+                <div style="background: #f5f5f5; padding: 15px; border-radius: 4px; margin-top: 15px;">
+                    <p style="font-size: 12px; margin: 0; color: #666;">Enlace: ${url}</p>
+                    <button onclick="navigator.clipboard.writeText('${url}'); alert('✅ Enlace copiado al portapapeles')" class="btn btn-small" style="margin-top: 10px; width: 100%;"><i class="fas fa-copy"></i> Copiar Enlace</button>
+                </div>
+            </div>
+            <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999;" onclick="this.remove(); this.nextElementSibling.remove();"></div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', shareHTML);
     }
 }
 
 function updateSocialButtons() {
     const likeBtn = document.getElementById('likeBtn');
-    const favoriteBtn = document.getElementById('favoriteBtn');
     const likes = localStorage.getItem(`likes_${currentArticle.id}`) || '0';
-    const isFavorite = localStorage.getItem(`favorite_${currentArticle.id}`);
     
     if (likeBtn) {
         likeBtn.innerHTML = `<i class="fas fa-heart" style="color: #DC143C;"></i> Me gusta (${likes})`;
     }
-    
-    if (favoriteBtn) {
-        if (isFavorite) {
-            favoriteBtn.innerHTML = `<i class="fas fa-bookmark"></i> Guardado`;
-            favoriteBtn.style.background = 'var(--primary-yellow)';
-        } else {
-            favoriteBtn.innerHTML = `<i class="far fa-bookmark"></i> Guardar`;
-        }
-    }
-}
-
-// ===================== RATING =====================
-function loadRating() {
-    const stars = document.querySelectorAll('.stars i');
-    const savedRating = localStorage.getItem(`rating_${currentArticle.id}`) || '0';
-    
-    stars.forEach(star => {
-        star.classList.remove('fas');
-        star.classList.add('far');
-        if (parseInt(star.dataset.rating) <= parseInt(savedRating)) {
-            star.classList.remove('far');
-            star.classList.add('fas');
-            star.style.color = '#FFCC00';
-        }
-    });
-}
-
-function setRating(rating) {
-    localStorage.setItem(`rating_${currentArticle.id}`, rating);
-    loadRating();
 }
 
 // ===================== COMENTARIOS =====================
 function loadComments() {
     const commentsList = document.getElementById('commentsList');
+    if (!commentsList) return;
+
     const comments = JSON.parse(localStorage.getItem(`comments_${currentArticle.id}`) || '[]');
     
     if (comments.length === 0) {
@@ -311,8 +258,8 @@ function loadComments() {
     
     commentsList.innerHTML = comments.map(comment => `
         <div style="padding: 20px; border: 1px solid var(--border-light); border-radius: 4px; margin-bottom: 15px;">
-            <p style="font-weight: 600; margin: 0 0 8px 0;">${comment.name}</p>
-            <p style="margin: 0 0 10px 0; color: var(--text-dark);">${comment.text}</p>
+            <p style="font-weight: 600; margin: 0 0 8px 0; color: #1a1a1a;">${comment.name}</p>
+            <p style="margin: 0 0 10px 0; color: #1a1a1a;">${comment.text}</p>
             <p style="font-size: 12px; color: var(--text-light); margin: 0;">${new Date(comment.date).toLocaleDateString('es-ES')}</p>
         </div>
     `).join('');
@@ -363,37 +310,16 @@ function setupEventListeners() {
     const searchBtn = document.getElementById('searchBtn');
     const searchBar = document.getElementById('searchBar');
     const closeSearch = document.getElementById('closeSearch');
-    const searchInput = document.getElementById('searchInput');
 
     if (searchBtn) {
         searchBtn.addEventListener('click', () => {
             searchBar.classList.toggle('active');
-            if (searchBar.classList.contains('active')) {
-                searchInput.focus();
-            }
         });
     }
 
     if (closeSearch) {
         closeSearch.addEventListener('click', () => {
             searchBar.classList.remove('active');
-            searchInput.value = '';
-        });
-    }
-
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            if (query.length === 0) return;
-            
-            const filtered = articles.filter(article =>
-                article.title.toLowerCase().includes(query) ||
-                article.excerpt.toLowerCase().includes(query)
-            );
-            
-            if (filtered.length > 0) {
-                window.location.href = `article.html?id=${filtered[0].id}`;
-            }
         });
     }
 }
@@ -421,9 +347,9 @@ function updateFooterSocials() {
 }
 
 function checkAdminStatus() {
-    const adminBtn = document.getElementById('adminNavBtn');
+    const adminBtn = document.querySelector('.admin-btn');
     if (localStorage.getItem('owner_password')) {
-        adminBtn.style.display = 'inline-block';
+        if (adminBtn) adminBtn.style.display = 'inline-block';
     }
 }
 

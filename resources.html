@@ -7,30 +7,38 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
         .resource-card {
-            background: var(--bg-white);
-            border: 1px solid var(--border-light);
-            border-radius: 4px;
+            background: white;
+            border-radius: 8px;
             overflow: hidden;
-            cursor: pointer;
+            border: 1px solid var(--border-light);
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
         }
 
         .resource-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-5px);
             box-shadow: var(--shadow-hover);
         }
 
-        .resource-icon {
-            width: 100%;
-            height: 180px;
+        .resource-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 64px;
+            font-size: 40px;
+            min-height: 100px;
         }
 
         .resource-content {
@@ -41,53 +49,97 @@
         }
 
         .resource-type {
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            margin-bottom: 10px;
             display: inline-block;
+            background: var(--bg-light);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 12px;
+            width: fit-content;
         }
 
         .resource-title {
             font-family: var(--font-serif);
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: var(--text-dark);
+        }
+
+        .resource-category {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 15px;
         }
 
         .resource-description {
             font-size: 14px;
             color: var(--text-light);
             margin-bottom: 15px;
+            line-height: 1.6;
             flex-grow: 1;
         }
 
-        .resource-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .resource-author {
             font-size: 12px;
             color: var(--text-light);
+            margin-bottom: 15px;
             padding-top: 15px;
             border-top: 1px solid var(--border-light);
         }
 
-        .resource-download {
-            color: var(--primary-yellow);
+        .resource-btn {
+            display: inline-block;
+            background: var(--primary-yellow);
+            color: var(--text-dark);
+            padding: 10px 20px;
+            border-radius: 4px;
             text-decoration: none;
             font-weight: 600;
-            display: inline-flex;
-            gap: 5px;
-            align-items: center;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
         }
 
-        .resources-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
+        .resource-btn:hover {
+            background: #ffD700;
+            transform: translateY(-2px);
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--border-light);
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-yellow);
+            border-color: var(--primary-yellow);
+            color: var(--text-dark);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary-yellow);
         }
     </style>
 </head>
@@ -116,7 +168,7 @@
                     <a href="resources.html" class="nav-link active">Recursos</a>
                     <a href="author.html" class="nav-link">Sobre el Autor</a>
                     <a href="contact.html" class="nav-link">Contacto</a>
-                    <a href="admin.html" class="nav-link admin-btn" id="adminNavBtn" style="display:none;">
+                    <a href="auth.html" class="nav-link admin-btn" style="display:none;">
                         <i class="fas fa-cog"></i> Admin
                     </a>
                 </nav>
@@ -137,106 +189,31 @@
         </div>
     </header>
 
-    <!-- HERO RECURSOS -->
-    <section class="resources-hero">
-        <div style="text-align: center; color: white;">
-            <h1 style="font-family: var(--font-serif); font-size: 48px; margin-bottom: 15px; font-weight: 400; letter-spacing: 1px;">Centro de Recursos</h1>
-            <p style="font-size: 18px; opacity: 0.95;">Biblioteca digital con material educativo de apoyo</p>
-        </div>
-    </section>
-
-    <!-- CONTENIDO RECURSOS -->
-    <main class="resources-container">
+    <!-- RECURSOS -->
+    <main style="background: white; padding: 60px 40px; min-height: 100vh;">
         <div class="container">
-            <!-- FILTROS -->
-            <div style="margin-bottom: 40px;">
-                <h2 style="font-family: var(--font-serif); font-size: 28px; margin-bottom: 25px; font-weight: 400;">Filtrar por Tipo</h2>
-                <div class="filter-buttons" id="filterButtonsResources">
-                    <button class="filter-btn active" data-filter="todos">Todos</button>
-                    <button class="filter-btn" data-filter="pdf"><i class="fas fa-file-pdf"></i> PDFs</button>
-                    <button class="filter-btn" data-filter="libro"><i class="fas fa-book"></i> Libros</button>
-                    <button class="filter-btn" data-filter="video"><i class="fas fa-video"></i> Videos</button>
-                    <button class="filter-btn" data-filter="infografia"><i class="fas fa-image"></i> Infografías</button>
-                    <button class="filter-btn" data-filter="audio"><i class="fas fa-podcast"></i> Audio</button>
-                </div>
+            <h1 style="font-family: var(--font-serif); font-size: 44px; margin-bottom: 10px; font-weight: 400;">
+                📚 Recursos Educativos
+            </h1>
+            <p style="color: var(--text-light); margin-bottom: 50px; font-size: 16px;">
+                Accede a PDFs, videos, libros y más materiales para ampliar tu conocimiento científico
+            </p>
+
+            <div class="filter-section">
+                <button class="filter-btn active" onclick="filterResources('todos')">Todos</button>
+                <button class="filter-btn" onclick="filterResources('pdf')">📄 PDF</button>
+                <button class="filter-btn" onclick="filterResources('video')">🎬 Videos</button>
+                <button class="filter-btn" onclick="filterResources('audio')">🔊 Audio</button>
+                <button class="filter-btn" onclick="filterResources('imagen')">🖼️ Imágenes</button>
+                <button class="filter-btn" onclick="filterResources('documento')">📑 Documentos</button>
             </div>
 
-            <!-- FILTRAR POR CATEGORÍA -->
-            <div style="margin-bottom: 40px;">
-                <h2 style="font-family: var(--font-serif); font-size: 28px; margin-bottom: 25px; font-weight: 400;">Filtrar por Categoría</h2>
-                <div class="filter-buttons" id="categoryFiltersResources">
-                    <!-- Se llena dinámicamente -->
-                </div>
-            </div>
-
-            <!-- GRID DE RECURSOS -->
             <div class="resources-grid" id="resourcesGrid">
-                <!-- Se llena con JavaScript -->
+                <!-- Se llena dinámicamente -->
             </div>
 
             <div id="noResources" class="no-articles" style="display:none;">
-                <p>No hay recursos en esta categoría.</p>
-            </div>
-
-            <!-- BOTÓN AGREGAR RECURSO (ADMIN) -->
-            <button class="btn btn-primary" id="addResourceBtn" style="display:none; margin-top: 40px; width: auto;">
-                <i class="fas fa-plus"></i> Agregar Nuevo Recurso
-            </button>
-
-            <!-- MODAL AGREGAR RECURSO -->
-            <div id="addResourceModal" style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; overflow: auto;">
-                <div style="background: white; max-width: 600px; margin: 40px auto; padding: 40px; border-radius: 4px;">
-                    <h2 style="font-family: var(--font-serif); font-size: 28px; margin-bottom: 30px; font-weight: 400;">Agregar Nuevo Recurso</h2>
-                    
-                    <form id="addResourceForm">
-                        <div class="form-group">
-                            <label for="resourceTitle">Título *</label>
-                            <input type="text" id="resourceTitle" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="resourceType">Tipo de Recurso *</label>
-                            <select id="resourceType" required>
-                                <option value="pdf">PDF</option>
-                                <option value="libro">Libro</option>
-                                <option value="video">Video</option>
-                                <option value="infografia">Infografía</option>
-                                <option value="audio">Audio</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="resourceCategory">Categoría *</label>
-                            <select id="resourceCategory" required>
-                                <!-- Se llena dinámicamente -->
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="resourceDescription">Descripción</label>
-                            <textarea id="resourceDescription" rows="4" placeholder="Describe el recurso..."></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="resourceUrl">URL del Recurso *</label>
-                            <input type="url" id="resourceUrl" placeholder="https://..." required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="resourceAuthor">Autor/Fuente</label>
-                            <input type="text" id="resourceAuthor" placeholder="Nombre del autor o sitio web">
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary" style="flex: 1;">
-                                <i class="fas fa-save"></i> Guardar Recurso
-                            </button>
-                            <button type="button" onclick="closeAddResource()" class="btn btn-secondary" style="flex: 1;">
-                                <i class="fas fa-times"></i> Cancelar
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                <p>No hay recursos disponibles aún.</p>
             </div>
         </div>
     </main>
@@ -272,6 +249,212 @@
         </div>
     </footer>
 
-    <script src="resources-script.js"></script>
+    <script>
+        const typeIcons = {
+            pdf: '📄',
+            video: '🎬',
+            audio: '🔊',
+            imagen: '🖼️',
+            documento: '📑',
+            libro: '📖',
+            infografia: '📊'
+        };
+
+        const categories = [
+            { key: 'quimica', name: 'Química', icon: '⚗️' },
+            { key: 'biologia', name: 'Biología', icon: '🧬' },
+            { key: 'geografia', name: 'Geografía', icon: '🌍' },
+            { key: 'geologia', name: 'Geología', icon: '🪨' },
+            { key: 'paleontologia', name: 'Paleontología', icon: '🦕' },
+            { key: 'astronomia', name: 'Astronomía', icon: '🔭' },
+            { key: 'tecnologia', name: 'Tecnología', icon: '💻' },
+            { key: 'meteorologia', name: 'Meteorología', icon: '⛈️' },
+            { key: 'ingenieria', name: 'Ingeniería', icon: '⚙️' },
+            { key: 'historia', name: 'Historia', icon: '📚' },
+            { key: 'medicina', name: 'Medicina', icon: '💊' },
+            { key: 'experimentos', name: 'Experimentos', icon: '🔬' }
+        ];
+
+        let resources = [];
+        let currentFilter = 'todos';
+
+        function loadResources() {
+            const saved = localStorage.getItem('science_stone_resources');
+            if (saved) {
+                resources = JSON.parse(saved);
+            }
+            renderResources();
+            setupEventListeners();
+            updateFooterSocials();
+            checkAdminStatus();
+        }
+
+        function renderResources() {
+            const grid = document.getElementById('resourcesGrid');
+            const noResources = document.getElementById('noResources');
+
+            let filtered = resources;
+            if (currentFilter !== 'todos') {
+                filtered = resources.filter(r => r.type === currentFilter);
+            }
+
+            if (filtered.length === 0) {
+                grid.style.display = 'none';
+                noResources.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            noResources.style.display = 'none';
+
+            grid.innerHTML = filtered.map(resource => {
+                const categoryObj = categories.find(c => c.key === resource.category);
+                const categoryName = categoryObj ? categoryObj.name : 'Sin categoría';
+                const icon = typeIcons[resource.type] || '📦';
+
+                return `
+                    <div class="resource-card">
+                        <div class="resource-header">${icon}</div>
+                        <div class="resource-content">
+                            <div class="resource-type">${resource.type.toUpperCase()}</div>
+                            <h3 class="resource-title">${resource.title}</h3>
+                            <p class="resource-category">📂 ${categoryName}</p>
+                            <p class="resource-description">${resource.description || 'Sin descripción disponible'}</p>
+                            <p class="resource-author">👤 ${resource.author || 'Desconocido'}</p>
+                            <a href="${resource.url}" class="resource-btn" target="_blank">
+                                <i class="fas fa-download"></i> Descargar
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterResources(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            renderResources();
+        }
+
+        function setupEventListeners() {
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('navMenu');
+
+            if (hamburger) {
+                hamburger.addEventListener('click', () => {
+                    hamburger.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        hamburger.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    });
+                });
+            }
+
+            const searchBtn = document.getElementById('searchBtn');
+            const searchBar = document.getElementById('searchBar');
+            const closeSearch = document.getElementById('closeSearch');
+            const searchInput = document.getElementById('searchInput');
+
+            if (searchBtn) {
+                searchBtn.addEventListener('click', () => {
+                    searchBar.classList.toggle('active');
+                    if (searchBar.classList.contains('active')) {
+                        searchInput.focus();
+                    }
+                });
+            }
+
+            if (closeSearch) {
+                closeSearch.addEventListener('click', () => {
+                    searchBar.classList.remove('active');
+                    searchInput.value = '';
+                    renderResources();
+                });
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase();
+
+                    if (query.length === 0) {
+                        renderResources();
+                        return;
+                    }
+
+                    const grid = document.getElementById('resourcesGrid');
+                    const filtered = resources.filter(r =>
+                        r.title.toLowerCase().includes(query) ||
+                        r.description.toLowerCase().includes(query) ||
+                        r.author.toLowerCase().includes(query)
+                    );
+
+                    if (filtered.length === 0) {
+                        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #666;">No se encontraron recursos.</div>';
+                        return;
+                    }
+
+                    grid.innerHTML = filtered.map(resource => {
+                        const categoryObj = categories.find(c => c.key === resource.category);
+                        const categoryName = categoryObj ? categoryObj.name : 'Sin categoría';
+                        const icon = typeIcons[resource.type] || '📦';
+
+                        return `
+                            <div class="resource-card">
+                                <div class="resource-header">${icon}</div>
+                                <div class="resource-content">
+                                    <div class="resource-type">${resource.type.toUpperCase()}</div>
+                                    <h3 class="resource-title">${resource.title}</h3>
+                                    <p class="resource-category">📂 ${categoryName}</p>
+                                    <p class="resource-description">${resource.description || 'Sin descripción disponible'}</p>
+                                    <p class="resource-author">👤 ${resource.author || 'Desconocido'}</p>
+                                    <a href="${resource.url}" class="resource-btn" target="_blank">
+                                        <i class="fas fa-download"></i> Descargar
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                });
+            }
+        }
+
+        function updateFooterSocials() {
+            const footerSocial = document.getElementById('footerSocial');
+            if (!footerSocial) return;
+
+            const socials = JSON.parse(localStorage.getItem('author_socials') || '[]');
+            const icons = {
+                facebook: 'fab fa-facebook',
+                twitter: 'fab fa-twitter',
+                instagram: 'fab fa-instagram',
+                linkedin: 'fab fa-linkedin',
+                youtube: 'fab fa-youtube',
+                whatsapp: 'fab fa-whatsapp',
+                telegram: 'fab fa-telegram'
+            };
+
+            footerSocial.innerHTML = socials.map(social => `
+                <a href="${social.url}" class="social-link" target="_blank" title="${social.platform}">
+                    <i class="${icons[social.platform] || 'fas fa-link'}"></i>
+                </a>
+            `).join('');
+        }
+
+        function checkAdminStatus() {
+            const adminBtn = document.querySelector('.admin-btn');
+            if (localStorage.getItem('owner_password')) {
+                if (adminBtn) adminBtn.style.display = 'inline-block';
+            }
+        }
+
+        loadResources();
+    </script>
 </body>
 </html>
